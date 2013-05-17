@@ -9,9 +9,9 @@
 
 // Publish 0 turns on the test menu and ignores the official setting 
 // The back button override is always on in test mode
-#define PUBLISH 0
+#define PUBLISH 1
 // Official 0 allows the back button override, while official 1 does not
-#define OFFICIAL 0
+#define OFFICIAL 1
 
 // Features to turn off to make space
 #define ALLOW_RANDOM_DUNGEON_GRAPHICS 1
