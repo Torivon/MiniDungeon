@@ -257,6 +257,9 @@ bool clockLayerInitialized = false;
 
 void UpdateClock(void)
 {
+	if(!clockLayerInitialized) {
+		return;
+	}
 	static char timeText[] = "00:00"; // Needs to be static because it's used by the system later.
 	char *time_format;
 
@@ -303,6 +306,9 @@ bool levelLayerInitialized = false;
 
 void UpdateLevelLayerText(int level)
 {
+	if(!levelLayerInitialized)
+		return;
+		
 	static char levelText[] = "00";
 
 	IntToString(levelText, 2, level);
@@ -335,6 +341,9 @@ GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 16
 bool healthLayersInitialized = false;
 void UpdateHealthText(int current, int max)
 {
+	if(!healthLayersInitialized)
+		return;
+		
 	static char currentHealthText[] = "0000"; // Needs to be static because it's used by the system later.
 	static char maxHealthText[] = "0000"; // Needs to be static because it's used by the system later.
 
@@ -393,10 +402,11 @@ void WindowDisappear(Window *window)
 
 Window * InitializeWindow(const char *name, bool animated)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Creating window %s",name);
 	Window *window = window_create();
-	window_stack_push(window, animated);
 	window_set_fullscreen(window, true); // Do I want full screen?
 	window_set_background_color(window, GColorBlack);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Window %s created",name);
 	return window;		
 }
 
@@ -407,6 +417,7 @@ Window * InitializeMenuWindow(const char *name, bool animated, WindowHandler ini
 	window_set_window_handlers(window,handlers);
 	
 	SetMenuClickConfigProvider(window);
+	window_stack_push(window, animated);
 	return window;
 }
 
@@ -429,6 +440,7 @@ GRect noFrame = {.origin = {.x = 115, .y = 78}, .size = {.w = 24, .h = 20}};
 Window * InitializeConfirmationWindow(TextLayer *exitText, TextLayer *yesText, TextLayer *noText)
 {
 	Window *window = InitializeWindow("Exit", true);
+	window_stack_push(window, true);
 	Layer *window_layer = window_get_root_layer(window);
 	
 	exitText = InitializeTextLayer(exitFrame, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));

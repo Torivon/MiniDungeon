@@ -30,6 +30,7 @@ MenuWindow menuWindows[MAX_MENU_WINDOWS];
 
 void MenuInit(Window *window)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Menu init");
 }
 
 void MenuDeinit(Window *window)
@@ -146,6 +147,7 @@ void PushNewMenu(MenuDefinition *menuDef)
 
 void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Single Click Select");
 	MenuEntry *currentEntry;
 	if(!currentMenuDef)
 		return;
@@ -155,6 +157,7 @@ void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 		return;
 
 	currentEntry->menuFunction();
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "End Single Click Select");
 }
 
 void IterateMenuEntries(int direction, int limit)
@@ -213,7 +216,7 @@ void BackLongClickHandler(ClickRecognizerRef recognizer, Window *window)
 }
 #endif
 
-void MenuClickConfigProvider(void)
+void MenuClickConfigProvider(void *context)
 {
 	window_single_click_subscribe(BUTTON_ID_SELECT, (ClickHandler)SelectSingleClickHandler);
 	window_single_click_subscribe(BUTTON_ID_UP,(ClickHandler)UpSingleClickHandler);

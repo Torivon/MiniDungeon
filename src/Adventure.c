@@ -70,6 +70,7 @@ void LoadRandomDungeonImage(void)
 
 void AdventureWindowAppear(Window *window)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Adventure appear floor %d",GetCurrentFloor());
 	MenuAppear(window);
 	ShowMainWindowRow(0, "Floor", UpdateFloorText());
 	adventureWindow = window;
