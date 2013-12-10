@@ -10,13 +10,14 @@
 #include "Utils.h"
 
 	 
-// Called once per minute
-void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t) 
+// Called once per seconds
+void handle_second_tick(struct tm* tick_time, TimeUnits units_changed) 
 {
-	(void)ctx;
-	(void)t;
-
-	UpdateClock();
+	if(! tick_time->tm_sec %30)
+		return;
+	if(units_changed & MINUTE_UNIT)
+		UpdateClock();
+		
 	UpdateAdventure();
 }
 
@@ -30,43 +31,31 @@ void ResetGame(void)
 	ClearInventory();
 }
 
-void handle_init(AppContextRef ctx) {
-	(void)ctx;
-	PblTm currentTime;
-	unsigned int unixTime;
-
-	resource_init_current_app(&APP_RESOURCES);
-
-	get_time(&currentTime);
+void handle_init() {
+	time_t now = time(NULL);
+	struct tm *current_time = localtime(&now);
 	
-	srand(time(NULL));
+	srand(now);
 	
 	InitializeExitConfirmationWindow();
 	
-	handle_minute_tick(ctx, NULL);
+	handle_second_tick(current_time, MINUTE_UNIT);
+	tick_timer_service_subscribe(SECOND_UNIT, &handle_second_tick);
+	
 
 	ResetGame();
 	ShowAdventureWindow();
 }
 
-void handle_deinit(AppContextRef ctx) {
-	(void)ctx;
-
+void handle_deinit() {
 	UnloadBackgroundImage();
 	UnloadMainBmpImage();
+	UnloadTextLayers();
 }
 
-void pbl_main(void *params) {
-	PebbleAppHandlers handlers = {
-		// Handle app start
-		.init_handler = &handle_init,
-		.deinit_handler = &handle_deinit,
-
-		// Handle time updates
-		.tick_info = {
-			.tick_handler = &handle_minute_tick,
-			.tick_units = MINUTE_UNIT
-			}
-	};
-	app_event_loop(params, &handlers);
+// The main event/run loop for our app
+int main(void) {
+  handle_init();
+  app_event_loop();
+  handle_deinit();
 }

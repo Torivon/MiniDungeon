@@ -11,6 +11,7 @@ void HideAllMenuLayers(void);
 void LoadMainBmpImage(Window *window, int resourceId);
 void UnloadMainBmpImage(void);
 void UnloadBackgroundImage(void);
+void UnloadTextLayers(void);
 
 void ShowMainWindowRow(int index, const char *text, const char *number);
 
@@ -19,12 +20,12 @@ void UpdateLevelLayerText(int level);
 
 void UpdateHealthText(int currentHealth, int maxHealth);
 
-void InitializeTextLayer(TextLayer *textLayer, GRect frame, GFont font);
+TextLayer * InitializeTextLayer(GRect frame, GFont font);
 
-void InitializeConfirmationWindow(Window *window, TextLayer *exitText, TextLayer *yesText, TextLayer *noText);
+Window * InitializeConfirmationWindow(TextLayer *exitText, TextLayer *yesText, TextLayer *noText);
 void InitializeExitConfirmationWindow(void);
-void InitializeWindow(Window *window, const char *name, bool animated);
-void InitializeMenuWindow(Window *window, const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear);
+Window * InitializeWindow(const char *name, bool animated);
+Window * InitializeMenuWindow(const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear);
 
 void WindowAppear(Window *window);
 void WindowDisappear(Window *window);
