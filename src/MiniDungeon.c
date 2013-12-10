@@ -46,9 +46,9 @@ void handle_init(AppContextRef ctx) {
 	resource_init_current_app(&APP_RESOURCES);
 
 	get_time(&currentTime);
-	unixTime = GetUnixTime(&currentTime);
-	SetRandomSeed(unixTime);
-
+	
+	srand(time(NULL));
+	
 	InitializeExitConfirmationWindow();
 	
 	handle_minute_tick(ctx, NULL);
