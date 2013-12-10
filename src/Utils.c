@@ -1,7 +1,4 @@
-#include "pebble_os.h"
-#include "pebble_app.h"
-#include "pebble_fonts.h"
-
+#include "pebble.h"
 #include "MiniDungeon.h"
 
 // Right justified
