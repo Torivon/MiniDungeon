@@ -299,14 +299,10 @@ void BattleExitWindow_SelectSingleClickHandler(ClickRecognizerRef recognizer, Wi
 	ShowMainBattleMenu();
 }
 
-void BattleExitWindowClickConfigProvider(ClickConfig **clickConfig, Window *window)
+void BattleExitWindowClickConfigProvider()
 {
-	(void)window;
-
-	clickConfig[BUTTON_ID_SELECT]->click.handler = (ClickHandler) BattleExitWindow_SelectSingleClickHandler;
+	window_single_click_subscribe(BUTTON_ID_SELECT, (ClickHandler) BattleExitWindow_SelectSingleClickHandler);
 }
-
-Window battleExitWindow;
 
 void BattleExitConfirmationDeinit(Window *window)
 {
@@ -316,15 +312,16 @@ void BattleExitConfirmationDeinit(Window *window)
 	}
 }
 
-static TextLayer exitText;
-static TextLayer yesText;
-static TextLayer noText;
+Window *battleExitWindow;
+static TextLayer *exitText;
+static TextLayer *yesText;
+static TextLayer *noText;
 
 void InitializeBattleExitConfirmationWindow(void)
 {
-	InitializeConfirmationWindow(&battleExitWindow, &exitText, &yesText, &noText);
-	battleExitWindow.window_handlers.unload = BattleExitConfirmationDeinit;
-	window_set_click_config_provider(&battleExitWindow, (ClickConfigProvider) BattleExitWindowClickConfigProvider);
+	battleExitWindow = InitializeConfirmationWindow(exitText, yesText, noText);
+	//battleExitWindow.window_handlers.unload = BattleExitConfirmationDeinit;
+	window_set_click_config_provider(battleExitWindow, (ClickConfigProvider) BattleExitWindowClickConfigProvider);
 	
 	BattleInit();
 	ShowMainBattleMenu();
@@ -334,6 +331,6 @@ void InitializeBattleExitConfirmationWindow(void)
 void RemoveConfirmationWindow(void)
 {
 #if (OVERRIDE_BACK_BUTTON == 0)
-	window_stack_remove(&battleExitWindow, false);
+	window_stack_remove(battleExitWindow, false);
 #endif
 }
