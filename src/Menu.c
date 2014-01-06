@@ -1,6 +1,4 @@
-#include "pebble_os.h"
-#include "pebble_app.h"
-#include "pebble_fonts.h"
+#include "pebble.h"
 
 #include "Menu.h"
 #include "UILayers.h"
@@ -23,7 +21,7 @@ MenuDefinition *currentMenuDef = NULL;
 
 typedef struct
 {
-	Window window;
+	Window *window;
 	bool inUse;
 	MenuDefinition *menu;
 } MenuWindow;
@@ -32,23 +30,25 @@ MenuWindow menuWindows[MAX_MENU_WINDOWS];
 
 void MenuInit(Window *window)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Menu init");
 }
 
 void MenuDeinit(Window *window)
 {
-	MenuWindow *menuWindow = window->user_data;
+	MenuWindow *menuWindow = window_get_user_data(window);
 	if(menuWindow)
 	{
 		menuWindow->inUse = false;
 		menuWindow->menu = NULL;
 	}
+	window_destroy(window);
 }
 
 void MenuAppear(Window *window)
 {
 	int i;
 	bool setSelected = false;
-	MenuWindow *menuWindow = window->user_data;
+	MenuWindow *menuWindow = window_get_user_data(window);
 	if(menuWindow)
 	{
 		SetCurrentMenu(menuWindow->menu);
@@ -133,13 +133,13 @@ void PushNewMenu(MenuDefinition *menuDef)
 		newMenuWindow->inUse = true;
 		newMenuWindow->menu = currentMenuDef;
 	
-		InitializeMenuWindow(&newMenuWindow->window, "Menu", currentMenuDef->animated, 
+		newMenuWindow->window = InitializeMenuWindow("Menu", currentMenuDef->animated, 
 			currentMenuDef->init ? currentMenuDef->init : MenuInit,
 			currentMenuDef->deinit ? currentMenuDef->deinit : MenuDeinit,
 			currentMenuDef->appear ? currentMenuDef->appear : MenuAppear,
 			currentMenuDef->disappear ? currentMenuDef->disappear : MenuDisappear);
-
-		newMenuWindow->window.user_data = newMenuWindow;
+			
+		window_set_user_data(newMenuWindow->window,newMenuWindow);
 	}
 }
 
@@ -147,6 +147,7 @@ void PushNewMenu(MenuDefinition *menuDef)
 
 void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Single Click Select");
 	MenuEntry *currentEntry;
 	if(!currentMenuDef)
 		return;
@@ -156,6 +157,7 @@ void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 		return;
 
 	currentEntry->menuFunction();
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "End Single Click Select");
 }
 
 void IterateMenuEntries(int direction, int limit)
@@ -214,20 +216,16 @@ void BackLongClickHandler(ClickRecognizerRef recognizer, Window *window)
 }
 #endif
 
-void MenuClickConfigProvider(ClickConfig **clickConfig, Window *window)
+void MenuClickConfigProvider(void *context)
 {
-	(void)window;
+	window_single_click_subscribe(BUTTON_ID_SELECT, (ClickHandler)SelectSingleClickHandler);
+	window_single_click_subscribe(BUTTON_ID_UP,(ClickHandler)UpSingleClickHandler);
+	window_single_click_subscribe(BUTTON_ID_DOWN,(ClickHandler)DownSingleClickHandler);
 
-	clickConfig[BUTTON_ID_SELECT]->click.handler = (ClickHandler) SelectSingleClickHandler;
-
-	clickConfig[BUTTON_ID_UP]->click.handler = (ClickHandler) UpSingleClickHandler;
-
-	clickConfig[BUTTON_ID_DOWN]->click.handler = (ClickHandler) DownSingleClickHandler;
 	
 #if OVERRIDE_BACK_BUTTON
-	clickConfig[BUTTON_ID_BACK]->click.handler = (ClickHandler) BackSingleClickHandler;
-	
-	clickConfig[BUTTON_ID_BACK]->long_click.handler = (ClickHandler) BackLongClickHandler;
+	window_single_click_subscribe(BUTTON_ID_BACK, (ClickHandler)BackSingleClickHandler);
+	window_long_click_subscribe(BUTTON_ID_BACK,500,(ClickHandler)BackLongClickHandler,NULL);
 #endif
 }
 

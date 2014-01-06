@@ -1,6 +1,4 @@
-#include "pebble_os.h"
-#include "pebble_app.h"
-#include "pebble_fonts.h"
+#include "pebble.h"
 
 #include "Adventure.h"
 #include "Battle.h"
@@ -72,6 +70,7 @@ void LoadRandomDungeonImage(void)
 
 void AdventureWindowAppear(Window *window)
 {
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Adventure appear floor %d",GetCurrentFloor());
 	MenuAppear(window);
 	ShowMainWindowRow(0, "Floor", UpdateFloorText());
 	adventureWindow = window;
