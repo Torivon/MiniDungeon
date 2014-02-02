@@ -3,6 +3,7 @@
 #include "Battle.h"
 #include "Character.h"
 #include "Items.h"
+#include "Logging.h"
 #include "Menu.h"
 #include "MiniDungeon.h"
 #include "Monsters.h"
@@ -19,8 +20,12 @@ void RemoveConfirmationWindow(void);
 void CloseBattleWindow(void)
 {
 	battleCleanExit = true;
-	RemoveConfirmationWindow();
 	PopMenu();
+}
+
+bool ClosingWhileInBattle(void)
+{
+	return !battleCleanExit;
 }
 
 static int currentFloor = 1;
@@ -40,8 +45,18 @@ int GetCurrentFloor(void)
 	return currentFloor;
 }
 
+void SetCurrentFloor(int newFloor)
+{
+	currentFloor = newFloor;
+}
+
 MonsterDef *currentMonster;
 int currentMonsterHealth;
+
+int GetCurrentMonsterHealth(void)
+{
+	return currentMonsterHealth;
+}
 
 int ApplyDefense(int baseDamage, int defense)
 {
@@ -196,9 +211,7 @@ MenuDefinition battleMainMenuDef =
 		{NULL, NULL, NULL},
 		{"Run", "Try to run away", AttemptToRun},
 	},
-#if OVERRIDE_BACK_BUTTON
 	.init = BattleWindowInit,
-#endif
 	.appear = BattleWindowAppear,
 	.disableBackButton = true,
 	.mainImageId = -1
@@ -267,11 +280,42 @@ int ComputeMonsterHealth(int level)
 	return ScaleMonsterHealth(currentMonster, baseHealth);
 }
 
+static bool forcedBattle = false;
+static int forcedBattleMonsterType = -1;
+static int forcedBattleMonsterHealth = 0;
+void ResumeBattle(int currentMonster, int currentMonsterHealth)
+{
+	if(currentMonster >= 0 && currentMonster < MonsterTypeCount() && currentMonsterHealth > 0)
+	{
+		forcedBattle = true;
+		forcedBattleMonsterType = currentMonster;
+		forcedBattleMonsterHealth = currentMonsterHealth;
+	}
+}
+
+bool IsBattleForced(void)
+{
+	return forcedBattle;
+}
+
 void BattleInit(void)
 {
-	currentMonster = GetRandomMonster(currentFloor);
+	currentMonster = NULL;
+	if(forcedBattle)
+	{
+		DEBUG_LOG("Starting forced battle with (%d,%d)", forcedBattleMonsterType, forcedBattleMonsterHealth);
+		currentMonster = GetFixedMonster(forcedBattleMonsterType);
+		currentMonsterHealth = forcedBattleMonsterHealth;	
+		forcedBattle = false;
+	}
+	
+	if(!currentMonster)
+	{
+		currentMonster = GetRandomMonster(currentFloor);
+		currentMonsterHealth = ComputeMonsterHealth(currentFloor);
+	}
+	
 	battleMainMenuDef.mainImageId = currentMonster->imageId;
-	currentMonsterHealth = ComputeMonsterHealth(currentFloor);
 	battleCleanExit = false;
 }
 
@@ -281,56 +325,7 @@ void BattleWindowInit(Window *window)
 	BattleInit();
 }
 
-void InitializeBattleExitConfirmationWindow(void);
-
 void ShowBattleWindow(void)
 {
-#if OVERRIDE_BACK_BUTTON
 	ShowMainBattleMenu();
-#else
-	InitializeBattleExitConfirmationWindow();
-#endif
-}
-
-//************************ Battle exit confirmation window ****************************//
-#if (OVERRIDE_BACK_BUTTON == 0)
-void BattleExitWindow_SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
-{
-	ShowMainBattleMenu();
-}
-
-void BattleExitWindowClickConfigProvider()
-{
-	window_single_click_subscribe(BUTTON_ID_SELECT, (ClickHandler) BattleExitWindow_SelectSingleClickHandler);
-}
-
-void BattleExitConfirmationDeinit(Window *window)
-{
-	if(!battleCleanExit)
-	{
-		ResetGame();
-	}
-}
-
-Window *battleExitWindow;
-static TextLayer *exitText;
-static TextLayer *yesText;
-static TextLayer *noText;
-
-void InitializeBattleExitConfirmationWindow(void)
-{
-	battleExitWindow = InitializeConfirmationWindow(exitText, yesText, noText);
-	//battleExitWindow.window_handlers.unload = BattleExitConfirmationDeinit;
-	window_set_click_config_provider(battleExitWindow, (ClickConfigProvider) BattleExitWindowClickConfigProvider);
-	
-	BattleInit();
-	ShowMainBattleMenu();
-}
-#endif
-
-void RemoveConfirmationWindow(void)
-{
-#if (OVERRIDE_BACK_BUTTON == 0)
-	window_stack_remove(battleExitWindow, false);
-#endif
 }

@@ -18,8 +18,12 @@ typedef struct
 	int goldScale : 4;
 } MonsterDef;
 
+int GetMostRecentMonster(void);
+
 int GetMonsterDefense(int defenseLevel);
 int ScaleMonsterHealth(MonsterDef *monster, int baseHealth);
 int GetMonsterPowerDivisor(int powerLevel);
 
+int MonsterTypeCount(void);
 MonsterDef *GetRandomMonster(int floor);
+MonsterDef *GetFixedMonster(int index);

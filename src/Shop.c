@@ -108,6 +108,16 @@ void ResetStatPointsPurchased(void)
 	statPointsPurchased = 0;
 }
 
+void SetStatPointsPurchased(int count)
+{
+	statPointsPurchased = count;
+}
+
+int GetStatPointsPurchased(void)
+{
+	return statPointsPurchased;
+}
+
 const char *UpdateStatCostText(void)
 {
 	static char costText[] = "0000"; // Needs to be static because it's used by the system later.

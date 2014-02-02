@@ -33,6 +33,16 @@ int randomItemTable[] =
 
 int itemsOwned[ITEM_TYPE_COUNT];
 
+int *GetItemsOwned(void)
+{
+	return itemsOwned;
+}
+
+int GetSizeOfItemsOwned(void)
+{
+	return sizeof(itemsOwned);
+}
+
 const char *UpdateItemCountText(ItemType itemType)
 {
 #if BOUNDS_CHECKING

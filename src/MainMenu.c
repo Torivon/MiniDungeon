@@ -90,9 +90,19 @@ bool GetVibration(void)
 	return vibration;
 }
 
+void SetVibration(bool enable)
+{
+	vibration = enable;
+}
+
 bool GetFastMode(void)
 {
 	return fastMode;
+}
+
+void SetFastMode(bool enable)
+{
+	fastMode = enable;
 }
 
 void ToggleFastMode(void)

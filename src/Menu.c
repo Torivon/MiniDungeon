@@ -1,5 +1,6 @@
 #include "pebble.h"
 
+#include "Logging.h"
 #include "Menu.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -30,7 +31,7 @@ MenuWindow menuWindows[MAX_MENU_WINDOWS];
 
 void MenuInit(Window *window)
 {
-	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Menu init");
+	DEBUG_LOG("Menu init");
 }
 
 void MenuDeinit(Window *window)
@@ -133,13 +134,11 @@ void PushNewMenu(MenuDefinition *menuDef)
 		newMenuWindow->inUse = true;
 		newMenuWindow->menu = currentMenuDef;
 	
-		newMenuWindow->window = InitializeMenuWindow("Menu", currentMenuDef->animated, 
+		newMenuWindow->window = InitializeMenuWindow(newMenuWindow, "Menu", currentMenuDef->animated, 
 			currentMenuDef->init ? currentMenuDef->init : MenuInit,
 			currentMenuDef->deinit ? currentMenuDef->deinit : MenuDeinit,
 			currentMenuDef->appear ? currentMenuDef->appear : MenuAppear,
 			currentMenuDef->disappear ? currentMenuDef->disappear : MenuDisappear);
-			
-		window_set_user_data(newMenuWindow->window,newMenuWindow);
 	}
 }
 
@@ -147,7 +146,7 @@ void PushNewMenu(MenuDefinition *menuDef)
 
 void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Single Click Select");
+	DEBUG_LOG("Single Click Select");
 	MenuEntry *currentEntry;
 	if(!currentMenuDef)
 		return;
@@ -157,7 +156,7 @@ void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 		return;
 
 	currentEntry->menuFunction();
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "End Single Click Select");
+	DEBUG_LOG("End Single Click Select");
 }
 
 void IterateMenuEntries(int direction, int limit)
@@ -201,7 +200,6 @@ void DownSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 	IterateMenuEntries(1, MAX_MENU_ENTRIES-1);
 }
 
-#if OVERRIDE_BACK_BUTTON
 void BackSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
 	if(currentMenuDef && currentMenuDef->disableBackButton)
@@ -210,23 +208,13 @@ void BackSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 	PopMenu();
 }
 
-void BackLongClickHandler(ClickRecognizerRef recognizer, Window *window)
-{
-	window_stack_pop_all(true);
-}
-#endif
-
 void MenuClickConfigProvider(void *context)
 {
 	window_single_click_subscribe(BUTTON_ID_SELECT, (ClickHandler)SelectSingleClickHandler);
 	window_single_click_subscribe(BUTTON_ID_UP,(ClickHandler)UpSingleClickHandler);
 	window_single_click_subscribe(BUTTON_ID_DOWN,(ClickHandler)DownSingleClickHandler);
 
-	
-#if OVERRIDE_BACK_BUTTON
 	window_single_click_subscribe(BUTTON_ID_BACK, (ClickHandler)BackSingleClickHandler);
-	window_long_click_subscribe(BUTTON_ID_BACK,500,(ClickHandler)BackLongClickHandler,NULL);
-#endif
 }
 
 void SetMenuClickConfigProvider(Window *window)

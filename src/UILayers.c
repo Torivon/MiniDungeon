@@ -1,5 +1,6 @@
 #include "pebble.h"
 
+#include "Logging.h"
 #include "Menu.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -144,6 +145,7 @@ void LoadBackgroundImage(Window *window, int id)
 //		Floor/Number
 //		item name / count
 
+GBitmap *mainImageBitmap;
 BitmapLayer *mainImage;
 GRect mainFrame = {.origin = {.x = 5, .y = 25}, .size = {.w = 80, .h = 80}};
 static bool mainImageLoaded = false;
@@ -213,8 +215,13 @@ void UnloadMainBmpImage(void)
 {
 	if(!mainImageLoaded)
 		return;
+	
+	DEBUG_LOG("Removing resourceId %d.", mainImageResourceLoaded);
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
 	bitmap_layer_destroy(mainImage);
+	gbitmap_destroy(mainImageBitmap);
+	mainImage = NULL;
+	mainImageBitmap = NULL;
 	mainImageLoaded = false;
 	mainImageResourceLoaded = -1;
 }
@@ -227,22 +234,33 @@ void LoadMainBmpImage(Window *window, int id)
 	
 	Layer *window_layer = window_get_root_layer(window);
 	
+#if DISABLE_MENU_BMPS
+	return;
+#endif
+	
 	if(!window)
+	{
+		DEBUG_LOG("Skipping image load due to window not yet available.");
 		return;
+	}
 		
 	if(mainImageLoaded)
 	{
 		if(mainImageResourceLoaded == resourceId)
 		{
+			DEBUG_LOG("Resource %d already loaded.", resourceId);
 			layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 			return; // already loaded the correct one.
 		}
+		DEBUG_LOG("Unloading resourceId %d.", mainImageResourceLoaded);
 		UnloadMainBmpImage();
 	}
 	
-	GBitmap *image = gbitmap_create_with_resource(resourceId);
+	DEBUG_LOG("Loading resourceId %d.", resourceId);
+
+	mainImageBitmap = gbitmap_create_with_resource(resourceId);
 	mainImage = bitmap_layer_create(mainFrame);
-	bitmap_layer_set_bitmap(mainImage, image);
+	bitmap_layer_set_bitmap(mainImage, mainImageBitmap);
 	bitmap_layer_set_alignment(mainImage, GAlignCenter);
 	layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 	mainImageLoaded = true;
@@ -402,72 +420,26 @@ void WindowDisappear(Window *window)
 
 Window * InitializeWindow(const char *name, bool animated)
 {
-	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Creating window %s",name);
+	DEBUG_LOG("Creating window %s",name);
 	Window *window = window_create();
 	window_set_fullscreen(window, true); // Do I want full screen?
 	window_set_background_color(window, GColorBlack);
-	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "Window %s created",name);
+	DEBUG_LOG("Window %s created",name);
 	return window;		
 }
 
-Window * InitializeMenuWindow(const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear)
+Window * InitializeMenuWindow(void *menuWindow, const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear)
 {
 	Window *window = InitializeWindow(name, animated);
 	WindowHandlers handlers = {.load = init, .unload = deinit, .appear = appear, .disappear = disappear};
 	window_set_window_handlers(window,handlers);
 	
 	SetMenuClickConfigProvider(window);
+	window_set_user_data(window,menuWindow);
 	window_stack_push(window, animated);
 	return window;
 }
 
-//************************ Exit confirmation window ****************************//
-
-void ExitWindow_SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
-{
-	ShowAdventureWindow();
-}
-
-void ExitWindowClickConfigProvider()
-{
-	window_single_click_subscribe(BUTTON_ID_SELECT,(ClickHandler) ExitWindow_SelectSingleClickHandler);
-}
-
-GRect exitFrame = {.origin = {.x = 0, .y = 50}, .size = {.w = 144, .h = 168-50}};
-GRect yesFrame = {.origin = {.x = 5, .y = 30}, .size = {.w = 50, .h = 20}};
-GRect noFrame = {.origin = {.x = 115, .y = 78}, .size = {.w = 24, .h = 20}};
-
-Window * InitializeConfirmationWindow(TextLayer *exitText, TextLayer *yesText, TextLayer *noText)
-{
-	Window *window = InitializeWindow("Exit", true);
-	window_stack_push(window, true);
-	Layer *window_layer = window_get_root_layer(window);
-	
-	exitText = InitializeTextLayer(exitFrame, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
-	text_layer_set_text(exitText, "Exit?");
-	text_layer_set_text_alignment(exitText, GTextAlignmentCenter);
-	layer_add_child(window_layer, text_layer_get_layer(exitText));
-
-	yesText = InitializeTextLayer(yesFrame, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
-	text_layer_set_text(yesText, "Yes");
-	layer_add_child(window_layer, text_layer_get_layer(yesText));
-
-	noText = InitializeTextLayer(noFrame, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
-	text_layer_set_text(noText, "No");
-	layer_add_child(window_layer, text_layer_get_layer(noText));
-	return window;
-}
-
-Window *confirmationWindow;
-static TextLayer *exitText;
-static TextLayer *yesText;
-static TextLayer *noText;
-
-void InitializeExitConfirmationWindow(void)
-{
-	confirmationWindow = InitializeConfirmationWindow(exitText, yesText, noText);
-	window_set_click_config_provider(confirmationWindow, (ClickConfigProvider) ExitWindowClickConfigProvider);
-}
 void UnloadTextLayers(void) {
 	for(int i = 0; i < MAX_MENU_ENTRIES ; i++) {
 		if(!menuLayers[i])
@@ -484,9 +456,6 @@ void UnloadTextLayers(void) {
 	}
 	text_layer_destroy(maxHealthLayer);
 	text_layer_destroy(currentHealthLayer);
-	text_layer_destroy(exitText);
-	text_layer_destroy(yesText);
-	text_layer_destroy(noText);
 	text_layer_destroy(clockLayer);
 	text_layer_destroy(levelLayer);
 }

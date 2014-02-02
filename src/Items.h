@@ -10,6 +10,9 @@ typedef enum
 	ITEM_TYPE_COUNT
 } ItemType;
 
+int *GetItemsOwned(void);
+int GetSizeOfItemsOwned(void);
+
 void ShowItemGainWindow(void);
 void ShowMainItemMenu(void);
 

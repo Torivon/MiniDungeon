@@ -27,10 +27,9 @@ void IntToString(char *buffer, size_t bufferSize, int value)
 	}
 }
 
-// Pulled from the pebble developer forums
-// forums.getpebble.com/discussion/comment/28908/#comment_28908
+// Returns an integer in the range [1,max]
 int Random(int max)
 {
-	return (uint16_t)(rand() % max);
+	return (uint16_t)(rand() % max) + 1;
 }
 

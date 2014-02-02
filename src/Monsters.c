@@ -1,8 +1,16 @@
 #include "pebble.h"
 
+#include "Logging.h"
 #include "Monsters.h"
 #include "Utils.h"
 
+int mostRecentMonster = -1;
+
+int GetMostRecentMonster(void)
+{
+	return mostRecentMonster;
+}
+	
 MonsterDef Rat = 
 {
 	.name = "Rat",
@@ -165,16 +173,30 @@ MonsterDef *randomMonsterMap[] =
 	&Lich,
 };
 
+int MonsterTypeCount(void)
+{
+	int count = sizeof(randomMonsterMap) / sizeof(MonsterDef*);
+	return count;
+}
+
 MonsterDef *GetRandomMonster(int floor)
 {
-	int result;
 	int limit;
 	if(floor >= 20)
 		return &Dragon;
 	
 	limit = floor >= 12 ? 6 : (floor + 1) / 2;
 	
-	result = Random(limit);
-	return randomMonsterMap[result];
+	mostRecentMonster = Random(limit);
+	return randomMonsterMap[mostRecentMonster];
 }
 
+MonsterDef *GetFixedMonster(int index)
+{
+	if(index >= 0 && index < MonsterTypeCount())
+	{
+		mostRecentMonster = index;
+		return randomMonsterMap[index];
+	}
+	return NULL;
+}

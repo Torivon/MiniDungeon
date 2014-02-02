@@ -4,7 +4,9 @@
 #include "Battle.h"
 #include "Character.h"
 #include "Items.h"
+#include "Logging.h"
 #include "Menu.h"
+#include "Persistence.h"
 #include "Shop.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -17,6 +19,12 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 	UpdateAdventure();
 }
 
+void InitializeGameData(void)
+{
+	if(!LoadPersistedData())
+		ResetGame();
+}
+
 void ResetGame(void)
 {
 #if ALLOW_STAT_SHOP
@@ -25,31 +33,34 @@ void ResetGame(void)
 	InitializeCharacter();
 	ResetFloor();
 	ClearInventory();
+	
+	SavePersistedData();
 }
 
 void handle_init() {
 	
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Start MiniDungeon");
+	DEBUG_LOG("Start MiniDungeon");
 	time_t now = time(NULL);
-	struct tm *current_time = localtime(&now);
 	
 	srand(now);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Srand");
-	InitializeExitConfirmationWindow();
+	DEBUG_LOG("Srand");
+//	InitializeExitConfirmationWindow();
 	
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "exit window initialized");
+	DEBUG_LOG("exit window initialized");
 	
 	handle_minute_tick(NULL, MINUTE_UNIT);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "First handle second");
+	DEBUG_LOG("First handle second");
 	
-	ResetGame();
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Reset Game");
+	InitializeGameData();
+	DEBUG_LOG("InitializeGameData");
 	ShowAdventureWindow();
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Show adventure window");
+	DEBUG_LOG("Show adventure window");
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
 
-void handle_deinit() {
+void handle_deinit() 
+{
+	SavePersistedData();
 	UnloadBackgroundImage();
 	UnloadMainBmpImage();
 	UnloadTextLayers();
