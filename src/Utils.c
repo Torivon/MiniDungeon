@@ -1,4 +1,6 @@
 #include "pebble.h"
+
+#include "Logging.h"
 #include "MiniDungeon.h"
 
 // Right justified
@@ -8,6 +10,8 @@ void IntToString(char *buffer, size_t bufferSize, int value)
 	int digit;
 	int temp = value;
 
+	DEBUG_VERBOSE_LOG("IntToString(%d)", value);
+	
 	do
 	{
 		digit = temp % 10;
@@ -30,6 +34,8 @@ void IntToString(char *buffer, size_t bufferSize, int value)
 // Returns an integer in the range [1,max]
 int Random(int max)
 {
-	return (uint16_t)(rand() % max) + 1;
+	int result = (uint16_t)(rand() % max) + 1;
+	DEBUG_VERBOSE_LOG("Random(%d)=%d", max, result);
+	return result;
 }
 

@@ -69,6 +69,7 @@ void LoadRandomDungeonImage(void)
 
 void AdventureWindowAppear(Window *window)
 {
+	INFO_LOG("Back to the adventure.");
 	DEBUG_LOG("Adventure appear floor %d",GetCurrentFloor());
 	MenuAppear(window);
 	ShowMainWindowRow(0, "Floor", UpdateFloorText());
@@ -88,6 +89,7 @@ void AdventureWindowDisappear(Window *window)
 
 void ShowAdventureWindow(void)
 {
+	INFO_LOG("Adventure Window");
 	PushNewMenu(&adventureMenuDef);
 }
 
@@ -167,6 +169,7 @@ void UpdateAdventure(void)
 	
 	if(IsBattleForced())
 	{
+		INFO_LOG("Triggering forced battle.");
 		ShowBattleWindow();
 		return;
 	}

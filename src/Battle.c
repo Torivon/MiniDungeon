@@ -19,6 +19,7 @@ void RemoveConfirmationWindow(void);
 
 void CloseBattleWindow(void)
 {
+	INFO_LOG("Ending battle.");
 	battleCleanExit = true;
 	PopMenu();
 }
@@ -106,6 +107,7 @@ void BattleUpdate(void)
 {
 	if(currentMonsterHealth <= 0)
 	{
+		INFO_LOG("Player wins.");
 		CloseBattleWindow();
 		GrantGold(currentFloor * currentMonster->goldScale);
 		if(currentFloor == 20)
@@ -160,6 +162,7 @@ void AttemptToRun(void)
 			
 	if(runCheck == 3 && currentFloor < 20) // if floor is >= 20 you are fighting the dragon
 	{
+		INFO_LOG("Player runs.");
 		CloseBattleWindow();
 		IncrementEscapes();
 		return;
@@ -219,6 +222,7 @@ MenuDefinition battleMainMenuDef =
 
 void ShowMainBattleMenu(void)
 {
+	INFO_LOG("Entering battle.");
 	PushNewMenu(&battleMainMenuDef);
 }
 

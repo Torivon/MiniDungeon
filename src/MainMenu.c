@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Battle.h"
 #include "Items.h"
+#include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
 #include "Shop.h"
@@ -160,5 +161,6 @@ void MainMenuWindowAppear(Window *window)
 
 void ShowMainMenu(void)
 {
+	INFO_LOG("Entering main menu. Game paused.");
 	PushNewMenu(&mainMenuDef);
 }

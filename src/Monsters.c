@@ -198,5 +198,7 @@ MonsterDef *GetFixedMonster(int index)
 		mostRecentMonster = index;
 		return randomMonsterMap[index];
 	}
+	
+	ERROR_LOG("Monster type %d is out of range.", index);
 	return NULL;
 }

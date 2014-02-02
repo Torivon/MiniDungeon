@@ -26,7 +26,7 @@ enum
 	PERSISTED_MONSTER_TYPE,
 	PERSISTED_MONSTER_HEALTH,
 	
-	// This need to always be last
+	// This needs to always be last
 	PERSISTED_DATA_COUNT
 };
 
@@ -63,21 +63,24 @@ bool SavePersistedData(void)
 	CharacterData *characterData;
 
 	if(!IsPersistedDataCurrent())
-		ClearPersistedData();	
+	{
+		WARNING_LOG("Persisted data does not match current version, clearing.");
+		ClearPersistedData();
+	}
 	
 	if(sizeof(CharacterData) > PERSIST_DATA_MAX_LENGTH )
 	{
-		// Log this
+		ERROR_LOG("CharacterData is too big to save (%d).", sizeof(CharacterData));
 		return false;
 	}
 
-	if(sizeof(GetSizeOfItemsOwned()) > PERSIST_DATA_MAX_LENGTH )
+	if(GetSizeOfItemsOwned() > PERSIST_DATA_MAX_LENGTH )
 	{
-		// Log this
+		ERROR_LOG("Item data is too big to save (%d).", GetSizeOfItemsOwned());
 		return false;
 	}
 
-	DEBUG_LOG("Saving persisted data.");
+	INFO_LOG("Saving persisted data.");
 	persist_write_bool(PERSISTED_IS_DATA_SAVED, true);
 	persist_write_int(PERSISTED_CURRENT_DATA_VERSION, CURRENT_DATA_VERSION);
 	persist_write_int(PERSISTED_MAX_KEY_USED, MAX_PERSISTED_KEY);
@@ -110,11 +113,12 @@ bool LoadPersistedData(void)
 		
 	if(!IsPersistedDataCurrent())
 	{
+		WARNING_LOG("Persisted data does not match current version, clearing.");
 		ClearPersistedData();
 		return false;
 	}
 
-	DEBUG_LOG("Loading persisted data.");
+	INFO_LOG("Loading persisted data.");
 	characterData = GetCharacter();
 	persist_read_data(PERSISTED_CHARACTER_DATA, characterData, sizeof(CharacterData));
 	floor = persist_read_int(PERSISTED_CURRENT_FLOOR);
@@ -133,6 +137,8 @@ bool LoadPersistedData(void)
 	if(characterData->level == 0)
 	{
 		// Something bad happened to the data, possible due to a watch crash
+		ERROR_LOG("Persisted data was broken somehow, clearing");
+		ClearPersistedData();
 		return false;
 	}
 	return true;

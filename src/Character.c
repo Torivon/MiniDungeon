@@ -4,6 +4,7 @@
 #include "Battle.h"
 #include "Character.h"
 #include "Items.h"
+#include "Logging.h"
 #include "Menu.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -78,6 +79,7 @@ int ComputeXPForNextLevel(int level)
 
 void InitializeCharacter(void)
 {
+	INFO_LOG("Initializing character.");
 	characterData.xp = 0;
 	characterData.level = 1;
 	characterData.gold = 0;
@@ -262,6 +264,7 @@ void IncrementMagicDefense(void)
 
 void LevelUp(void)
 {
+	INFO_LOG("Level up.");
 	statPointsToSpend += STAT_POINTS_PER_LEVEL;
 	++characterData.level;
 	characterData.xpForNextLevel += ComputeXPForNextLevel(characterData.level);

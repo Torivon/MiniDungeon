@@ -2,6 +2,7 @@
 
 #include "Character.h"
 #include "Items.h"
+#include "Logging.h"
 #include "Menu.h"
 #include "Adventure.h"
 #include "UILayers.h"
@@ -138,6 +139,7 @@ void ItemGainMenuInit(Window *window)
 
 void ShowItemGainWindow(void)
 {
+	INFO_LOG("Item gained.");
 	PushNewMenu(&itemGainMenuDef);
 }
 

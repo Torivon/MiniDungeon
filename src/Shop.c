@@ -2,6 +2,7 @@
 
 #include "Character.h"
 #include "Items.h"
+#include "Logging.h"
 #include "Menu.h"
 #include "MiniDungeon.h"
 #include "Shop.h"
@@ -195,6 +196,7 @@ void ShopMenuWindowAppear(Window *window)
 
 void ShowShopWindow(void)
 {
+	INFO_LOG("Entering shop.");
 	PushNewMenu(&shopMenuDef);
 }
 #endif //ALLOW_SHOP

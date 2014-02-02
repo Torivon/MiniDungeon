@@ -39,14 +39,11 @@ void ResetGame(void)
 
 void handle_init() {
 	
-	DEBUG_LOG("Start MiniDungeon");
+	INFO_LOG("Starting MiniDungeon");
 	time_t now = time(NULL);
 	
 	srand(now);
 	DEBUG_LOG("Srand");
-//	InitializeExitConfirmationWindow();
-	
-	DEBUG_LOG("exit window initialized");
 	
 	handle_minute_tick(NULL, MINUTE_UNIT);
 	DEBUG_LOG("First handle second");
@@ -54,12 +51,12 @@ void handle_init() {
 	InitializeGameData();
 	DEBUG_LOG("InitializeGameData");
 	ShowAdventureWindow();
-	DEBUG_LOG("Show adventure window");
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
 
 void handle_deinit() 
 {
+	INFO_LOG("Cleaning up on exit.");
 	SavePersistedData();
 	UnloadBackgroundImage();
 	UnloadMainBmpImage();
