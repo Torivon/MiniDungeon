@@ -107,6 +107,7 @@ void HideAllMenuLayers(void)
 //******** Background *********//
 // backgroundImage holds the frame for all other UI elements
 BitmapLayer *backgroundImage;
+GBitmap *backgroundBitmap;
 static bool backgroundLoaded = false;
 
 void UnloadBackgroundImage(void)
@@ -114,6 +115,9 @@ void UnloadBackgroundImage(void)
 	if(!backgroundLoaded)
 		return;
 	bitmap_layer_destroy(backgroundImage);
+	backgroundImage = NULL;
+	gbitmap_destroy(backgroundBitmap);
+	backgroundBitmap = NULL;
 	backgroundLoaded = false;
 }
 
@@ -128,9 +132,9 @@ void LoadBackgroundImage(Window *window, int id)
     GRect bounds = layer_get_frame(window_layer);
 	if(!backgroundLoaded)
 	{
-		GBitmap *image = gbitmap_create_with_resource(id);
+		backgroundBitmap = gbitmap_create_with_resource(id);
 		backgroundImage = bitmap_layer_create(bounds);
-		bitmap_layer_set_bitmap(backgroundImage, image);
+		bitmap_layer_set_bitmap(backgroundImage, backgroundBitmap);
 		bitmap_layer_set_alignment(backgroundImage, GAlignLeft);
 		backgroundLoaded = true;
 	}

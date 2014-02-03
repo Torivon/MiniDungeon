@@ -1,9 +1,9 @@
 {
-    "versionLabel": "1.0",
+    "versionLabel": "2.0.1",
     "uuid": "79206a03-76a9-452f-b320-f2a7fc9850ec",
     "appKeys": {},
     "longName": "MiniDungeon",
-    "versionCode": 1,
+    "versionCode": 3,
     "capabilities": [
         ""
     ],
