@@ -9,27 +9,37 @@
 #include "Persistence.h"
 #include "Shop.h"
 	
-#define CURRENT_DATA_VERSION 2
+#define CURRENT_DATA_VERSION 3
+
+#define NUMBER_OF_PERSISTED_GAMES 2
+
 enum
 {
 	PERSISTED_IS_DATA_SAVED = 0,
 	PERSISTED_CURRENT_DATA_VERSION,
 	PERSISTED_MAX_KEY_USED,
+	PERSISTED_VIBRATION,
+	PERSISTED_GLOBAL_DATA_COUNT,
+};
+
+enum
+{
+	PERSISTED_GAME_DATA_IS_SAVED = 0,
+	PERSISTED_GAME_DATA_VERSION,
 	PERSISTED_CHARACTER_DATA,
-	PERSISTED_CURRENT_FLOOR,
+	PERSISTED_STORY_DATA,
 	PERSISTED_ITEM_DATA,
 	PERSISTED_STAT_POINTS_PURCHASED,
-	PERSISTED_VIBRATION,
-	PERSISTED_FAST_MODE,
 	
 	PERSISTED_IN_COMBAT,
 	PERSISTED_MONSTER_TYPE,
 	PERSISTED_MONSTER_HEALTH,
 	
 	// This needs to always be last
-	PERSISTED_DATA_COUNT
+	PERSISTED_GAME_DATA_COUNT
 };
 
+#define PERSISTED_DATA_COUNT PERSISTED_GLOBAL_DATA_COUNT + NUMBER_OF_PERSISTED_GAMES * PERSISTED_GAME_DATA_COUNT
 #define MAX_PERSISTED_KEY PERSISTED_DATA_COUNT - 1
 
 bool IsPersistedDataCurrent(void)
@@ -60,8 +70,10 @@ void ClearPersistedData(void)
 	
 bool SavePersistedData(void)
 {
-	CharacterData *characterData;
+	return false; //Temporary
 
+/*	
+	CharacterData *characterData;
 	if(!IsPersistedDataCurrent())
 	{
 		WARNING_LOG("Persisted data does not match current version, clearing.");
@@ -102,10 +114,14 @@ bool SavePersistedData(void)
 	persist_write_int(PERSISTED_MONSTER_HEALTH, GetCurrentMonsterHealth());
 	
 	return true;
+	*/
 }
 
 bool LoadPersistedData(void)
 {
+	return false; //temporary
+	
+	/*
 	CharacterData *characterData;
 	int floor = 0;
 	if(!persist_exists(PERSISTED_IS_DATA_SAVED) || !persist_read_bool(PERSISTED_IS_DATA_SAVED))
@@ -142,4 +158,5 @@ bool LoadPersistedData(void)
 		return false;
 	}
 	return true;
+	*/
 }

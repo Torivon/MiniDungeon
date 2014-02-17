@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include "Persistence.h"
 #include "Shop.h"
+#include "TitleMenu.h"
 #include "UILayers.h"
 #include "Utils.h"
 
@@ -31,7 +32,6 @@ void ResetGame(void)
 	ResetStatPointsPurchased();
 #endif
 	InitializeCharacter();
-	ResetFloor();
 	ClearInventory();
 	
 	SavePersistedData();
@@ -39,10 +39,9 @@ void ResetGame(void)
 
 void handle_init() {
 	
-	INFO_LOG("Starting MiniDungeon");
-	time_t now = time(NULL);
+	INFO_LOG("Starting MiniAdventure");
 	
-	srand(now);
+	SeedRandom();
 	DEBUG_LOG("Srand");
 	
 	handle_minute_tick(NULL, MINUTE_UNIT);
@@ -50,7 +49,7 @@ void handle_init() {
 	
 	InitializeGameData();
 	DEBUG_LOG("InitializeGameData");
-	ShowAdventureWindow();
+	ShowTitleMenu();
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
 

@@ -8,30 +8,63 @@
 #include "MainMenu.h"
 #include "Menu.h"
 #include "Shop.h"
+#include "Story.h"
 #include "UILayers.h"
 #include "Utils.h"
-
-const char *UpdateFloorText(void)
-{
-	static char floorText[] = "00"; // Needs to be static because it's used by the system later.
-	IntToString(floorText, 2, GetCurrentFloor());
-	return floorText;
-}
 
 int updateDelay = 0;
 bool adventureWindowVisible = false;
 
 void AdventureWindowAppear(Window *window);
 void AdventureWindowDisappear(Window *window);
+void LoadLocationImage(void);
 
+void RefreshAdventure(void)
+{
+	ShowMainWindowRow(0, GetCurrentLocationName(), "");
+	UpdateCharacterHealth();
+	UpdateCharacterLevel();
+	updateDelay = 1;
+	LoadLocationImage();
+}
+
+void FollowFirstPath(void)
+{
+	DEBUG_LOG("Trying to follow first path");
+	if(!IsCurrentLocationPath())
+	{
+		SetNewLocation(GetCurrentAdjacentLocationIndex(0));
+		RefreshAdventure();
+	}
+}
+
+void EndPath(void)
+{
+	SetNewLocation(GetCurrentDestinationIndex());
+	RefreshAdventure();
+}
+
+bool UpdatePath(void)
+{
+	IncrementCurrentDuration();
+	DEBUG_LOG("Time in current location: %d/%d.", GetCurrentDuration(), GetCurrentLocationLength());
+	if(GetCurrentDuration() >= GetCurrentLocationLength())
+	{
+		EndPath();
+		return true;
+	}
+	
+	return false;
+}
+ 
 MenuDefinition adventureMenuDef = 
 {
 	.menuEntries = 
 	{
 		{"Main", "Open the main menu", ShowMainMenu},
+		{"Leave", "Follow a path", FollowFirstPath}, // Debug: If this is a fixed location, travel along path 0
+		{"Shop", "Visit a shop", ShowShopWindow}, // Debug: This should not be here on paths
 #if ALLOW_TEST_MENU
-		{NULL, NULL, NULL},
-		{NULL, NULL, NULL},
 		{NULL, NULL, NULL},
 		{NULL, NULL, NULL},
 		{"", "", ShowTestMenu}
@@ -45,39 +78,20 @@ MenuDefinition adventureMenuDef =
 
 Window *adventureWindow = NULL;
 
-void LoadRandomDungeonImage(void)
+void LoadLocationImage(void)
 {
-#if ALLOW_RANDOM_DUNGEON_GRAPHICS		
-	int result;
-#endif
-	
-#if ALLOW_RANDOM_DUNGEON_GRAPHICS		
-	result = Random(12);
-	if(result < 6)
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT;
-	else if(result < 9)
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONLEFT;
-	else if(result < 12)
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT;
-	else
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONDEADEND;
-#endif
-
+	adventureMenuDef.mainImageId = GetCurrentBackgroundImage();
 	if(adventureWindow)
 		LoadMainBmpImage(adventureWindow, adventureMenuDef.mainImageId);
 }
 
 void AdventureWindowAppear(Window *window)
 {
-	INFO_LOG("Back to the adventure.");
-	DEBUG_LOG("Adventure appear floor %d",GetCurrentFloor());
+	INFO_LOG("Adventure window: %s", GetCurrentLocationName());
 	MenuAppear(window);
-	ShowMainWindowRow(0, "Floor", UpdateFloorText());
 	adventureWindow = window;
-	UpdateCharacterHealth();
-	UpdateCharacterLevel();
-	updateDelay = 1;
 	adventureWindowVisible = true;
+	RefreshAdventure();
 }
 
 void AdventureWindowDisappear(Window *window)
@@ -101,47 +115,23 @@ typedef struct
 	int weight;
 } RandomTableEntry;
 
-#if ALLOW_SHOP
 // These should add up to 100
 RandomTableEntry entries[] = 
 {
-	{ShowItemGainWindow, 44},
-	{ShowBattleWindow, 44},
-	{ShowNewFloorWindow, 9},
-	{ShowShopWindow, 3}
+	{ShowBattleWindow, 100},
 };
-#else
-// These should add up to 100
-RandomTableEntry entries[] = 
-{
-	{ShowItemGainWindow, 40},
-	{ShowBattleWindow, 50},
-	{ShowNewFloorWindow, 10}
-};
-#endif
 
-static int baseChanceOfEvent = 35;
-#if EVENT_CHANCE_SCALING
-static int ticksSinceLastEvent = 0;
-#endif
-
-bool ComputeRandomEvent(bool fastMode)
+bool ComputeRandomEvent(void)
 {
-	int result = Random(100);
+	int result = Random(100) + 1;
 	int i = 0;
 	int acc = 0;
-	int chanceOfEvent = baseChanceOfEvent;
-#if EVENT_CHANCE_SCALING
-	if(ticksSinceLastEvent > 20)
-	{
-		chanceOfEvent += (ticksSinceLastEvent - 20) * 2;
-	}
-#endif
+	int chanceOfEvent = GetCurrentLocationEncounterChance();
 	
-	if(!fastMode && result > chanceOfEvent)
+	if(result > chanceOfEvent)
 		return false;
 		
-	result = Random(100);
+	result = Random(100) + 1;
 	
 	do
 	{
@@ -152,9 +142,6 @@ bool ComputeRandomEvent(bool fastMode)
 				vibes_short_pulse();
 			if(entries[i].windowFunction)
 				entries[i].windowFunction();
-#if EVENT_CHANCE_SCALING
-			ticksSinceLastEvent = 0;
-#endif
 			break;
 		}
 		++i;      
@@ -174,46 +161,17 @@ void UpdateAdventure(void)
 		return;
 	}
 
-#if EVENT_CHANCE_SCALING
-	++ticksSinceLastEvent;
-#endif
-	if(updateDelay && !GetFastMode())
+	if(updateDelay)
 	{
 		--updateDelay;
 		return;
 	}
-
-	ComputeRandomEvent(GetFastMode());
-	LoadRandomDungeonImage();
-}
-
-void NewFloorMenuInit(Window *window);
-void NewFloorMenuAppear(Window *window);
-
-MenuDefinition newFloorMenuDef = 
-{
-	.menuEntries = 
+	
+	if(IsCurrentLocationPath())
 	{
-		{"Ok", "Return to adventuring", PopMenu}
-	},
-	.init = NewFloorMenuInit,
-	.appear = NewFloorMenuAppear,
-	.mainImageId = RESOURCE_ID_IMAGE_NEWFLOOR
-};
-
-void NewFloorMenuInit(Window *window)
-{
-	MenuInit(window);
-	IncrementFloor();
-}
-
-void NewFloorMenuAppear(Window *window)
-{
-	MenuAppear(window);
-	ShowMainWindowRow(0, "New Floor", UpdateFloorText());
-}
-
-void ShowNewFloorWindow(void)
-{
-	PushNewMenu(&newFloorMenuDef);
+		if(UpdatePath())
+			return;
+		ComputeRandomEvent();
+		LoadLocationImage();
+	}
 }

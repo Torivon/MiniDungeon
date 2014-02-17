@@ -2,7 +2,7 @@
 
 #include "Character.h"
 
-typedef struct
+typedef struct MonsterDef
 {
 	const char *name;
 	int imageId : 6;
@@ -16,6 +16,7 @@ typedef struct
 	int defenseLevel : 3;
 	int magicDefenseLevel : 3;
 	int goldScale : 4;
+	bool preventRun : 1;
 } MonsterDef;
 
 int GetMostRecentMonster(void);
@@ -23,7 +24,3 @@ int GetMostRecentMonster(void);
 int GetMonsterDefense(int defenseLevel);
 int ScaleMonsterHealth(MonsterDef *monster, int baseHealth);
 int GetMonsterPowerDivisor(int powerLevel);
-
-int MonsterTypeCount(void);
-MonsterDef *GetRandomMonster(int floor);
-MonsterDef *GetFixedMonster(int index);

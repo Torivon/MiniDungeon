@@ -71,13 +71,11 @@ void ShowTestMenu(void)
 //************* Main Menu *****************//
 
 static bool vibration = true;
-static int fastMode = false;
 
 void DrawOptionsMenu(void)
 {
 	ShowMainWindowRow(0, "Options", "");
 	ShowMainWindowRow(1, "Vibration", vibration ? "On" : "Off");
-	ShowMainWindowRow(2, "Fast Mode", fastMode ? "On" : "Off");
 }
 
 void ToggleVibration(void)
@@ -96,22 +94,6 @@ void SetVibration(bool enable)
 	vibration = enable;
 }
 
-bool GetFastMode(void)
-{
-	return fastMode;
-}
-
-void SetFastMode(bool enable)
-{
-	fastMode = enable;
-}
-
-void ToggleFastMode(void)
-{
-	fastMode = !fastMode;
-	DrawOptionsMenu();
-}
-
 void OptionsMenuAppear(Window *window);
 
 MenuDefinition optionsMenuDef = 
@@ -120,7 +102,6 @@ MenuDefinition optionsMenuDef =
 	{
 		{"Quit", "Return to main menu", PopMenu},
 		{"Toggle", "Toggle Vibration", ToggleVibration},
-		{"Toggle", "Speed up events", ToggleFastMode}
 	},
 	.appear = OptionsMenuAppear,
 	.mainImageId = -1

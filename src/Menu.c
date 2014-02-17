@@ -107,6 +107,8 @@ void PopMenu(void)
 	window_stack_pop(currentMenuDef ? currentMenuDef->animated : true);
 }
 
+void MenuClickConfigProvider(void *context);
+
 void PushNewMenu(MenuDefinition *menuDef)
 {
 	SetCurrentMenu(menuDef);
@@ -138,7 +140,8 @@ void PushNewMenu(MenuDefinition *menuDef)
 			currentMenuDef->init ? currentMenuDef->init : MenuInit,
 			currentMenuDef->deinit ? currentMenuDef->deinit : MenuDeinit,
 			currentMenuDef->appear ? currentMenuDef->appear : MenuAppear,
-			currentMenuDef->disappear ? currentMenuDef->disappear : MenuDisappear);
+			currentMenuDef->disappear ? currentMenuDef->disappear : MenuDisappear,
+			(ClickConfigProvider) MenuClickConfigProvider);
 	}
 }
 
@@ -146,7 +149,7 @@ void PushNewMenu(MenuDefinition *menuDef)
 
 void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
-	DEBUG_LOG("Single Click Select");
+	DEBUG_VERBOSE_LOG("Single Click Select");
 	MenuEntry *currentEntry;
 	if(!currentMenuDef)
 		return;
@@ -156,7 +159,7 @@ void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 		return;
 
 	currentEntry->menuFunction();
-	DEBUG_LOG("End Single Click Select");
+	DEBUG_VERBOSE_LOG("End Single Click Select");
 }
 
 void IterateMenuEntries(int direction, int limit)
@@ -215,9 +218,4 @@ void MenuClickConfigProvider(void *context)
 	window_single_click_subscribe(BUTTON_ID_DOWN,(ClickHandler)DownSingleClickHandler);
 
 	window_single_click_subscribe(BUTTON_ID_BACK, (ClickHandler)BackSingleClickHandler);
-}
-
-void SetMenuClickConfigProvider(Window *window)
-{
-	window_set_click_config_provider(window, (ClickConfigProvider) MenuClickConfigProvider);
 }

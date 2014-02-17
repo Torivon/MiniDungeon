@@ -23,7 +23,7 @@ void UpdateHealthText(int currentHealth, int maxHealth);
 TextLayer * InitializeTextLayer(GRect frame, GFont font);
 
 Window * InitializeWindow(const char *name, bool animated);
-Window * InitializeMenuWindow(void *menuWindow, const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear);
+Window * InitializeMenuWindow(void *menuWindow, const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear, ClickConfigProvider clicker);
 
 void WindowAppear(Window *window);
 void WindowDisappear(Window *window);

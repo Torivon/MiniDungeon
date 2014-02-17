@@ -31,10 +31,16 @@ void IntToString(char *buffer, size_t bufferSize, int value)
 	}
 }
 
-// Returns an integer in the range [1,max]
+void SeedRandom(void)
+{
+	time_t now = time(NULL);
+	srand(now);
+}
+
+// Returns an integer in the range [0,max)
 int Random(int max)
 {
-	int result = (uint16_t)(rand() % max) + 1;
+	int result = (uint16_t)(rand() % max);
 	DEBUG_VERBOSE_LOG("Random(%d)=%d", max, result);
 	return result;
 }

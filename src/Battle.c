@@ -8,6 +8,7 @@
 #include "MiniDungeon.h"
 #include "Monsters.h"
 #include "Adventure.h"
+#include "Story.h"
 #include "UILayers.h"
 #include "Utils.h"
 
@@ -27,28 +28,6 @@ void CloseBattleWindow(void)
 bool ClosingWhileInBattle(void)
 {
 	return !battleCleanExit;
-}
-
-static int currentFloor = 1;
-
-void ResetFloor(void)
-{
-	currentFloor = 1;
-}
-
-void IncrementFloor(void)
-{
-	++currentFloor;
-}
-
-int GetCurrentFloor(void)
-{
-	return currentFloor;
-}
-
-void SetCurrentFloor(int newFloor)
-{
-	currentFloor = newFloor;
 }
 
 MonsterDef *currentMonster;
@@ -84,8 +63,8 @@ void MonsterAttack(void)
 {
 	int baseDamage;
 	int damageToDeal;
-	bool useMagicAttack = (currentMonster->allowMagicAttack && currentMonster->allowPhysicalAttack) ? Random(2) - 1 : currentMonster->allowMagicAttack;
-	baseDamage = ComputePlayerHealth(currentFloor)/GetMonsterPowerDivisor(currentMonster->powerLevel);
+	bool useMagicAttack = (currentMonster->allowMagicAttack && currentMonster->allowPhysicalAttack) ? Random(2) : currentMonster->allowMagicAttack;
+	baseDamage = ComputePlayerHealth(GetCurrentBaseLevel())/GetMonsterPowerDivisor(currentMonster->powerLevel);
 	damageToDeal = ApplyDefense(baseDamage, useMagicAttack ? GetCharacter()->stats.magicDefense : GetCharacter()->stats.defense);
 
 	if(DealPlayerDamage(damageToDeal))
@@ -109,12 +88,8 @@ void BattleUpdate(void)
 	{
 		INFO_LOG("Player wins.");
 		CloseBattleWindow();
-		GrantGold(currentFloor * currentMonster->goldScale);
-		if(currentFloor == 20)
-		{
-			ShowEndWindow();
-		}
-		else if(GrantExperience(currentFloor))
+		GrantGold(GetCurrentBaseLevel() * currentMonster->goldScale);
+		if(GrantExperience(GetCurrentBaseLevel()))
 		{
 			LevelUp();
 		}
@@ -158,9 +133,9 @@ void UseLightningOnCurrentMonster(void)
 
 void AttemptToRun(void)
 {
-	int runCheck = Random(3);
+	int runCheck = Random(3) + 1;
 			
-	if(runCheck == 3 && currentFloor < 20) // if floor is >= 20 you are fighting the dragon
+	if(runCheck == 3 && !currentMonster->preventRun)
 	{
 		INFO_LOG("Player runs.");
 		CloseBattleWindow();
@@ -289,7 +264,7 @@ static int forcedBattleMonsterType = -1;
 static int forcedBattleMonsterHealth = 0;
 void ResumeBattle(int currentMonster, int currentMonsterHealth)
 {
-	if(currentMonster >= 0 && currentMonster < MonsterTypeCount() && currentMonsterHealth > 0)
+	if(currentMonster >= 0 && currentMonsterHealth > 0)
 	{
 		forcedBattle = true;
 		forcedBattleMonsterType = currentMonster;
@@ -315,8 +290,8 @@ void BattleInit(void)
 	
 	if(!currentMonster)
 	{
-		currentMonster = GetRandomMonster(currentFloor);
-		currentMonsterHealth = ComputeMonsterHealth(currentFloor);
+		currentMonster = GetRandomMonster();
+		currentMonsterHealth = ComputeMonsterHealth(GetCurrentBaseLevel());
 	}
 	
 	battleMainMenuDef.mainImageId = currentMonster->imageId;

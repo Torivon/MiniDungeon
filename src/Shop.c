@@ -9,10 +9,6 @@
 #include "UILayers.h"
 #include "Utils.h"
 
-#if ALLOW_SHOP
-
-#if ALLOW_ITEM_SHOP
-
 int costs[5] = 
 {
 	10,
@@ -96,10 +92,6 @@ void ShowShopItemMenu(void)
 	PushNewMenu(&shopItemMenuDef);
 }
 
-#endif //ALLOW_ITEM_SHOP
-
-#if ALLOW_STAT_SHOP
-
 void ShopStatMenuAppear(Window *window);
 
 static int statPointsPurchased = 0;
@@ -168,8 +160,6 @@ void ShowShopStatMenu(void)
 	PushNewMenu(&shopStatMenuDef);
 }
 
-#endif //ALLOW_STAT_SHOP
-
 void ShopMenuWindowAppear(Window *window);
 
 MenuDefinition shopMenuDef = 
@@ -177,12 +167,8 @@ MenuDefinition shopMenuDef =
 	.menuEntries = 
 	{
 		{"Quit", "Return to adventure", PopMenu},
-#if ALLOW_ITEM_SHOP
 		{"Items", "Buy items", ShowShopItemMenu},
-#endif
-#if ALLOW_STAT_SHOP
 		{"Stats", "Buy stat points", ShowShopStatMenu},
-#endif
 	},
 	.appear = ShopMenuWindowAppear,
 	.mainImageId = RESOURCE_ID_IMAGE_SHOP
@@ -199,4 +185,3 @@ void ShowShopWindow(void)
 	INFO_LOG("Entering shop.");
 	PushNewMenu(&shopMenuDef);
 }
-#endif //ALLOW_SHOP

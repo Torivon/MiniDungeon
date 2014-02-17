@@ -11,6 +11,16 @@
 // Publish 0 turns on the test menu
 #define PUBLISH 1
 	
+// Stories to include
+#define INCLUDE_DUNGEON_CRAWL 1
+#define INCLUDE_DRAGON_QUEST 0
+
+enum
+{
+	DUNGEON_CRAWL_INDEX = 0,
+	DRAGON_QUEST_INDEX = 1,
+};
+
 // Logging
 #define DEBUG_LOGGING 0 // DEBUG_LOGGING 1 turns on DEBUG_LOG. DEBUG_LOGGING 2 turns on DEBUG_VERBOSE_LOG also.
 #define ERROR_LOGGING 1 // ERROR_LOG should be used for actual incorrect operation.
@@ -18,18 +28,7 @@
 #define INFO_LOGGING 1 // INFO_LOG should be used to log game flow.
 
 // Features to turn off to make space
-#define ALLOW_RANDOM_DUNGEON_GRAPHICS 1
 #define BOUNDS_CHECKING 1
-#define EVENT_CHANCE_SCALING 1
-
-#define ALLOW_SHOP 1
-#if ALLOW_SHOP
-	#define ALLOW_ITEM_SHOP 1
-	#define ALLOW_STAT_SHOP 1
-#else
-	#define ALLOW_ITEM_SHOP 0
-	#define ALLOW_STAT_SHOP 0
-#endif	
 
 // Set up the test menu based on previous choices
 #if PUBLISH
@@ -39,7 +38,7 @@
 #endif
 
 // This needs to be large enough to handle the maximum size of the window stack
-#define MAX_MENU_WINDOWS 4
+#define MAX_MENU_WINDOWS 6
 // This determines how many text rows there are in the interface
 #define MAX_MENU_ENTRIES 6
 	

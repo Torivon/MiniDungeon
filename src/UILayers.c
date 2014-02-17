@@ -1,10 +1,8 @@
 #include "pebble.h"
 
 #include "Logging.h"
-#include "Menu.h"
 #include "UILayers.h"
 #include "Utils.h"
-#include "Adventure.h"
 
 #define WINDOW_ROW_HEIGHT 16
 
@@ -432,13 +430,13 @@ Window * InitializeWindow(const char *name, bool animated)
 	return window;		
 }
 
-Window * InitializeMenuWindow(void *menuWindow, const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear)
+Window * InitializeMenuWindow(void *menuWindow, const char *name, bool animated, WindowHandler init, WindowHandler deinit, WindowHandler appear, WindowHandler disappear, ClickConfigProvider clicker)
 {
 	Window *window = InitializeWindow(name, animated);
 	WindowHandlers handlers = {.load = init, .unload = deinit, .appear = appear, .disappear = disappear};
 	window_set_window_handlers(window,handlers);
 	
-	SetMenuClickConfigProvider(window);
+	window_set_click_config_provider(window, clicker);
 	window_set_user_data(window,menuWindow);
 	window_stack_push(window, animated);
 	return window;

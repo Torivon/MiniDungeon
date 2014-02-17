@@ -172,7 +172,6 @@ void EndMenuAppear(Window *window)
 		ShowMainWindowRow(0, "You lose", "");
 	else
 		ShowMainWindowRow(0, "You win", "");
-	ShowMainWindowRow(1, "Floor", UpdateFloorText());
 	ShowMainWindowRow(2, "Level", UpdateLevelText());
 	ShowMainWindowRow(3, "Gold", UpdateGoldText());
 	ShowMainWindowRow(4, "Escapes", UpdateEscapeText());
