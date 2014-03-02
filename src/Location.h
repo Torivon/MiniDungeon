@@ -2,8 +2,8 @@
 	
 typedef enum 
 {
-	LOCATIONTYPE_FIXED,
-	LOCATIONTYPE_PATH,
+	LOCATIONTYPE_FIXED = 0,
+	LOCATIONTYPE_PATH = 1,
 } LocationType;
 
 typedef struct Location Location;

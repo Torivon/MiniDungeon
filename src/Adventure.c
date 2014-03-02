@@ -32,9 +32,9 @@ void ResetGame(void)
 {
 	INFO_LOG("Resetting game.");
 	ResetStatPointsPurchased();
-	InitializeCurrentStory();
 	InitializeCharacter();
 	ClearInventory();
+	InitializeCurrentStory();
 	
 	SavePersistedData();
 }

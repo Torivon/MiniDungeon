@@ -4,6 +4,7 @@
 #include "Battle.h"
 #include "Character.h"
 #include "DungeonCrawl.h"
+#include "Items.h"
 #include "Location.h"
 #include "LocationInternal.h"
 #include "Logging.h"
@@ -626,6 +627,12 @@ void InitializeDungeonCrawl(void)
 	dungeonCrawlStoryState.persistedStoryState.currentLocationDuration = 0;
 	dungeonCrawlStoryState.persistedStoryState.currentPathDestination = 0;
 	dungeonCrawlStoryState.persistedStoryState.mostRecentMonster = 0;
+	
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
 }
 
 Story dungeonCrawlStory = 
