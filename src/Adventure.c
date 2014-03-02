@@ -21,6 +21,10 @@ void LoadLocationImage(void);
 
 void RefreshAdventure(void)
 {
+	if(!adventureWindowVisible)
+		return;
+	
+	DEBUG_VERBOSE_LOG("Refreshing adventure window.");
 	ShowMainWindowRow(0, GetCurrentLocationName(), "");
 	UpdateCharacterHealth();
 	UpdateCharacterLevel();

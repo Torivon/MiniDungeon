@@ -74,6 +74,9 @@ Location *GetLocationByIndex(Location *locationList, int index)
 		return NULL;
 	}
 	
+	if(index < 0)
+		return NULL;
+	
 	return &locationList[index];
 }
 
@@ -105,4 +108,12 @@ int GetDestinationOfPath(Location *location, int lastIndex)
 		return location->adjacentLocations[0];
 	
 	return -1;
+}
+
+void RunArrivalFunction(Location *location)
+{
+	if(location && location->arrivalFunction)
+	{
+		location->arrivalFunction();
+	}
 }

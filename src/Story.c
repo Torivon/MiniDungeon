@@ -122,6 +122,7 @@ void SetNewLocation(int index)
 	{
 		currentStoryState->currentPathDestination = GetDestinationOfPath(newLocation, lastIndex);
 	}
+	RunArrivalFunction(newLocation);
 }
 
 int GetCurrentDestinationIndex(void)
@@ -136,4 +137,12 @@ int GetCurrentAdjacentLocationIndex(int index)
 		return -1;
 	
 	return GetAdjacentLocationIndex(currentLocation, index);
+}
+
+void InitializeCurrentStory(void)
+{
+	if(currentStory && currentStory->initializeStory)
+	{
+		currentStory->initializeStory();
+	}
 }

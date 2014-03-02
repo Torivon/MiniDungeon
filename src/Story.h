@@ -2,7 +2,9 @@
 
 typedef struct Location Location;
 typedef struct MonsterDef MonsterDef;
-	
+
+typedef void (*StoryInitializeFunction)(void);
+
 typedef struct Story
 {
 	int gameNumber;
@@ -12,6 +14,7 @@ typedef struct Story
 	int numberOfMonsters;
 	MonsterDef *monsterList;
 //	Dialog *dialogList; // NYI
+	StoryInitializeFunction initializeStory;
 } Story;
 
 typedef struct StoryState
@@ -49,3 +52,5 @@ int GetCurrentDestinationIndex(void);
 
 // Takes an index into the adjacent locations array, and returns a global location index
 int GetCurrentAdjacentLocationIndex(int index);
+
+void InitializeCurrentStory(void);

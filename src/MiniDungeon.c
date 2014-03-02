@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include "Persistence.h"
 #include "Shop.h"
+#include "Story.h"
 #include "TitleMenu.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -31,6 +32,7 @@ void ResetGame(void)
 #if ALLOW_STAT_SHOP
 	ResetStatPointsPurchased();
 #endif
+	InitializeCurrentStory();
 	InitializeCharacter();
 	ClearInventory();
 	

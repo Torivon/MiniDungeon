@@ -29,3 +29,5 @@ int GetAdjacentLocationIndex(Location *location, int index);
 
 LocationType GetLocationType(Location *location);
 int GetDestinationOfPath(Location *location, int lastIndex);
+
+void RunArrivalFunction(Location *location);

@@ -2,6 +2,7 @@
 
 #include "Adventure.h"
 #include "Battle.h"
+#include "Character.h"
 #include "DungeonCrawl.h"
 #include "Location.h"
 #include "LocationInternal.h"
@@ -54,7 +55,8 @@ enum
 	DUNGEON_FLOOR_19,
 	DUNGEON_FLOOR_19_END,
 	DUNGEON_FLOOR_20,
-	DUNGEON_FLOOR_20_END,
+	DUNGEON_DRAGONS_ROOM,
+	DUNGEON_TREASURE_ROOM,
 };
 
 enum
@@ -386,14 +388,129 @@ static Location locationList[] =
 		.encounterChance = 15,
 	},
 	{
-		.name = "Dungeon End",
+		.name = "Floor 15 Stairs",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_FLOOR_16},
+		.numberOfBackgroundImages = 1,
+		.backgroundImages = {RESOURCE_ID_IMAGE_NEWFLOOR},
+	},
+	{
+		.name = "Floor 16",
+		.type = LOCATIONTYPE_PATH,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_15_END, DUNGEON_FLOOR_16_END},
+		.length = 30,
+		.baseLevel = 16,
+		.numberOfBackgroundImages = 3,
+		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT},
+		.numberOfMonsters = 4,
+		.monsters = {DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
+		.encounterChance = 15,
+	},
+	{
+		.name = "Floor 16 Stairs",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_FLOOR_17},
+		.numberOfBackgroundImages = 1,
+		.backgroundImages = {RESOURCE_ID_IMAGE_NEWFLOOR},
+	},
+	{
+		.name = "Floor 17",
+		.type = LOCATIONTYPE_PATH,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_16_END, DUNGEON_FLOOR_17_END},
+		.length = 30,
+		.baseLevel = 17,
+		.numberOfBackgroundImages = 3,
+		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT},
+		.numberOfMonsters = 4,
+		.monsters = {DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
+		.encounterChance = 15,
+	},
+	{
+		.name = "Floor 17 Stairs",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_FLOOR_18},
+		.numberOfBackgroundImages = 1,
+		.backgroundImages = {RESOURCE_ID_IMAGE_NEWFLOOR},
+	},
+	{
+		.name = "Floor 18",
+		.type = LOCATIONTYPE_PATH,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_17_END, DUNGEON_FLOOR_18_END},
+		.length = 30,
+		.baseLevel = 18,
+		.numberOfBackgroundImages = 3,
+		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT},
+		.numberOfMonsters = 4,
+		.monsters = {DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
+		.encounterChance = 15,
+	},
+	{
+		.name = "Floor 18 Stairs",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_FLOOR_19},
+		.numberOfBackgroundImages = 1,
+		.backgroundImages = {RESOURCE_ID_IMAGE_NEWFLOOR},
+	},
+	{
+		.name = "Floor 19",
+		.type = LOCATIONTYPE_PATH,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_18_END, DUNGEON_FLOOR_19_END},
+		.length = 30,
+		.baseLevel = 19,
+		.numberOfBackgroundImages = 3,
+		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT},
+		.numberOfMonsters = 4,
+		.monsters = {DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
+		.encounterChance = 15,
+	},
+	{
+		.name = "Floor 19 Stairs",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_FLOOR_20},
+		.numberOfBackgroundImages = 1,
+		.backgroundImages = {RESOURCE_ID_IMAGE_NEWFLOOR},
+	},
+	{
+		.name = "Floor 20",
+		.type = LOCATIONTYPE_PATH,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_19_END, DUNGEON_DRAGONS_ROOM},
+		.length = 30,
+		.baseLevel = 20,
+		.numberOfBackgroundImages = 3,
+		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT},
+		.numberOfMonsters = 4,
+		.monsters = {DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
+		.encounterChance = 15,
+	},
+	{
+		.name = "Dragon's Room",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_TREASURE_ROOM},
+		.numberOfBackgroundImages = 1,
+		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT},
+		.numberOfMonsters = 1,
+		.monsters = {DUNGEON_DRAGON},
+		.baseLevel = 20,
+		.arrivalFunction = ShowBattleWindow,
+	},
+	{
+		.name = "Treasure Room",
 		.type = LOCATIONTYPE_FIXED,
 		.numberOfAdjacentLocations = 0,
 		.numberOfBackgroundImages = 1,
 		.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONDEADEND},
-		.numberOfMonsters = 1,
-		.monsters = {DUNGEON_DRAGON},
-		.arrivalFunction = (LocationFunction*) ShowBattleWindow,
+		.arrivalFunction = ShowEndWindow,
 	},
 };
 
@@ -500,15 +617,25 @@ static MonsterDef monsters[] =
 	},
 };
 
+StoryState dungeonCrawlStoryState = {0};
+
+void InitializeDungeonCrawl(void)
+{
+	dungeonCrawlStoryState.needsSaving = true;
+	dungeonCrawlStoryState.currentLocationIndex = 0;
+	dungeonCrawlStoryState.currentLocationDuration = 0;
+	dungeonCrawlStoryState.currentPathDestination = 0;
+	dungeonCrawlStoryState.mostRecentMonster = 0;
+}
+
 Story dungeonCrawlStory = 
 {
 	.gameNumber = DUNGEON_CRAWL_INDEX,
 	.gameDataVersion = 1,
 	.locationList = locationList,
 	.monsterList = monsters,
+	.initializeStory = InitializeDungeonCrawl,
 };
-
-StoryState dungeonCrawlStoryState = {0};
 
 void LaunchDungeonCrawl(void)
 {

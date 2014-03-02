@@ -13,8 +13,8 @@ typedef struct Location
 	int length; // For a path, how many minutes it takes to traverse.
 	int baseLevel; // This determines the level of monsters encountered
 	
-	LocationFunction *arrivalFunction; // Run when you arrive at a new location
-	PrerequisiteFunction *prerequisiteFunction; // Determines whether you can enter the location
+	LocationFunction arrivalFunction; // Run when you arrive at a new location
+	PrerequisiteFunction prerequisiteFunction; // Determines whether you can enter the location
 	
 	int numberOfMonsters;
 	int monsters[LOCATION_MAX_MONSTERS]; // The set of random monsters that can appear
