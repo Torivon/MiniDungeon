@@ -1,5 +1,5 @@
 #include "pebble.h"
-	
+
 #include "Location.h"
 #include "Logging.h"
 #include "Monsters.h"
@@ -14,9 +14,13 @@ void RegisterStory(const Story *story, StoryState *storyState)
 	{
 		currentStory = story;
 		currentStoryState = storyState;
-		currentStoryState->currentLocationIndex = 0;
-		currentStoryState->currentLocationDuration = 0;
 	}
+}
+
+void ClearCurrentStory(void)
+{
+	currentStory = NULL;
+	currentStoryState = NULL;
 }
 
 const Story *GetCurrentStory(void)
@@ -37,18 +41,19 @@ MonsterDef *GetMonsterByIndex(int index)
 	if(index < 0 || index > GetNumberOfMonsters(currentStory->monsterList))
 		return NULL;
 
+	currentStoryState->persistedStoryState.mostRecentMonster = index;
 	return &currentStory->monsterList[index];
 }
 
 Location *GetCurrentLocation(void)
 {
-	if(currentStoryState->currentLocationIndex < 0 || currentStoryState->currentLocationIndex > currentStory->numberOfLocations)
+	if(currentStoryState->persistedStoryState.currentLocationIndex < 0 || currentStoryState->persistedStoryState.currentLocationIndex > currentStory->numberOfLocations)
 	{
-		DEBUG_LOG("Current location index out of bounds (%d/%d).", currentStoryState->currentLocationIndex, currentStory->numberOfLocations);
+		DEBUG_LOG("Current location index out of bounds (%d/%d).", currentStoryState->persistedStoryState.currentLocationIndex, currentStory->numberOfLocations);
 		return NULL;
 	}
 
-	return GetLocationByIndex(currentStory->locationList, currentStoryState->currentLocationIndex);
+	return GetLocationByIndex(currentStory->locationList, currentStoryState->persistedStoryState.currentLocationIndex);
 }
 
 int GetCurrentBackgroundImage(void)
@@ -83,12 +88,17 @@ const char *GetCurrentLocationName(void)
 
 void IncrementCurrentDuration(void)
 {
-	++currentStoryState->currentLocationDuration;
+	++currentStoryState->persistedStoryState.currentLocationDuration;
+}
+
+void CurrentStoryStateNeedsSaving(void)
+{
+	currentStoryState->needsSaving = true;
 }
 
 int GetCurrentDuration(void)
 {
-	return currentStoryState->currentLocationDuration;
+	return currentStoryState->persistedStoryState.currentLocationDuration;
 }
 
 int GetCurrentLocationLength(void)
@@ -103,7 +113,7 @@ bool IsCurrentLocationPath(void)
 
 void SetNewLocation(int index)
 {
-	int lastIndex = currentStoryState->currentLocationIndex;
+	int lastIndex = currentStoryState->persistedStoryState.currentLocationIndex;
 	Location *newLocation = GetLocationByIndex(currentStory->locationList, index);
 
 	DEBUG_LOG("Trying to find new location with index %d.", index);
@@ -116,18 +126,18 @@ void SetNewLocation(int index)
 	
 	DEBUG_LOG("Setting new location index %d.", index);
 	currentStoryState->needsSaving = true;
-	currentStoryState->currentLocationIndex = index;
-	currentStoryState->currentLocationDuration = 0;
+	currentStoryState->persistedStoryState.currentLocationIndex = index;
+	currentStoryState->persistedStoryState.currentLocationDuration = 0;
 	if(GetLocationType(newLocation) == LOCATIONTYPE_PATH)
 	{
-		currentStoryState->currentPathDestination = GetDestinationOfPath(newLocation, lastIndex);
+		currentStoryState->persistedStoryState.currentPathDestination = GetDestinationOfPath(newLocation, lastIndex);
 	}
 	RunArrivalFunction(newLocation);
 }
 
 int GetCurrentDestinationIndex(void)
 {
-	return currentStoryState->currentPathDestination;
+	return currentStoryState->persistedStoryState.currentPathDestination;
 }
 
 int GetCurrentAdjacentLocationIndex(int index)
@@ -145,4 +155,9 @@ void InitializeCurrentStory(void)
 	{
 		currentStory->initializeStory();
 	}
+}
+
+StoryState *GetCurrentStoryState(void)
+{
+	return currentStoryState;
 }

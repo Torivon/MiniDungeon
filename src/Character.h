@@ -1,6 +1,5 @@
 #pragma once
 
-// TODO: turn the list of stats into an array for more code reuse
 typedef struct
 {
 	int maxHealth;

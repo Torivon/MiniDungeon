@@ -7,6 +7,7 @@
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
+#include "Persistence.h"
 #include "Shop.h"
 #include "Story.h"
 #include "UILayers.h"
@@ -17,7 +18,26 @@ bool adventureWindowVisible = false;
 
 void AdventureWindowAppear(Window *window);
 void AdventureWindowDisappear(Window *window);
+void AdventureWindowInit(Window *window);
+void AdventureWindowDeinit(Window *window);
 void LoadLocationImage(void);
+
+void InitializeGameData(void)
+{
+	if(!LoadPersistedData())
+		ResetGame();
+}
+
+void ResetGame(void)
+{
+	INFO_LOG("Resetting game.");
+	ResetStatPointsPurchased();
+	InitializeCurrentStory();
+	InitializeCharacter();
+	ClearInventory();
+	
+	SavePersistedData();
+}
 
 void RefreshAdventure(void)
 {
@@ -76,6 +96,8 @@ MenuDefinition adventureMenuDef =
 	},
 	.appear = AdventureWindowAppear,
 	.disappear = AdventureWindowDisappear,
+	.init = AdventureWindowInit,
+	.deinit = AdventureWindowDeinit,
 	.animated = true,
 	.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT
 };
@@ -105,9 +127,24 @@ void AdventureWindowDisappear(Window *window)
 	adventureWindow = NULL;
 }
 
+void AdventureWindowInit(Window *window)
+{
+	MenuInit(window);
+	DEBUG_LOG("InitializeGameData");
+	InitializeGameData();	
+}
+
+void AdventureWindowDeinit(Window *window)
+{
+	SavePersistedData();
+	ClearCurrentStory();
+	MenuDeinit(window);
+}
+
 void ShowAdventureWindow(void)
 {
 	INFO_LOG("Adventure Window");
+	CurrentStoryStateNeedsSaving();
 	PushNewMenu(&adventureMenuDef);
 }
 

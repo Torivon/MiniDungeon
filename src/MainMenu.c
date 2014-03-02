@@ -129,6 +129,7 @@ MenuDefinition mainMenuDef =
 		{"Progress", "Character advancement", ShowProgressMenu},
 		{"Stats", "Character Stats", ShowStatMenu},
 		{"Options", "Open the options menu", ShowOptionsMenu},
+		{"Reset", "Reset the game", ResetGame},
 	},
 	.appear = MainMenuWindowAppear,
 	.mainImageId = RESOURCE_ID_IMAGE_REST

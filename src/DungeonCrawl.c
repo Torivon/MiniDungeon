@@ -622,10 +622,10 @@ StoryState dungeonCrawlStoryState = {0};
 void InitializeDungeonCrawl(void)
 {
 	dungeonCrawlStoryState.needsSaving = true;
-	dungeonCrawlStoryState.currentLocationIndex = 0;
-	dungeonCrawlStoryState.currentLocationDuration = 0;
-	dungeonCrawlStoryState.currentPathDestination = 0;
-	dungeonCrawlStoryState.mostRecentMonster = 0;
+	dungeonCrawlStoryState.persistedStoryState.currentLocationIndex = 0;
+	dungeonCrawlStoryState.persistedStoryState.currentLocationDuration = 0;
+	dungeonCrawlStoryState.persistedStoryState.currentPathDestination = 0;
+	dungeonCrawlStoryState.persistedStoryState.mostRecentMonster = 0;
 }
 
 Story dungeonCrawlStory = 

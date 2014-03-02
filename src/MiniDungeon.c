@@ -21,24 +21,6 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 	UpdateAdventure();
 }
 
-void InitializeGameData(void)
-{
-	if(!LoadPersistedData())
-		ResetGame();
-}
-
-void ResetGame(void)
-{
-#if ALLOW_STAT_SHOP
-	ResetStatPointsPurchased();
-#endif
-	InitializeCurrentStory();
-	InitializeCharacter();
-	ClearInventory();
-	
-	SavePersistedData();
-}
-
 void handle_init() {
 	
 	INFO_LOG("Starting MiniAdventure");
@@ -49,8 +31,9 @@ void handle_init() {
 	handle_minute_tick(NULL, MINUTE_UNIT);
 	DEBUG_LOG("First handle second");
 	
-	InitializeGameData();
-	DEBUG_LOG("InitializeGameData");
+	// Just here so that the health and level fields are always filled in.
+	InitializeCharacter();
+	
 	ShowTitleMenu();
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
@@ -58,7 +41,6 @@ void handle_init() {
 void handle_deinit() 
 {
 	INFO_LOG("Cleaning up on exit.");
-	SavePersistedData();
 	UnloadBackgroundImage();
 	UnloadMainBmpImage();
 	UnloadTextLayers();

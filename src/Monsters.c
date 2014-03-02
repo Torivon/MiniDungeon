@@ -4,13 +4,6 @@
 #include "Monsters.h"
 #include "Utils.h"
 
-int mostRecentMonster = -1;
-
-int GetMostRecentMonster(void)
-{
-	return mostRecentMonster;
-}
-
 int defenseLevelMap[] = 
 {
 	0,

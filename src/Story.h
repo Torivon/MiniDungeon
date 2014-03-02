@@ -17,16 +17,22 @@ typedef struct Story
 	StoryInitializeFunction initializeStory;
 } Story;
 
-typedef struct StoryState
+typedef struct PersistedStoryState
 {
-	bool needsSaving;
 	int currentLocationIndex;
 	int currentLocationDuration;
 	int currentPathDestination; // The global index for the Location to go to when the current path finishes.
-	int mostRecentMonster;
+	int mostRecentMonster;	
+} PersistedStoryState;
+
+typedef struct StoryState
+{
+	bool needsSaving;
+	PersistedStoryState persistedStoryState;
 } StoryState;
 
 void RegisterStory(const Story *story, StoryState *storyState);
+void ClearCurrentStory(void);
 
 //Location *GetLocationByIndex(int index);
 MonsterDef *GetMonsterByIndex(int index);
@@ -39,6 +45,7 @@ int GetCurrentBaseLevel(void);
 
 const char *GetCurrentLocationName(void);
 void IncrementCurrentDuration(void);
+void CurrentStoryStateNeedsSaving(void);
 int GetCurrentDuration(void);
 int GetCurrentLocationLength(void);
 
@@ -54,3 +61,6 @@ int GetCurrentDestinationIndex(void);
 int GetCurrentAdjacentLocationIndex(int index);
 
 void InitializeCurrentStory(void);
+
+const Story *GetCurrentStory(void);
+StoryState *GetCurrentStoryState(void);

@@ -8,3 +8,4 @@ void ShowAdventureWindow(void);
 void UpdateAdventure(void);
 
 void RefreshAdventure(void);
+void ResetGame(void);
