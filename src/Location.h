@@ -14,6 +14,8 @@ typedef bool (*PrerequisiteFunction)(void);
 #define LOCATION_MAX_MONSTERS 4
 #define LOCATION_MAX_BACKGROUND_IMAGES 4
 #define LOCATION_MAX_ADJACENT_LOCATIONS 4
+	
+#define PATH_CLASS_MAX_MONSTERS 10
 
 int GetLocationBackgroundImageId(Location *location);
 int GetLocationMonsterIndex(Location *location);

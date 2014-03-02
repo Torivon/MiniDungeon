@@ -9,41 +9,61 @@ int GetLocationBackgroundImageId(Location *location)
 {
 	int index;
 	
-	if(location->numberOfBackgroundImages > LOCATION_MAX_BACKGROUND_IMAGES)
-		return -1;
+	if(location->type == LOCATIONTYPE_FIXED && location->fixedclass)
+		return location->fixedclass->backgroundImage;
 	
-	if(location->numberOfBackgroundImages == 1)
+	if(location->type == LOCATIONTYPE_PATH && location->pathclass)
 	{
-		return location->backgroundImages[0];
+		if(location->pathclass->numberOfBackgroundImages > LOCATION_MAX_BACKGROUND_IMAGES)
+			return -1;
+		
+		if(location->pathclass->numberOfBackgroundImages == 1)
+		{
+			return location->pathclass->backgroundImages[0];
+		}
+		else
+		{
+			index = Random(location->pathclass->numberOfBackgroundImages);
+			return location->pathclass->backgroundImages[index];
+		}
 	}
-	else
-	{
-		index = Random(location->numberOfBackgroundImages);
-		return location->backgroundImages[index];
-	}
+	
+	return -1;
 }
 
 int GetLocationMonsterIndex(Location *location)
 {
 	int index;
 	
-	if(location->numberOfMonsters > LOCATION_MAX_MONSTERS)
-		return -1;
+	if(location->type == LOCATIONTYPE_FIXED && location->fixedclass)
+		return location->fixedclass->monster;
 	
-	if(location->numberOfMonsters == 1)
+	if(location->type == LOCATIONTYPE_PATH && location->pathclass)
 	{
-		return location->monsters[0];
+		if(location->pathclass->numberOfMonsters > PATH_CLASS_MAX_MONSTERS)
+			return -1;
+		
+		if(location->pathclass->numberOfMonsters == 1)
+		{
+			return location->pathclass->monsters[0];
+		}
+		else
+		{
+			int max = ((location->pathclass->numberOfMonsters - 1) * (location->baseLevel - 1))/(location->pathclass->monsterUnlockLevel - 1) + 1;
+			index = Random(max);
+			return location->pathclass->monsters[index];
+		}
 	}
-	else
-	{
-		index = Random(location->numberOfMonsters);
-		return location->monsters[index];
-	}
+	
+	return -1;
 }
 
 int GetLocationEncounterChance(Location *location)
 {
-	return location->encounterChance;
+	if(location->type == LOCATIONTYPE_PATH && location->pathclass)
+		return location->pathclass->encounterChance;
+	
+	return 0;
 }
 
 const char *GetLocationName(Location* location)
@@ -112,8 +132,8 @@ int GetDestinationOfPath(Location *location, int lastIndex)
 
 void RunArrivalFunction(Location *location)
 {
-	if(location && location->arrivalFunction)
+	if(location && location->type == LOCATIONTYPE_FIXED && location->fixed_ArrivalFunction)
 	{
-		location->arrivalFunction();
+		location->fixed_ArrivalFunction();
 	}
 }
