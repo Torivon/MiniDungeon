@@ -182,12 +182,12 @@ MenuDefinition battleMainMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Attack", "Attack with your sword.", AttackCurrentMonster},
-		{"Item", "Use an item", ShowItemBattleMenu},
-		{NULL, NULL, NULL},
-		{"Progress", "Character advancement", ShowProgressMenu},
-		{NULL, NULL, NULL},
-		{"Run", "Try to run away", AttemptToRun},
+		{.text = "Attack", .description = "Attack with your sword.", .menuFunction = AttackCurrentMonster},
+		{.text = "Item", .description = "Use an item", .menuFunction = ShowItemBattleMenu},
+		{.text = NULL, .description = NULL, .menuFunction = NULL},
+		{.text = "Progress", .description = "Character advancement", .menuFunction = ShowProgressMenu},
+		{.text = NULL, .description = NULL, .menuFunction = NULL},
+		{.text = "Run", .description = "Try to run away", .menuFunction = AttemptToRun},
 	},
 	.init = BattleWindowInit,
 	.appear = BattleWindowAppear,
@@ -231,12 +231,12 @@ MenuDefinition itemBattleMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to battle menu", PopMenu},
-		{"Drink", "Heal 50% of your health", ActivateCombatPotion},
-		{"Drink", "Heal 100% of your health", ActivateCombatFullPotion},
-		{"Throw", "Deal fire damage", ActivateFireScroll},
-		{"Throw", "Deal ice damage", ActivateIceScroll},
-		{"Throw", "Deal lightning damage", ActivateLightningScroll}
+		{.text = "Quit", .description = "Return to battle menu", .menuFunction = PopMenu},
+		{.text = "Drink", .description = "Heal 50% of your health", .menuFunction = ActivateCombatPotion},
+		{.text = "Drink", .description = "Heal 100% of your health", .menuFunction = ActivateCombatFullPotion},
+		{.text = "Throw", .description = "Deal fire damage", .menuFunction = ActivateFireScroll},
+		{.text = "Throw", .description = "Deal ice damage", .menuFunction = ActivateIceScroll},
+		{.text = "Throw", .description = "Deal lightning damage", .menuFunction = ActivateLightningScroll}
 	},
 	.appear = ItemBattleMenuAppear,
 	.mainImageId = -1

@@ -49,6 +49,8 @@ void CurrentStoryStateNeedsSaving(void);
 int GetCurrentDuration(void);
 int GetCurrentLocationLength(void);
 
+const char *GetAdjacentLocationName(uint16_t index);
+
 bool IsCurrentLocationPath(void);
 
 // Debug function

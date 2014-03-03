@@ -158,7 +158,7 @@ MenuDefinition endMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Ok", "Restart game", PopMenu}
+		{.text = "Ok", .description = "Restart game", .menuFunction = PopMenu}
 	},
 	.disappear = EndMenuDisappear,
 	.appear = EndMenuAppear,
@@ -282,11 +282,11 @@ MenuDefinition statMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to main menu", PopMenu},
-		{"Increase", "Increase strength", IncrementStrength},
-		{"Increase", "Increase defense", IncrementDefense},
-		{"Increase", "Increase magic", IncrementMagic},
-		{"Increase", "Increase magic defense", IncrementMagicDefense},
+		{.text = "Quit", .description = "Return to main menu", .menuFunction = PopMenu},
+		{.text = "Increase", .description = "Increase strength", .menuFunction = IncrementStrength},
+		{.text = "Increase", .description = "Increase defense", .menuFunction = IncrementDefense},
+		{.text = "Increase", .description = "Increase magic", .menuFunction = IncrementMagic},
+		{.text = "Increase", .description = "Increase magic defense", .menuFunction = IncrementMagicDefense},
 	},
 	.appear = StatMenuAppear,
 	.mainImageId = -1
@@ -309,7 +309,7 @@ MenuDefinition progressMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to main menu", PopMenu},
+		{.text = "Quit", .description = "Return to main menu", .menuFunction = PopMenu},
 	},
 	.appear = ProgressMenuAppear,
 	.mainImageId = -1

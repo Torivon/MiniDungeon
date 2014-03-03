@@ -50,9 +50,18 @@ void RefreshAdventure(void)
 	UpdateCharacterLevel();
 	updateDelay = 1;
 	LoadLocationImage();
+	RefreshMenuAppearance();
 }
 
-void FollowFirstPath(void)
+const char *Path0Text(void)
+{
+	if(IsCurrentLocationPath())
+		return NULL;
+
+	return GetAdjacentLocationName(0);
+}
+
+void FollowPath0(void)
 {
 	DEBUG_LOG("Trying to follow first path");
 	if(!IsCurrentLocationPath())
@@ -62,8 +71,64 @@ void FollowFirstPath(void)
 	}
 }
 
+const char *Path1Text(void)
+{
+	if(IsCurrentLocationPath())
+		return NULL;
+
+	return GetAdjacentLocationName(1);
+}
+
+void FollowPath1(void)
+{
+	DEBUG_LOG("Trying to follow second path");
+	if(!IsCurrentLocationPath())
+	{
+		SetNewLocation(GetCurrentAdjacentLocationIndex(1));
+		RefreshAdventure();
+	}
+}
+
+const char *Path2Text(void)
+{
+	if(IsCurrentLocationPath())
+		return NULL;
+
+	return GetAdjacentLocationName(2);
+}
+
+void FollowPath2(void)
+{
+	DEBUG_LOG("Trying to follow first path");
+	if(!IsCurrentLocationPath())
+	{
+		SetNewLocation(GetCurrentAdjacentLocationIndex(2));
+		RefreshAdventure();
+	}
+}
+
+const char *Path3Text(void)
+{
+	if(IsCurrentLocationPath())
+		return NULL;
+
+	return GetAdjacentLocationName(3);
+}
+
+void FollowPath3(void)
+{
+	DEBUG_LOG("Trying to follow first path");
+	if(!IsCurrentLocationPath())
+	{
+		SetNewLocation(GetCurrentAdjacentLocationIndex(3));
+		RefreshAdventure();
+	}
+}
+
 void EndPath(void)
 {
+	if(GetVibration())
+		vibes_short_pulse();
 	SetNewLocation(GetCurrentDestinationIndex());
 	RefreshAdventure();
 }
@@ -80,19 +145,37 @@ bool UpdatePath(void)
 	
 	return false;
 }
- 
+
+const char *ShopMenuEntryTextFunction(void)
+{
+	if(IsCurrentLocationPath())
+		return NULL;
+	else
+		return "Shop";
+}
+
+const char *ShopMenuEntryDescriptionFunction(void)
+{
+	if(IsCurrentLocationPath())
+		return NULL;
+	else
+		return "Visit a shop";
+}
+
+#if ALLOW_TEST_MENU
+		{.text = "", .description = "", .menuFunction = ShowTestMenu}
+#endif
+
 MenuDefinition adventureMenuDef = 
 {
 	.menuEntries = 
 	{
-		{"Main", "Open the main menu", ShowMainMenu},
-		{"Leave", "Follow a path", FollowFirstPath}, // Debug: If this is a fixed location, travel along path 0
-		{"Shop", "Visit a shop", ShowShopWindow}, // Debug: This should not be here on paths
-#if ALLOW_TEST_MENU
-		{NULL, NULL, NULL},
-		{NULL, NULL, NULL},
-		{"", "", ShowTestMenu}
-#endif
+		{.text = "Main", .description = "Open the main menu", .menuFunction = ShowMainMenu},
+		{.useFunctions = true, .textFunction = ShopMenuEntryTextFunction, .descriptionFunction = ShopMenuEntryDescriptionFunction, .menuFunction = ShowShopWindow},
+		{.useFunctions = true, .textFunction = Path0Text, .descriptionFunction = Path0Text, .menuFunction = FollowPath0},
+		{.useFunctions = true, .textFunction = Path1Text, .descriptionFunction = Path1Text, .menuFunction = FollowPath1},
+		{.useFunctions = true, .textFunction = Path2Text, .descriptionFunction = Path2Text, .menuFunction = FollowPath2},
+		{.useFunctions = true, .textFunction = Path3Text, .descriptionFunction = Path3Text, .menuFunction = FollowPath3},
 	},
 	.appear = AdventureWindowAppear,
 	.disappear = AdventureWindowDisappear,

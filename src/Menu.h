@@ -3,11 +3,21 @@
 #include "MiniDungeon.h"
 
 typedef void (*MenuFunction)(void);
+typedef const char *(*MenuTextFunction)(void);
 
 typedef struct
 {
-	const char *text;
-	const char *description;
+	bool useFunctions;
+	union
+	{
+		const char *text;
+		MenuTextFunction textFunction;
+	};
+	union
+	{
+		const char *description;
+		MenuTextFunction descriptionFunction;
+	};
 	MenuFunction menuFunction;
 } MenuEntry;
 
@@ -30,6 +40,8 @@ void SetMenuClickConfigProvider(Window *window);
 
 // Useful callback while building a new menu
 void DoNothing(void);
+
+void RefreshMenuAppearance(void);
 
 void MenuInit(Window *window);
 void MenuDeinit(Window *window);

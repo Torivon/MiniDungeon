@@ -106,6 +106,22 @@ int GetCurrentLocationLength(void)
 	return GetLocationLength(GetCurrentLocation());
 }
 
+const char *GetAdjacentLocationName(uint16_t index)
+{
+	Location *adjacentLocation;
+	int realIndex = GetCurrentAdjacentLocationIndex(index);
+	
+	if(realIndex == -1)
+		return NULL;
+	
+	adjacentLocation = GetLocationByIndex(currentStory->locationList, realIndex);
+	
+	if(!adjacentLocation)
+		return NULL;
+	
+	return GetLocationName(adjacentLocation);
+}
+
 bool IsCurrentLocationPath(void)
 {
 	return GetLocationType(GetCurrentLocation()) == LOCATIONTYPE_PATH;

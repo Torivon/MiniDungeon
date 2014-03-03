@@ -20,16 +20,16 @@ static MenuDefinition titleMenuDef =
 {
 	.menuEntries = 
 	{
-		{NULL, NULL, NULL},
+		{.text = NULL, .description = NULL, .menuFunction = NULL},
 #if INCLUDE_DUNGEON_CRAWL
-		{"Dungeon", "A simple dungeon crawl", LaunchDungeonCrawl},
+		{.text = "Dungeon", .description = "A simple dungeon crawl", .menuFunction = LaunchDungeonCrawl},
 #else
-		{NULL, NULL, NULL},
+		{.text = NULL, .description = NULL, .menuFunction = NULL},
 #endif
 #if INCLUDE_DRAGON_QUEST
-		{"Quest", "Quest to kill a dragon", LaunchDragonQuest},
+		{.text = "Quest", .description = "Quest to kill a dragon", .menuFunction = LaunchDragonQuest},
 #else
-		{NULL, NULL, NULL},
+		{.text = NULL, .description = NULL, .menuFunction = NULL},
 #endif
 	},
 	.appear = TitleMenuWindowAppear,

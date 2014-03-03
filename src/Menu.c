@@ -5,12 +5,44 @@
 #include "UILayers.h"
 #include "Utils.h"
 
+const char *GetMenuEntryText(MenuEntry *entry)
+{
+	if(!entry)
+		return NULL;
+	
+	if(entry->useFunctions)
+	{
+		if(entry->textFunction)
+			return entry->textFunction();
+		
+		return NULL;
+	}
+	
+	return entry->text;
+}
+
+const char *GetMenuEntryDescription(MenuEntry *entry)
+{
+	if(!entry)
+		return NULL;
+	
+	if(entry->useFunctions)
+	{
+		if(entry->descriptionFunction)
+			return entry->descriptionFunction();
+		
+		return NULL;
+	}
+	
+	return entry->description;
+}
+
 bool MenuEntryIsActive(MenuEntry *entry)
 {
 	if(!entry)
 		return false;
 
-	return entry->text && entry->menuFunction;
+	return GetMenuEntryText(entry) && entry->menuFunction;
 }
 
 MenuDefinition *currentMenuDef = NULL;
@@ -45,10 +77,40 @@ void MenuDeinit(Window *window)
 	window_destroy(window);
 }
 
-void MenuAppear(Window *window)
+void RefreshMenuAppearance(void)
 {
 	int i;
 	bool setSelected = false;
+	if(!currentMenuDef)
+		return;
+	
+	for(i = 0; i < MAX_MENU_ENTRIES; ++i)
+	{
+		MenuEntry *entry = &currentMenuDef->menuEntries[i];
+		if(MenuEntryIsActive(entry))
+		{
+			ShowMenuLayer(i, GetMenuEntryText(entry));
+			if(setSelected)
+			{
+				SetMenuHighlight(i, false);
+			}
+			else
+			{
+				SetMenuHighlight(i, true);
+				setSelected = true;
+				currentMenuDef->currentSelection = i;
+				SetMenuDescription(GetMenuEntryDescription(entry));
+			}
+		}
+		else
+		{
+			HideMenuLayer(i);
+		}
+	}	
+}
+
+void MenuAppear(Window *window)
+{
 	MenuWindow *menuWindow = window_get_user_data(window);
 	if(menuWindow)
 	{
@@ -62,29 +124,7 @@ void MenuAppear(Window *window)
 		return;
 	}
 
-	for(i = 0; i < MAX_MENU_ENTRIES; ++i)
-	{
-		MenuEntry *entry = &currentMenuDef->menuEntries[i];
-		if(MenuEntryIsActive(entry))
-		{
-			ShowMenuLayer(i, entry->text);
-			if(setSelected)
-			{
-				SetMenuHighlight(i, false);
-			}
-			else
-			{
-				SetMenuHighlight(i, true);
-				setSelected = true;
-				currentMenuDef->currentSelection = i;
-				SetMenuDescription(entry->description);
-			}
-		}
-		else
-		{
-			HideMenuLayer(i);
-		}
-	}
+	RefreshMenuAppearance();
 	
 	if(menuWindow && menuWindow->menu && menuWindow->menu->mainImageId != -1)
 	{
@@ -189,7 +229,7 @@ void IterateMenuEntries(int direction, int limit)
 		SetMenuHighlight(currentMenuDef->currentSelection, false);
 		SetMenuHighlight(newSelection, true);
 		currentMenuDef->currentSelection = newSelection;
-		SetMenuDescription(entry->description);
+		SetMenuDescription(GetMenuEntryDescription(entry));
 	}
 }
 

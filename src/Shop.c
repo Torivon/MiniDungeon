@@ -70,12 +70,12 @@ MenuDefinition shopItemMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to shop menu", PopMenu},
-		{"10", "Buy Potion", BuyPotion},
-		{"100", "Buy Elixir", BuyElixir},
-		{"20", "Buy Bomb", BuyBomb},
-		{"20", "Buy Icicle", BuyIcicle},
-		{"20", "Buy Spark", BuySpark},
+		{.text = "Quit", .description = "Return to shop menu", .menuFunction = PopMenu},
+		{.text = "10", .description = "Buy Potion", .menuFunction = BuyPotion},
+		{.text = "100", .description = "Buy Elixir", .menuFunction = BuyElixir},
+		{.text = "20", .description = "Buy Bomb", .menuFunction = BuyBomb},
+		{.text = "20", .description = "Buy Icicle", .menuFunction = BuyIcicle},
+		{.text = "20", .description = "Buy Spark", .menuFunction = BuySpark},
 	},
 	.appear = ShopItemMenuAppear,
 	.mainImageId = -1
@@ -142,8 +142,8 @@ MenuDefinition shopStatMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to shop menu", PopMenu},
-		{"Buy", "Buy stat point", BuyStatPoint},
+		{.text = "Quit", .description = "Return to shop menu", .menuFunction = PopMenu},
+		{.text = "Buy", .description = "Buy stat point", .menuFunction = BuyStatPoint},
 	},
 	.appear = ShopStatMenuAppear,
 	.mainImageId = -1
@@ -166,9 +166,9 @@ MenuDefinition shopMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to adventure", PopMenu},
-		{"Items", "Buy items", ShowShopItemMenu},
-		{"Stats", "Buy stat points", ShowShopStatMenu},
+		{.text = "Quit", .description = "Return to adventure", .menuFunction = PopMenu},
+		{.text = "Items", .description = "Buy items", .menuFunction = ShowShopItemMenu},
+		{.text = "Stats", .description = "Buy stat points", .menuFunction = ShowShopStatMenu},
 	},
 	.appear = ShopMenuWindowAppear,
 	.mainImageId = RESOURCE_ID_IMAGE_SHOP

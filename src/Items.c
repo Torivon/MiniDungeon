@@ -82,7 +82,7 @@ MenuDefinition itemGainMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Ok", "Return to adventuring", PopMenu}
+		{.text = "Ok", .description = "Return to adventuring", .menuFunction = PopMenu}
 	},
 	.init = ItemGainMenuInit,
 	.appear = ItemGainMenuAppear,
@@ -182,9 +182,9 @@ MenuDefinition itemMainMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to main menu", PopMenu},
-		{"Drink", "Heal 50% of max health", ActivatePotion},
-		{"Drink", "Heal 100% of max health", ActivateFullPotion}
+		{.text = "Quit", .description = "Return to main menu", .menuFunction = PopMenu},
+		{.text = "Drink", .description = "Heal 50% of max health", .menuFunction = ActivatePotion},
+		{.text = "Drink", .description = "Heal 100% of max health", .menuFunction = ActivateFullPotion}
 	},
 	.appear = ItemMainMenuAppear,
 	.mainImageId = -1
