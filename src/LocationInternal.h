@@ -18,10 +18,19 @@ typedef struct FixedClass
 	uint16_t backgroundImage; // resource id
 } FixedClass;
 
+// The dungeon class interprets Location's length as per floor
+typedef struct DungeonClass
+{
+	uint8_t numberOfFloors;
+	uint8_t levelIncreaseRate; // For every x floors, add 1 to the baseLevel.
+	PathClass *pathclass;
+	FixedClass *fixedclass;
+} DungeonClass;
+
 typedef struct Location
 {
 	char *name;
-	uint type : 1;
+	uint type : 2;
 	
 	uint length : 8; // For a path, how many minutes it takes to traverse.
 	uint baseLevel : 8; // This determines the level of monsters encountered
@@ -39,5 +48,6 @@ typedef struct Location
 	{
 		PathClass *pathclass;
 		FixedClass *fixedclass;
+		DungeonClass *dungeonclass;
 	};
 } Location;

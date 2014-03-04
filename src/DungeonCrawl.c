@@ -118,8 +118,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 1 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_2},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_1, DUNGEON_FLOOR_2},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -134,8 +134,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 2 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_3},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_2, DUNGEON_FLOOR_3},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -150,8 +150,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 3 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_4},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_3, DUNGEON_FLOOR_4},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -166,8 +166,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 4 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_5},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_4, DUNGEON_FLOOR_5},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -182,8 +182,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 5 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_6},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_5, DUNGEON_FLOOR_6},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -198,8 +198,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 6 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_7},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_6, DUNGEON_FLOOR_7},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -214,8 +214,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 7 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_8},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_7, DUNGEON_FLOOR_8},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -230,8 +230,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 8 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_9},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_8, DUNGEON_FLOOR_9},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -246,8 +246,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 9 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_10},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_9, DUNGEON_FLOOR_10},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -262,8 +262,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 10 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_11},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_10, DUNGEON_FLOOR_11},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -278,8 +278,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 11 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_12},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_11, DUNGEON_FLOOR_12},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -294,8 +294,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 12 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_13},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_12, DUNGEON_FLOOR_13},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -310,15 +310,15 @@ static Location locationList[] =
 	{
 		.name = "Floor 13 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_14},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_13, DUNGEON_FLOOR_14},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
 		.name = "Floor 14",
 		.type = LOCATIONTYPE_PATH,
 		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_10_END, DUNGEON_FLOOR_11_END},
+		.adjacentLocations = {DUNGEON_FLOOR_13_END, DUNGEON_FLOOR_14_END},
 		.length = 30,
 		.baseLevel = 14,
 		.pathclass = &DungeonFloorClass,
@@ -326,8 +326,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 14 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_15},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_14, DUNGEON_FLOOR_15},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -342,8 +342,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 15 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_16},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_15, DUNGEON_FLOOR_16},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -358,8 +358,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 16 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_17},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_16, DUNGEON_FLOOR_17},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -374,8 +374,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 17 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_18},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_17, DUNGEON_FLOOR_18},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -390,8 +390,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 18 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_19},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_18, DUNGEON_FLOOR_19},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{
@@ -406,8 +406,8 @@ static Location locationList[] =
 	{
 		.name = "Floor 19 Stairs",
 		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_20},
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_FLOOR_19, DUNGEON_FLOOR_20},
 		.fixedclass = &DungeonStairsClass,
 	},
 	{

@@ -4,6 +4,7 @@ typedef enum
 {
 	LOCATIONTYPE_FIXED = 0,
 	LOCATIONTYPE_PATH = 1,
+	LOCATIONTYPE_DUNGEON = 2,
 } LocationType;
 
 typedef struct Location Location;

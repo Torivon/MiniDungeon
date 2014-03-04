@@ -50,6 +50,8 @@ int GetLocationMonsterIndex(Location *location)
 		else
 		{
 			int max = ((location->pathclass->numberOfMonsters - 1) * (location->baseLevel - 1))/(location->pathclass->monsterUnlockLevel - 1) + 1;
+			if(max > location->pathclass->numberOfMonsters)
+				max = location->pathclass->numberOfMonsters;
 			index = Random(max);
 			return location->pathclass->monsters[index];
 		}
