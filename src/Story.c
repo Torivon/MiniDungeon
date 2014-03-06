@@ -1,5 +1,6 @@
 #include "pebble.h"
 
+#include "Utils.h"
 #include "Location.h"
 #include "Logging.h"
 #include "Monsters.h"
@@ -58,12 +59,12 @@ Location *GetCurrentLocation(void)
 
 int GetCurrentBackgroundImage(void)
 {
-	return GetLocationBackgroundImageId(GetCurrentLocation());
+	return GetLocationBackgroundImageId(GetCurrentLocation(), currentStoryState->persistedStoryState.dungeonFixed);
 }
 
 MonsterDef *GetRandomMonster(void)
 {
-	return GetMonsterByIndex(GetLocationMonsterIndex(GetCurrentLocation()));
+	return GetMonsterByIndex(GetLocationMonsterIndex(GetCurrentLocation(), currentStoryState->persistedStoryState.dungeonFixed, currentStoryState->persistedStoryState.dungeonFloor));
 }
 
 MonsterDef *GetFixedMonster(int index)
@@ -73,17 +74,29 @@ MonsterDef *GetFixedMonster(int index)
 
 int GetCurrentLocationEncounterChance(void)
 {
-	return GetLocationEncounterChance(GetCurrentLocation());
+	return GetLocationEncounterChance(GetCurrentLocation(), currentStoryState->persistedStoryState.dungeonFixed);
 }
 
 int GetCurrentBaseLevel(void)
 {
-	return GetLocationBaseLevel(GetCurrentLocation());
+	return GetLocationBaseLevel(GetCurrentLocation(), currentStoryState->persistedStoryState.dungeonFloor);
 }
 
 const char *GetCurrentLocationName(void)
 {
 	return GetLocationName(GetCurrentLocation());
+}
+
+const char *GetCurrentLocationFloor(void)
+{
+	if(IsCurrentLocationDungeon())
+	{
+		static char floorText[] = "00"; // Needs to be static because it's used by the system later.
+		IntToString(floorText, 2, currentStoryState->persistedStoryState.dungeonFloor);
+		return floorText;
+	}
+	
+	return "";
 }
 
 void IncrementCurrentDuration(void)
@@ -111,6 +124,19 @@ const char *GetAdjacentLocationName(uint16_t index)
 	Location *adjacentLocation;
 	int realIndex = GetCurrentAdjacentLocationIndex(index);
 	
+	if(IsCurrentLocationDungeon())
+	{
+		if(!currentStoryState->persistedStoryState.dungeonFixed)
+			return NULL;
+		
+		if(index == 0)
+			return "Previous";
+		else if(index == 1)
+			return "Next";
+		else
+			return NULL;
+	}
+	
 	if(realIndex == -1)
 		return NULL;
 	
@@ -125,6 +151,30 @@ const char *GetAdjacentLocationName(uint16_t index)
 bool IsCurrentLocationPath(void)
 {
 	return GetLocationType(GetCurrentLocation()) == LOCATIONTYPE_PATH;
+}
+
+bool IsCurrentLocationDungeon(void)
+{
+	return GetLocationType(GetCurrentLocation()) == LOCATIONTYPE_DUNGEON;
+}
+
+bool IsCurrentLocationFixed(void)
+{
+	return GetLocationType(GetCurrentLocation()) == LOCATIONTYPE_FIXED;
+}
+
+bool CurrentLocationAllowsShops(void)
+{
+	if(IsCurrentLocationFixed())
+		return true;
+	
+	if(IsCurrentLocationDungeon())
+	{
+		if(currentStoryState->persistedStoryState.dungeonFixed)
+			return true;
+	}
+	
+	return false;
 }
 
 void SetNewLocation(int index)
@@ -147,6 +197,15 @@ void SetNewLocation(int index)
 	if(GetLocationType(newLocation) == LOCATIONTYPE_PATH)
 	{
 		currentStoryState->persistedStoryState.currentPathDestination = GetDestinationOfPath(newLocation, lastIndex);
+	}
+	if(GetLocationType(newLocation) == LOCATIONTYPE_DUNGEON)
+	{
+		currentStoryState->persistedStoryState.currentPathDestination = GetDestinationOfPath(newLocation, lastIndex);
+		if(GetAdjacentLocationIndex(newLocation, 0) == currentStoryState->persistedStoryState.currentPathDestination)
+			currentStoryState->persistedStoryState.dungeonFloor = GetLocationNumberOfFloors(newLocation);
+		else
+			currentStoryState->persistedStoryState.dungeonFloor = 1;
+		currentStoryState->persistedStoryState.dungeonFixed = false;
 	}
 	RunArrivalFunction(newLocation);
 }
@@ -176,4 +235,110 @@ void InitializeCurrentStory(void)
 StoryState *GetCurrentStoryState(void)
 {
 	return currentStoryState;
+}
+
+static void EndPath(void)
+{
+	SetNewLocation(GetCurrentDestinationIndex());
+}
+
+static LocationUpdateReturnType UpdatePath(void)
+{
+	IncrementCurrentDuration();
+	DEBUG_LOG("Time in current location: %d/%d.", GetCurrentDuration(), GetCurrentLocationLength());
+	if(GetCurrentDuration() >= GetCurrentLocationLength())
+	{
+		EndPath();
+		return LOCATIONUPDATE_FULLREFRESH;
+	}
+	
+	return LOCATIONUPDATE_COMPUTERANDOM;
+}
+
+static void EndDungeonPath(void)
+{
+	Location *location = GetCurrentLocation();
+	bool forward;
+	if(currentStoryState->persistedStoryState.currentPathDestination == GetCurrentAdjacentLocationIndex(0))
+		forward = false;
+	else
+		forward = true;
+	
+	if(forward && currentStoryState->persistedStoryState.dungeonFloor == GetLocationNumberOfFloors(location))
+	{
+		SetNewLocation(GetCurrentDestinationIndex());
+	}
+	else if(!forward && currentStoryState->persistedStoryState.dungeonFloor == 1)
+	{
+		SetNewLocation(GetCurrentDestinationIndex());
+	}
+	else
+	{
+		currentStoryState->persistedStoryState.dungeonFixed = true;
+		currentStoryState->persistedStoryState.currentLocationDuration = 0;
+		if(!forward)
+			--currentStoryState->persistedStoryState.dungeonFloor;
+	}
+}
+
+static LocationUpdateReturnType UpdateDungeon(void)
+{
+	if(currentStoryState->persistedStoryState.dungeonFixed)
+	{
+		return LOCATIONUPDATE_DONOTHING;
+	}
+	else
+	{
+		IncrementCurrentDuration();
+		DEBUG_LOG("Time in current location: %d/%d.", GetCurrentDuration(), GetCurrentLocationLength());
+		if(GetCurrentDuration() >= GetCurrentLocationLength())
+		{
+			EndDungeonPath();
+			return LOCATIONUPDATE_FULLREFRESH;
+		}
+		
+		return LOCATIONUPDATE_COMPUTERANDOM;
+	}
+}
+
+LocationUpdateReturnType UpdateCurrentLocation(void)
+{
+	Location *location = GetCurrentLocation();
+	if(!location)
+		return LOCATIONUPDATE_DONOTHING;
+	
+	switch(GetLocationType(location))
+	{
+		case LOCATIONTYPE_PATH:
+			return UpdatePath();
+			break;
+		case LOCATIONTYPE_FIXED:
+			return LOCATIONUPDATE_DONOTHING;
+			break;
+		case LOCATIONTYPE_DUNGEON:
+			return UpdateDungeon();
+			break;
+		default:
+			return LOCATIONUPDATE_DONOTHING;
+	}
+}
+
+void TravelToAdjacentLocationByIndex(int index)
+{
+	if(IsCurrentLocationFixed())
+	{
+		SetNewLocation(GetCurrentAdjacentLocationIndex(index));
+	}
+	else if(IsCurrentLocationDungeon() && currentStoryState->persistedStoryState.dungeonFixed)
+	{
+		if(index != 0 && index != 1)
+			return;
+		
+		if(index == 1)
+			++currentStoryState->persistedStoryState.dungeonFloor;
+		
+		currentStoryState->persistedStoryState.dungeonFixed = false;
+		currentStoryState->persistedStoryState.currentPathDestination = GetCurrentAdjacentLocationIndex(index);
+		currentStoryState->persistedStoryState.currentLocationDuration = 0;
+	}
 }

@@ -12,13 +12,15 @@
 #define PUBLISH 1
 	
 // Stories to include
-#define INCLUDE_DUNGEON_CRAWL 1
+#define INCLUDE_DUNGEON_CRAWL 0
 #define INCLUDE_DRAGON_QUEST 0
+#define INCLUDE_DUNGEON_CRAWL2 1
 
 enum
 {
 	DUNGEON_CRAWL_INDEX = 0,
 	DRAGON_QUEST_INDEX = 1,
+	DUNGEON_CRAWL2_INDEX = 2,
 };
 
 // Logging
@@ -38,7 +40,7 @@ enum
 #endif
 
 // This needs to be large enough to handle the maximum size of the window stack
-#define MAX_MENU_WINDOWS 6
+#define MAX_MENU_WINDOWS 7
 // This determines how many text rows there are in the interface
 #define MAX_MENU_ENTRIES 6
 	

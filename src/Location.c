@@ -5,65 +5,120 @@
 #include "Logging.h"
 #include "Utils.h"
 
-int GetLocationBackgroundImageId(Location *location)
+FixedClass *GetLocationFixedClass(Location *location, bool dungeonFixed)
+{
+	switch(location->type)
+	{
+		case LOCATIONTYPE_FIXED:
+			return location->fixedclass;
+		case LOCATIONTYPE_PATH:
+			return NULL;
+		case LOCATIONTYPE_DUNGEON:
+			if(!location->dungeonclass)
+				return NULL;
+			if(dungeonFixed)
+				return location->dungeonclass->fixedclass;
+			else
+				return NULL;
+		default:
+			return NULL;
+	}
+}
+	
+PathClass *GetLocationPathClass(Location *location, bool dungeonFixed)
+{
+	switch(location->type)
+	{
+		case LOCATIONTYPE_FIXED:
+			return NULL;
+		case LOCATIONTYPE_PATH:
+			return location->pathclass;
+		case LOCATIONTYPE_DUNGEON:
+			if(!location->dungeonclass)
+				return NULL;
+			if(dungeonFixed)
+				return NULL;
+			else
+				return location->dungeonclass->pathclass;
+		default:
+			return NULL;
+	}
+}
+
+int GetLocationBaseLevel(Location *location, int floor)
+{
+	if(location->type == LOCATIONTYPE_DUNGEON && location->dungeonclass && location->dungeonclass->levelIncreaseRate)
+	{
+		return location->baseLevel + floor / location->dungeonclass->levelIncreaseRate;
+	}
+	
+	return location->baseLevel;
+}
+
+int GetLocationBackgroundImageId(Location *location, bool dungeonFixed)
 {
 	int index;
+	FixedClass *fixedclass = NULL;
+	PathClass *pathclass = NULL;
 	
-	if(location->type == LOCATIONTYPE_FIXED && location->fixedclass)
-		return location->fixedclass->backgroundImage;
+	if((fixedclass = GetLocationFixedClass(location, dungeonFixed)))
+		return fixedclass->backgroundImage;
 	
-	if(location->type == LOCATIONTYPE_PATH && location->pathclass)
+	if((pathclass = GetLocationPathClass(location, dungeonFixed)))
 	{
-		if(location->pathclass->numberOfBackgroundImages > LOCATION_MAX_BACKGROUND_IMAGES)
+		if(pathclass->numberOfBackgroundImages > LOCATION_MAX_BACKGROUND_IMAGES)
 			return -1;
 		
-		if(location->pathclass->numberOfBackgroundImages == 1)
+		if(pathclass->numberOfBackgroundImages == 1)
 		{
-			return location->pathclass->backgroundImages[0];
+			return pathclass->backgroundImages[0];
 		}
 		else
 		{
-			index = Random(location->pathclass->numberOfBackgroundImages);
-			return location->pathclass->backgroundImages[index];
+			index = Random(pathclass->numberOfBackgroundImages);
+			return pathclass->backgroundImages[index];
 		}
 	}
 	
 	return -1;
 }
 
-int GetLocationMonsterIndex(Location *location)
+int GetLocationMonsterIndex(Location *location, bool dungeonFixed, uint floor)
 {
 	int index;
+	FixedClass *fixedclass = NULL;
+	PathClass *pathclass = NULL;
 	
-	if(location->type == LOCATIONTYPE_FIXED && location->fixedclass)
+	if((fixedclass = GetLocationFixedClass(location, dungeonFixed)))
 		return location->fixedclass->monster;
 	
-	if(location->type == LOCATIONTYPE_PATH && location->pathclass)
+	if((pathclass = GetLocationPathClass(location, dungeonFixed)))
 	{
-		if(location->pathclass->numberOfMonsters > PATH_CLASS_MAX_MONSTERS)
+		if(pathclass->numberOfMonsters > PATH_CLASS_MAX_MONSTERS)
 			return -1;
 		
-		if(location->pathclass->numberOfMonsters == 1)
+		if(pathclass->numberOfMonsters == 1)
 		{
-			return location->pathclass->monsters[0];
+			return pathclass->monsters[0];
 		}
 		else
 		{
-			int max = ((location->pathclass->numberOfMonsters - 1) * (location->baseLevel - 1))/(location->pathclass->monsterUnlockLevel - 1) + 1;
-			if(max > location->pathclass->numberOfMonsters)
-				max = location->pathclass->numberOfMonsters;
+			int max = ((pathclass->numberOfMonsters - 1) * (GetLocationBaseLevel(location, floor) - 1))/(pathclass->monsterUnlockLevel - 1) + 1;
+			if(max > pathclass->numberOfMonsters)
+				max = pathclass->numberOfMonsters;
 			index = Random(max);
-			return location->pathclass->monsters[index];
+			return pathclass->monsters[index];
 		}
 	}
 	
 	return -1;
 }
 
-int GetLocationEncounterChance(Location *location)
+int GetLocationEncounterChance(Location *location, bool dungeonFixed)
 {
-	if(location->type == LOCATIONTYPE_PATH && location->pathclass)
-		return location->pathclass->encounterChance;
+	PathClass *pathclass = NULL;
+	if((pathclass = GetLocationPathClass(location, dungeonFixed)))
+		return pathclass->encounterChance;
 	
 	return 0;
 }
@@ -76,11 +131,6 @@ const char *GetLocationName(Location* location)
 int GetLocationLength(Location *location)
 {
 	return location->length;
-}
-
-int GetLocationBaseLevel(Location *location)
-{
-	return location->baseLevel;
 }
 
 size_t SizeOfLocation(void)
@@ -138,4 +188,12 @@ void RunArrivalFunction(Location *location)
 	{
 		location->fixed_ArrivalFunction();
 	}
+}
+
+uint8_t GetLocationNumberOfFloors(Location *location)
+{
+	if(location->type != LOCATIONTYPE_DUNGEON)
+		return 0;
+	
+	return location->dungeonclass->numberOfFloors;
 }

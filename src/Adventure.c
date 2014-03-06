@@ -45,7 +45,7 @@ void RefreshAdventure(void)
 		return;
 	
 	DEBUG_VERBOSE_LOG("Refreshing adventure window.");
-	ShowMainWindowRow(0, GetCurrentLocationName(), "");
+	ShowMainWindowRow(0, GetCurrentLocationName(), GetCurrentLocationFloor());
 	UpdateCharacterHealth();
 	UpdateCharacterLevel();
 	updateDelay = 1;
@@ -66,7 +66,7 @@ void FollowPath0(void)
 	DEBUG_LOG("Trying to follow first path");
 	if(!IsCurrentLocationPath())
 	{
-		SetNewLocation(GetCurrentAdjacentLocationIndex(0));
+		TravelToAdjacentLocationByIndex(0);
 		RefreshAdventure();
 	}
 }
@@ -84,7 +84,7 @@ void FollowPath1(void)
 	DEBUG_LOG("Trying to follow second path");
 	if(!IsCurrentLocationPath())
 	{
-		SetNewLocation(GetCurrentAdjacentLocationIndex(1));
+		TravelToAdjacentLocationByIndex(1);
 		RefreshAdventure();
 	}
 }
@@ -102,7 +102,7 @@ void FollowPath2(void)
 	DEBUG_LOG("Trying to follow first path");
 	if(!IsCurrentLocationPath())
 	{
-		SetNewLocation(GetCurrentAdjacentLocationIndex(2));
+		TravelToAdjacentLocationByIndex(2);
 		RefreshAdventure();
 	}
 }
@@ -120,46 +120,25 @@ void FollowPath3(void)
 	DEBUG_LOG("Trying to follow first path");
 	if(!IsCurrentLocationPath())
 	{
-		SetNewLocation(GetCurrentAdjacentLocationIndex(3));
+		TravelToAdjacentLocationByIndex(3);
 		RefreshAdventure();
 	}
 }
 
-void EndPath(void)
-{
-	if(GetVibration())
-		vibes_short_pulse();
-	SetNewLocation(GetCurrentDestinationIndex());
-	RefreshAdventure();
-}
-
-bool UpdatePath(void)
-{
-	IncrementCurrentDuration();
-	DEBUG_LOG("Time in current location: %d/%d.", GetCurrentDuration(), GetCurrentLocationLength());
-	if(GetCurrentDuration() >= GetCurrentLocationLength())
-	{
-		EndPath();
-		return true;
-	}
-	
-	return false;
-}
-
 const char *ShopMenuEntryTextFunction(void)
 {
-	if(IsCurrentLocationPath())
-		return NULL;
-	else
+	if(CurrentLocationAllowsShops())
 		return "Shop";
+	else
+		return NULL;
 }
 
 const char *ShopMenuEntryDescriptionFunction(void)
 {
-	if(IsCurrentLocationPath())
-		return NULL;
-	else
+	if(CurrentLocationAllowsShops())
 		return "Visit a shop";
+	else
+		return NULL;
 }
 
 #if ALLOW_TEST_MENU
@@ -275,6 +254,7 @@ bool ComputeRandomEvent(void)
 
 void UpdateAdventure(void)
 {
+	LocationUpdateReturnType returnVal;
 	if(!adventureWindowVisible)
 		return;
 	
@@ -291,11 +271,21 @@ void UpdateAdventure(void)
 		return;
 	}
 	
-	if(IsCurrentLocationPath())
+	returnVal = UpdateCurrentLocation();
+
+	switch(returnVal)
 	{
-		if(UpdatePath())
-			return;
-		ComputeRandomEvent();
-		LoadLocationImage();
+		case LOCATIONUPDATE_COMPUTERANDOM:
+			ComputeRandomEvent();
+			LoadLocationImage();
+			break;
+		case LOCATIONUPDATE_DONOTHING:
+			break;
+		case LOCATIONUPDATE_FULLREFRESH:
+			if(GetVibration())
+				vibes_short_pulse();
+
+			RefreshAdventure();
+			break;
 	}
 }

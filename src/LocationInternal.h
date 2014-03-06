@@ -31,11 +31,11 @@ typedef struct Location
 {
 	char *name;
 	uint type : 2;
-	
-	uint length : 8; // For a path, how many minutes it takes to traverse.
-	uint baseLevel : 8; // This determines the level of monsters encountered
-
 	uint numberOfAdjacentLocations : 3;
+	
+	uint8_t length; // For a path, how many minutes it takes to traverse.
+	uint8_t baseLevel; // This determines the level of monsters encountered
+
 	uint16_t adjacentLocations[LOCATION_MAX_ADJACENT_LOCATIONS]; // For a town or dungeon, these can be paths leading away or fixed locations. For a path, only two can be set and they are the endpoints
 	
 	union

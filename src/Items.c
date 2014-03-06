@@ -62,7 +62,6 @@ void ClearInventory(void)
 	{
 		itemsOwned[i] = 0;
 	}
-	itemsOwned[ITEM_TYPE_POTION] = 5;
 }
 
 const char *GetItemName(ItemType itemType)

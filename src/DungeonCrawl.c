@@ -12,7 +12,7 @@
 #include "Monsters.h"
 #include "Story.h"
 	
-#if INCLUDE_DUNGEON_CRAWL
+#if INCLUDE_DUNGEON_CRAWL || INCLUDE_DUNGEON_CRAWL2
 
 enum
 {
@@ -76,7 +76,7 @@ static PathClass DungeonFloorClass =
 	.numberOfMonsters = 6,
 	.monsters = {DUNGEON_RAT, DUNGEON_GOBLIN, DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
 	.monsterUnlockLevel = 15,
-	.encounterChance = 25,
+	.encounterChance = 20,
 	.numberOfBackgroundImages = 4,
 	.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT, RESOURCE_ID_IMAGE_DUNGEONDEADEND},	
 };
@@ -97,6 +97,15 @@ static FixedClass TreasureRoomClass =
 	.backgroundImage = RESOURCE_ID_IMAGE_DUNGEONDEADEND,
 };
 
+static DungeonClass FullDungeonClass =
+{
+	.numberOfFloors = 20,
+	.levelIncreaseRate = 1,
+	.pathclass = &DungeonFloorClass,
+	.fixedclass = &DungeonStairsClass,
+};
+
+#if INCLUDE_DUNGEON_CRAWL
 static Location locationList[] = 
 {
 	{
@@ -436,6 +445,7 @@ static Location locationList[] =
 		.fixed_ArrivalFunction = ShowEndWindow,
 	},
 };
+#endif
 
 static MonsterDef monsters[] =
 {
@@ -540,6 +550,7 @@ static MonsterDef monsters[] =
 	},
 };
 
+#if INCLUDE_DUNGEON_CRAWL
 StoryState dungeonCrawlStoryState = {0};
 
 void InitializeDungeonCrawl(void)
@@ -568,13 +579,85 @@ Story dungeonCrawlStory =
 
 void LaunchDungeonCrawl(void)
 {
-#if INCLUDE_DUNGEON_CRAWL
 	dungeonCrawlStory.numberOfLocations = sizeof(locationList)/sizeof(Location);
 	dungeonCrawlStory.numberOfMonsters = sizeof(monsters)/sizeof(MonsterDef);
 	RegisterStory(&dungeonCrawlStory, &dungeonCrawlStoryState);
 	DEBUG_LOG("Initialized locationList size = %d", sizeof(locationList));
 	ShowAdventureWindow();
-#endif	
 }
+#endif
+
+#if INCLUDE_DUNGEON_CRAWL2
+static Location locationList2[] =
+{
+	{
+		.name = "Dungeon Entrance",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {1},
+		.fixedclass = &DungeonStairsClass,
+	},
+	{
+		.name = "Dungeon",
+		.type = LOCATIONTYPE_DUNGEON,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {0, 2},
+		.length = 30,
+		.baseLevel = 1,
+		.dungeonclass = &FullDungeonClass,
+	},
+	{
+		.name = "Dragon's Room",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {3},
+		.fixedclass = &DragonsRoomClass,
+		.baseLevel = 1,
+		.fixed_ArrivalFunction = ShowBattleWindow,
+	},
+	{
+		.name = "Treasure Room",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 0,
+		.fixedclass = &TreasureRoomClass,
+		.fixed_ArrivalFunction = ShowEndWindow,
+	},
+};
+
+StoryState dungeonCrawl2StoryState = {0};
+
+void InitializeDungeonCrawl2(void)
+{
+	dungeonCrawl2StoryState.needsSaving = true;
+	dungeonCrawl2StoryState.persistedStoryState.currentLocationIndex = 0;
+	dungeonCrawl2StoryState.persistedStoryState.currentLocationDuration = 0;
+	dungeonCrawl2StoryState.persistedStoryState.currentPathDestination = 0;
+	dungeonCrawl2StoryState.persistedStoryState.mostRecentMonster = 0;
+	
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+	AddItem(ITEM_TYPE_POTION);
+}
+
+Story dungeonCrawl2Story = 
+{
+	.gameNumber = DUNGEON_CRAWL2_INDEX,
+	.gameDataVersion = 1,
+	.locationList = locationList2,
+	.monsterList = monsters,
+	.initializeStory = InitializeDungeonCrawl2,
+};
+
+void LaunchDungeonCrawl2(void)
+{
+	dungeonCrawl2Story.numberOfLocations = sizeof(locationList2)/sizeof(Location);
+	dungeonCrawl2Story.numberOfMonsters = sizeof(monsters)/sizeof(MonsterDef);
+	RegisterStory(&dungeonCrawl2Story, &dungeonCrawl2StoryState);
+	DEBUG_LOG("Initialized locationList size = %d", sizeof(locationList2));
+	ShowAdventureWindow();
+}
+#endif
 
 #endif

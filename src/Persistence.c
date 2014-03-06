@@ -10,9 +10,9 @@
 #include "Shop.h"
 #include "Story.h"
 	
-#define CURRENT_DATA_VERSION 3
+#define CURRENT_DATA_VERSION 4
 
-#define NUMBER_OF_PERSISTED_GAMES 2
+#define NUMBER_OF_PERSISTED_GAMES 3
 
 enum
 {

@@ -1,6 +1,7 @@
 #pragma once
 
-typedef struct Location Location;
+#include "Location.h"
+	
 typedef struct MonsterDef MonsterDef;
 
 typedef void (*StoryInitializeFunction)(void);
@@ -22,7 +23,9 @@ typedef struct PersistedStoryState
 	int currentLocationIndex;
 	int currentLocationDuration;
 	int currentPathDestination; // The global index for the Location to go to when the current path finishes.
-	int mostRecentMonster;	
+	int mostRecentMonster;
+	uint8_t dungeonFloor;
+	bool dungeonFixed;
 } PersistedStoryState;
 
 typedef struct StoryState
@@ -44,6 +47,7 @@ int GetCurrentLocationEncounterChance(void);
 int GetCurrentBaseLevel(void);
 
 const char *GetCurrentLocationName(void);
+const char *GetCurrentLocationFloor(void);
 void IncrementCurrentDuration(void);
 void CurrentStoryStateNeedsSaving(void);
 int GetCurrentDuration(void);
@@ -52,6 +56,9 @@ int GetCurrentLocationLength(void);
 const char *GetAdjacentLocationName(uint16_t index);
 
 bool IsCurrentLocationPath(void);
+bool IsCurrentLocationDungeon(void);
+bool IsCurrentLocationFixed(void);
+bool CurrentLocationAllowsShops(void);
 
 // Debug function
 void FollowFirstPath(void);
@@ -66,3 +73,6 @@ void InitializeCurrentStory(void);
 
 const Story *GetCurrentStory(void);
 StoryState *GetCurrentStoryState(void);
+
+LocationUpdateReturnType UpdateCurrentLocation(void);
+void TravelToAdjacentLocationByIndex(int index);

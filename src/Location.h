@@ -7,6 +7,13 @@ typedef enum
 	LOCATIONTYPE_DUNGEON = 2,
 } LocationType;
 
+typedef enum
+{
+	LOCATIONUPDATE_COMPUTERANDOM = 0,
+	LOCATIONUPDATE_DONOTHING,
+	LOCATIONUPDATE_FULLREFRESH,
+} LocationUpdateReturnType;
+
 typedef struct Location Location;
 
 typedef void (*LocationFunction)(void);
@@ -18,15 +25,15 @@ typedef bool (*PrerequisiteFunction)(void);
 	
 #define PATH_CLASS_MAX_MONSTERS 10
 
-int GetLocationBackgroundImageId(Location *location);
-int GetLocationMonsterIndex(Location *location);
-int GetLocationEncounterChance(Location *location);
+int GetLocationBackgroundImageId(Location *location, bool dungeonFixed);
+int GetLocationMonsterIndex(Location *location, bool dungeonFixed, uint floor);
+int GetLocationEncounterChance(Location *location, bool dungeonFixed);
 const char *GetLocationName(Location *location);
 
 size_t SizeOfLocation(void);
 Location *GetLocationByIndex(Location *locationList, int index);
 int GetLocationLength(Location *location);
-int GetLocationBaseLevel(Location *location);
+int GetLocationBaseLevel(Location *location, int floor);
 
 int GetAdjacentLocationIndex(Location *location, int index);
 
@@ -34,3 +41,5 @@ LocationType GetLocationType(Location *location);
 int GetDestinationOfPath(Location *location, int lastIndex);
 
 void RunArrivalFunction(Location *location);
+
+uint8_t GetLocationNumberOfFloors(Location *location);
