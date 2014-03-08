@@ -1,3 +1,3 @@
 #pragma once
 
-void RegisterDragonQuestStory(void);
+void LaunchDragonQuest(void);

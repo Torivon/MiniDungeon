@@ -306,5 +306,6 @@ void BattleWindowInit(Window *window)
 
 void ShowBattleWindow(void)
 {
-	ShowMainBattleMenu();
+	if(CurrentLocationAllowsCombat())
+		ShowMainBattleMenu();
 }

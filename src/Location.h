@@ -28,6 +28,7 @@ typedef bool (*PrerequisiteFunction)(void);
 int GetLocationBackgroundImageId(Location *location, bool dungeonFixed);
 int GetLocationMonsterIndex(Location *location, bool dungeonFixed, uint floor);
 int GetLocationEncounterChance(Location *location, bool dungeonFixed);
+int GetLocationMonsterCount(Location *location, bool dungeonFixed);
 const char *GetLocationName(Location *location);
 
 size_t SizeOfLocation(void);
@@ -43,3 +44,6 @@ int GetDestinationOfPath(Location *location, int lastIndex);
 void RunArrivalFunction(Location *location);
 
 uint8_t GetLocationNumberOfFloors(Location *location);
+
+bool LocationAllowsShop(Location *location, bool dungeonFixed);
+

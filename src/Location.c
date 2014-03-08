@@ -123,6 +123,19 @@ int GetLocationEncounterChance(Location *location, bool dungeonFixed)
 	return 0;
 }
 
+int GetLocationMonsterCount(Location *location, bool dungeonFixed)
+{	
+	PathClass *pathclass = NULL;
+	FixedClass *fixedclass = NULL;
+	if((pathclass = GetLocationPathClass(location, dungeonFixed)))
+		return pathclass->numberOfMonsters;
+	
+	if((fixedclass = GetLocationFixedClass(location, dungeonFixed)))
+		return fixedclass->monster ? 1 : 0;
+	
+	return 0;
+}
+
 const char *GetLocationName(Location* location)
 {
 	return location->name;
@@ -196,4 +209,14 @@ uint8_t GetLocationNumberOfFloors(Location *location)
 		return 0;
 	
 	return location->dungeonclass->numberOfFloors;
+}
+
+bool LocationAllowsShop(Location *location, bool dungeonFixed)
+{
+	FixedClass *fixedclass = GetLocationFixedClass(location, dungeonFixed);
+	
+	if(!fixedclass)
+		return false;
+	
+	return fixedclass->allowShop;
 }

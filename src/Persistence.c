@@ -10,9 +10,9 @@
 #include "Shop.h"
 #include "Story.h"
 	
-#define CURRENT_DATA_VERSION 4
+#define CURRENT_DATA_VERSION 7
 
-#define NUMBER_OF_PERSISTED_GAMES 3
+#define NUMBER_OF_PERSISTED_GAMES 2
 
 enum
 {
@@ -195,6 +195,14 @@ bool LoadPersistedData(void)
 	if(currentStoryState && currentStory)
 	{
 		int offset = ComputeGamePersistedDataOffset(currentStory->gameNumber);
+		
+		if(!IsPersistedGameDataCurrent(currentStory->gameNumber, currentStory->gameDataVersion))
+		{
+			WARNING_LOG("Game's persisted data does not match current version, clearing.");
+			ClearPersistedGameData(currentStory->gameNumber);
+			return false;
+		}
+		
 		INFO_LOG("Loading persisted data.");
 		characterData = GetCharacter();
 		persist_read_data(PERSISTED_GAME_CHARACTER_DATA + offset, characterData, sizeof(CharacterData));

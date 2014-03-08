@@ -13,7 +13,7 @@
 void TitleMenuWindowAppear(Window *window)
 {
 	MenuAppear(window);
-	ShowMainWindowRow(0, "Paused", "");
+	ShowMainWindowRow(0, "MiniAdventure", "");
 }
 
 static MenuDefinition titleMenuDef = 
@@ -31,14 +31,9 @@ static MenuDefinition titleMenuDef =
 #else
 		{.text = NULL, .description = NULL, .menuFunction = NULL},
 #endif
-#if INCLUDE_DUNGEON_CRAWL2
-		{.text = "Dungeon2", .description = "A second dungeon crawl", .menuFunction = LaunchDungeonCrawl2},
-#else
-		{.text = NULL, .description = NULL, .menuFunction = NULL},
-#endif
 	},
 	.appear = TitleMenuWindowAppear,
-	.mainImageId = RESOURCE_ID_IMAGE_REST
+	.mainImageId = RESOURCE_ID_IMAGE_TITLE
 };
 
 void ShowTitleMenu(void)

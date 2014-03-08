@@ -12,50 +12,12 @@
 #include "Monsters.h"
 #include "Story.h"
 	
-#if INCLUDE_DUNGEON_CRAWL || INCLUDE_DUNGEON_CRAWL2
+#if INCLUDE_DUNGEON_CRAWL
 
 enum
 {
 	DUNGEON_ENTRANCE = 0,
-	DUNGEON_FLOOR_1,
-	DUNGEON_FLOOR_1_END,
-	DUNGEON_FLOOR_2,
-	DUNGEON_FLOOR_2_END,
-	DUNGEON_FLOOR_3,
-	DUNGEON_FLOOR_3_END,
-	DUNGEON_FLOOR_4,
-	DUNGEON_FLOOR_4_END,
-	DUNGEON_FLOOR_5,
-	DUNGEON_FLOOR_5_END,
-	DUNGEON_FLOOR_6,
-	DUNGEON_FLOOR_6_END,
-	DUNGEON_FLOOR_7,
-	DUNGEON_FLOOR_7_END,
-	DUNGEON_FLOOR_8,
-	DUNGEON_FLOOR_8_END,
-	DUNGEON_FLOOR_9,
-	DUNGEON_FLOOR_9_END,
-	DUNGEON_FLOOR_10,
-	DUNGEON_FLOOR_10_END,
-	DUNGEON_FLOOR_11,
-	DUNGEON_FLOOR_11_END,
-	DUNGEON_FLOOR_12,
-	DUNGEON_FLOOR_12_END,
-	DUNGEON_FLOOR_13,
-	DUNGEON_FLOOR_13_END,
-	DUNGEON_FLOOR_14,
-	DUNGEON_FLOOR_14_END,
-	DUNGEON_FLOOR_15,
-	DUNGEON_FLOOR_15_END,
-	DUNGEON_FLOOR_16,
-	DUNGEON_FLOOR_16_END,
-	DUNGEON_FLOOR_17,
-	DUNGEON_FLOOR_17_END,
-	DUNGEON_FLOOR_18,
-	DUNGEON_FLOOR_18_END,
-	DUNGEON_FLOOR_19,
-	DUNGEON_FLOOR_19_END,
-	DUNGEON_FLOOR_20,
+	DUNGEON_FULL,
 	DUNGEON_DRAGONS_ROOM,
 	DUNGEON_TREASURE_ROOM,
 };
@@ -77,13 +39,14 @@ static PathClass DungeonFloorClass =
 	.monsters = {DUNGEON_RAT, DUNGEON_GOBLIN, DUNGEON_WIZARD, DUNGEON_ZOMBIE, DUNGEON_TURTLE, DUNGEON_LICH},
 	.monsterUnlockLevel = 15,
 	.encounterChance = 20,
-	.numberOfBackgroundImages = 4,
-	.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT, RESOURCE_ID_IMAGE_DUNGEONDEADEND},	
+	.numberOfBackgroundImages = 3,
+	.backgroundImages = {RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT, RESOURCE_ID_IMAGE_DUNGEONLEFT, RESOURCE_ID_IMAGE_DUNGEONRIGHT},	
 };
 
 static FixedClass DungeonStairsClass =
 {
 	.backgroundImage = RESOURCE_ID_IMAGE_NEWFLOOR,
+	.allowShop = true,
 };
 
 static FixedClass DragonsRoomClass =
@@ -104,348 +67,6 @@ static DungeonClass FullDungeonClass =
 	.pathclass = &DungeonFloorClass,
 	.fixedclass = &DungeonStairsClass,
 };
-
-#if INCLUDE_DUNGEON_CRAWL
-static Location locationList[] = 
-{
-	{
-		.name = "Dungeon Entrance",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_FLOOR_1},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 1",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_ENTRANCE, DUNGEON_FLOOR_1_END},
-		.length = 30,
-		.baseLevel = 1,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 1 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_1, DUNGEON_FLOOR_2},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 2",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_1_END, DUNGEON_FLOOR_2_END},
-		.length = 30,
-		.baseLevel = 2,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 2 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_2, DUNGEON_FLOOR_3},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 3",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_2_END, DUNGEON_FLOOR_3_END},
-		.length = 30,
-		.baseLevel = 3,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 3 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_3, DUNGEON_FLOOR_4},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 4",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_3_END, DUNGEON_FLOOR_4_END},
-		.length = 30,
-		.baseLevel = 4,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 4 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_4, DUNGEON_FLOOR_5},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 5",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_4_END, DUNGEON_FLOOR_5_END},
-		.length = 30,
-		.baseLevel = 5,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 5 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_5, DUNGEON_FLOOR_6},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 6",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_5_END, DUNGEON_FLOOR_6_END},
-		.length = 30,
-		.baseLevel = 6,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 6 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_6, DUNGEON_FLOOR_7},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 7",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_6_END, DUNGEON_FLOOR_7_END},
-		.length = 30,
-		.baseLevel = 7,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 7 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_7, DUNGEON_FLOOR_8},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 8",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_7_END, DUNGEON_FLOOR_8_END},
-		.length = 30,
-		.baseLevel = 8,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 8 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_8, DUNGEON_FLOOR_9},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 9",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_8_END, DUNGEON_FLOOR_9_END},
-		.length = 30,
-		.baseLevel = 9,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 9 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_9, DUNGEON_FLOOR_10},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 10",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_9_END, DUNGEON_FLOOR_10_END},
-		.length = 30,
-		.baseLevel = 10,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 10 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_10, DUNGEON_FLOOR_11},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 11",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_10_END, DUNGEON_FLOOR_11_END},
-		.length = 30,
-		.baseLevel = 11,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 11 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_11, DUNGEON_FLOOR_12},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 12",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_11_END, DUNGEON_FLOOR_12_END},
-		.length = 30,
-		.baseLevel = 12,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 12 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_12, DUNGEON_FLOOR_13},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 13",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_12_END, DUNGEON_FLOOR_13_END},
-		.length = 30,
-		.baseLevel = 13,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 13 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_13, DUNGEON_FLOOR_14},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 14",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_13_END, DUNGEON_FLOOR_14_END},
-		.length = 30,
-		.baseLevel = 14,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 14 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_14, DUNGEON_FLOOR_15},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 15",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_14_END, DUNGEON_FLOOR_15_END},
-		.length = 30,
-		.baseLevel = 15,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 15 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_15, DUNGEON_FLOOR_16},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 16",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_15_END, DUNGEON_FLOOR_16_END},
-		.length = 30,
-		.baseLevel = 16,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 16 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_16, DUNGEON_FLOOR_17},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 17",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_16_END, DUNGEON_FLOOR_17_END},
-		.length = 30,
-		.baseLevel = 17,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 17 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_17, DUNGEON_FLOOR_18},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 18",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_17_END, DUNGEON_FLOOR_18_END},
-		.length = 30,
-		.baseLevel = 18,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 18 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_18, DUNGEON_FLOOR_19},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 19",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_18_END, DUNGEON_FLOOR_19_END},
-		.length = 30,
-		.baseLevel = 19,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Floor 19 Stairs",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_19, DUNGEON_FLOOR_20},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Floor 20",
-		.type = LOCATIONTYPE_PATH,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {DUNGEON_FLOOR_19_END, DUNGEON_DRAGONS_ROOM},
-		.length = 30,
-		.baseLevel = 20,
-		.pathclass = &DungeonFloorClass,
-	},
-	{
-		.name = "Dragon's Room",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {DUNGEON_TREASURE_ROOM},
-		.fixedclass = &DragonsRoomClass,
-		.baseLevel = 20,
-		.fixed_ArrivalFunction = ShowBattleWindow,
-	},
-	{
-		.name = "Treasure Room",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 0,
-		.fixedclass = &TreasureRoomClass,
-		.fixed_ArrivalFunction = ShowEndWindow,
-	},
-};
-#endif
 
 static MonsterDef monsters[] =
 {
@@ -550,7 +171,42 @@ static MonsterDef monsters[] =
 	},
 };
 
-#if INCLUDE_DUNGEON_CRAWL
+static Location locationList[] =
+{
+	{
+		.name = "Dungeon Entrance",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_FULL},
+		.fixedclass = &DungeonStairsClass,
+	},
+	{
+		.name = "Dungeon",
+		.type = LOCATIONTYPE_DUNGEON,
+		.numberOfAdjacentLocations = 2,
+		.adjacentLocations = {DUNGEON_ENTRANCE, DUNGEON_DRAGONS_ROOM},
+		.length = 30,
+		.baseLevel = 1,
+		.dungeonclass = &FullDungeonClass,
+	},
+	{
+		.name = "Dragon's Room",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 1,
+		.adjacentLocations = {DUNGEON_TREASURE_ROOM},
+		.fixedclass = &DragonsRoomClass,
+		.baseLevel = 1,
+		.fixed_ArrivalFunction = ShowBattleWindow,
+	},
+	{
+		.name = "Treasure Room",
+		.type = LOCATIONTYPE_FIXED,
+		.numberOfAdjacentLocations = 0,
+		.fixedclass = &TreasureRoomClass,
+		.fixed_ArrivalFunction = ShowEndWindow,
+	},
+};
+
 StoryState dungeonCrawlStoryState = {0};
 
 void InitializeDungeonCrawl(void)
@@ -585,79 +241,5 @@ void LaunchDungeonCrawl(void)
 	DEBUG_LOG("Initialized locationList size = %d", sizeof(locationList));
 	ShowAdventureWindow();
 }
-#endif
-
-#if INCLUDE_DUNGEON_CRAWL2
-static Location locationList2[] =
-{
-	{
-		.name = "Dungeon Entrance",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {1},
-		.fixedclass = &DungeonStairsClass,
-	},
-	{
-		.name = "Dungeon",
-		.type = LOCATIONTYPE_DUNGEON,
-		.numberOfAdjacentLocations = 2,
-		.adjacentLocations = {0, 2},
-		.length = 30,
-		.baseLevel = 1,
-		.dungeonclass = &FullDungeonClass,
-	},
-	{
-		.name = "Dragon's Room",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 1,
-		.adjacentLocations = {3},
-		.fixedclass = &DragonsRoomClass,
-		.baseLevel = 1,
-		.fixed_ArrivalFunction = ShowBattleWindow,
-	},
-	{
-		.name = "Treasure Room",
-		.type = LOCATIONTYPE_FIXED,
-		.numberOfAdjacentLocations = 0,
-		.fixedclass = &TreasureRoomClass,
-		.fixed_ArrivalFunction = ShowEndWindow,
-	},
-};
-
-StoryState dungeonCrawl2StoryState = {0};
-
-void InitializeDungeonCrawl2(void)
-{
-	dungeonCrawl2StoryState.needsSaving = true;
-	dungeonCrawl2StoryState.persistedStoryState.currentLocationIndex = 0;
-	dungeonCrawl2StoryState.persistedStoryState.currentLocationDuration = 0;
-	dungeonCrawl2StoryState.persistedStoryState.currentPathDestination = 0;
-	dungeonCrawl2StoryState.persistedStoryState.mostRecentMonster = 0;
-	
-	AddItem(ITEM_TYPE_POTION);
-	AddItem(ITEM_TYPE_POTION);
-	AddItem(ITEM_TYPE_POTION);
-	AddItem(ITEM_TYPE_POTION);
-	AddItem(ITEM_TYPE_POTION);
-}
-
-Story dungeonCrawl2Story = 
-{
-	.gameNumber = DUNGEON_CRAWL2_INDEX,
-	.gameDataVersion = 1,
-	.locationList = locationList2,
-	.monsterList = monsters,
-	.initializeStory = InitializeDungeonCrawl2,
-};
-
-void LaunchDungeonCrawl2(void)
-{
-	dungeonCrawl2Story.numberOfLocations = sizeof(locationList2)/sizeof(Location);
-	dungeonCrawl2Story.numberOfMonsters = sizeof(monsters)/sizeof(MonsterDef);
-	RegisterStory(&dungeonCrawl2Story, &dungeonCrawl2StoryState);
-	DEBUG_LOG("Initialized locationList size = %d", sizeof(locationList2));
-	ShowAdventureWindow();
-}
-#endif
 
 #endif

@@ -127,7 +127,7 @@ void FollowPath3(void)
 
 const char *ShopMenuEntryTextFunction(void)
 {
-	if(CurrentLocationAllowsShops())
+	if(CurrentLocationAllowsShop())
 		return "Shop";
 	else
 		return NULL;
@@ -135,7 +135,7 @@ const char *ShopMenuEntryTextFunction(void)
 
 const char *ShopMenuEntryDescriptionFunction(void)
 {
-	if(CurrentLocationAllowsShops())
+	if(CurrentLocationAllowsShop())
 		return "Visit a shop";
 	else
 		return NULL;

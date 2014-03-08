@@ -58,7 +58,9 @@ const char *GetAdjacentLocationName(uint16_t index);
 bool IsCurrentLocationPath(void);
 bool IsCurrentLocationDungeon(void);
 bool IsCurrentLocationFixed(void);
-bool CurrentLocationAllowsShops(void);
+bool CurrentLocationAllowsShop(void);
+
+bool CurrentLocationAllowsCombat(void);
 
 // Debug function
 void FollowFirstPath(void);

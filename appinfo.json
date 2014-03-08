@@ -15,6 +15,76 @@
     "resources": {
         "media": [
             {
+                "type": "png",
+                "name": "IMAGE_FOREST3",
+                "file": "images/Forest3.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_FOREST2",
+                "file": "images/Forest2.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_FOREST1",
+                "file": "images/Forest1.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_FOREST_CAVE",
+                "file": "images/ForestCave.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_CELLAR",
+                "file": "images/Cellar.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_CAVE3",
+                "file": "images/Cave3.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_CAVE2",
+                "file": "images/Cave2.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_CAVE1",
+                "file": "images/Cave1.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_VILLAGE_INTERIOR",
+                "file": "images/VillageInterior.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_VILLAGE_EXTERIOR",
+                "file": "images/VillageExterior.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_ROAD3",
+                "file": "images/Road3.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_ROAD2",
+                "file": "images/Road2.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_ROAD1",
+                "file": "images/Road1.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_TITLE",
+                "file": "images/Title.png"
+            },
+            {
                 "menuIcon": true,
                 "type": "png",
                 "name": "IMAGE_MENU_ICON",

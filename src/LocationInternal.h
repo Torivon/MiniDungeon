@@ -16,6 +16,7 @@ typedef struct FixedClass
 {
 	uint16_t monster; // A fixed location only has one monster, to be used if the arrival function is ShowBattleWindow
 	uint16_t backgroundImage; // resource id
+	bool allowShop;
 } FixedClass;
 
 // The dungeon class interprets Location's length as per floor

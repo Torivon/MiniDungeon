@@ -163,18 +163,24 @@ bool IsCurrentLocationFixed(void)
 	return GetLocationType(GetCurrentLocation()) == LOCATIONTYPE_FIXED;
 }
 
-bool CurrentLocationAllowsShops(void)
+bool CurrentLocationAllowsShop(void)
 {
-	if(IsCurrentLocationFixed())
-		return true;
+	return LocationAllowsShop(GetCurrentLocation(), currentStoryState->persistedStoryState.dungeonFixed);
+}
+
+bool CurrentLocationAllowsCombat(void)
+{
+	Location *location = GetCurrentLocation();
+	if(!location)
+		return false;
 	
-	if(IsCurrentLocationDungeon())
-	{
-		if(currentStoryState->persistedStoryState.dungeonFixed)
-			return true;
-	}
+	if(!GetLocationEncounterChance(location, currentStoryState->persistedStoryState.dungeonFixed))
+		return false;
 	
-	return false;
+	if(!GetLocationMonsterCount(location, currentStoryState->persistedStoryState.dungeonFixed))
+		return false;
+	
+	return true;
 }
 
 void SetNewLocation(int index)
