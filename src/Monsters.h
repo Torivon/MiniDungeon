@@ -5,7 +5,7 @@
 typedef struct MonsterDef
 {
 	const char *name;
-	int imageId : 6;
+	int imageId;
 	int extraFireDefenseMultiplier : 11;
 	int extraIceDefenseMultiplier : 11;
 	int extraLightningDefenseMultiplier : 11;

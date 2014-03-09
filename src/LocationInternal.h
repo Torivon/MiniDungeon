@@ -9,13 +9,13 @@ typedef struct PathClass
 	uint numberOfBackgroundImages : 8;
 	uint monsterUnlockLevel : 8; // When the base level of the location is greater than or equal to this, all monster types are available.
 	uint16_t monsters[PATH_CLASS_MAX_MONSTERS]; // The set of random monsters that can appear
-	uint16_t backgroundImages[LOCATION_MAX_BACKGROUND_IMAGES]; // resource ids		
+	int backgroundImages[LOCATION_MAX_BACKGROUND_IMAGES]; // resource ids		
 } PathClass;
 
 typedef struct FixedClass
 {
 	uint16_t monster; // A fixed location only has one monster, to be used if the arrival function is ShowBattleWindow
-	uint16_t backgroundImage; // resource id
+	int backgroundImage; // resource id
 	bool allowShop;
 } FixedClass;
 

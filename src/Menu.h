@@ -31,7 +31,7 @@ typedef struct
 	int currentSelection : 4;
 	int animated : 1;
 	int disableBackButton : 1;
-	int mainImageId : 6;
+	int mainImageId; //resourceid
 } MenuDefinition;
 
 void SetCurrentMenu(MenuDefinition *menuDef);
