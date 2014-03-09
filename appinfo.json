@@ -16,6 +16,51 @@
         "media": [
             {
                 "type": "png",
+                "name": "IMAGE_BEACH",
+                "file": "images/Beach.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_TREASURE_ROOM",
+                "file": "images/TreasureRoom.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_TOMB_ENTRANCE",
+                "file": "images/TombEntrance.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_MOUNTAIN3",
+                "file": "images/MountainExterior3.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_MOUNTAIN2",
+                "file": "images/MountainExterior2.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_MOUNTAIN1",
+                "file": "images/MountainExterior1.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_BOAT",
+                "file": "images/Boat.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_SARCOPHAGUS",
+                "file": "images/Sarcophagus.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_PYRAMID_EXTERIOR",
+                "file": "images/PyramidExterior.png"
+            },
+            {
+                "type": "png",
                 "name": "IMAGE_WATERFALL_TOP",
                 "file": "images/WaterfallTop.png"
             },
