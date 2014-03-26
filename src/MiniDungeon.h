@@ -7,6 +7,9 @@
 // Feature tuning
 #define PAD_WITH_SPACES 1
 #define DISABLE_MENU_BMPS 0
+	
+#define ENABLE_ITEMS 0
+#define ENABLE_SHOPS 0
 
 // Publish 0 turns on the test menu
 #define PUBLISH 1

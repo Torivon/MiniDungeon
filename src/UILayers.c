@@ -27,6 +27,10 @@ GRect menuDescFrame = {.origin = {.x = 10, .y = 107}, .size = {.w = 144-20, .h =
 void RemoveMenuLayers(void)
 {
 	int i;
+	
+	if(!menuLayersInitialized)
+		return;
+	
 	for(i = 0; i < MAX_MENU_ENTRIES; ++i)
 	{
 		layer_remove_from_parent(text_layer_get_layer(menuLayers[i]));
@@ -121,6 +125,9 @@ void UnloadBackgroundImage(void)
 
 void RemoveBackgroundImage()
 {
+	if(!backgroundLoaded)
+		return;
+
 	layer_remove_from_parent(bitmap_layer_get_layer(backgroundImage));
 }
 
@@ -164,6 +171,10 @@ bool mainLayersInitialized = false;
 void RemoveMainLayers(void)
 {
 	int i;
+	
+	if(!mainLayersInitialized)
+		return;
+	
 	for(i = 0; i < MAX_MAIN_TEXT_LAYERS; ++i)
 	{
 		layer_remove_from_parent(text_layer_get_layer(mainTextLayers[i]));
@@ -210,6 +221,9 @@ void ShowMainWindowRow(int index, const char *text, const char *number)
 
 void RemoveMainBmpImage(void)
 {
+	if(!mainImageLoaded)
+		return;
+	
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
 }
 
@@ -277,9 +291,9 @@ bool clockLayerInitialized = false;
 
 void UpdateClock(void)
 {
-	if(!clockLayerInitialized) {
+	if(!clockLayerInitialized)
 		return;
-	}
+
 	static char timeText[] = "00:00"; // Needs to be static because it's used by the system later.
 	char *time_format;
 
@@ -302,6 +316,9 @@ void UpdateClock(void)
 
 void RemoveClockLayer(void)
 {
+	if(!clockLayerInitialized)
+		return;
+
 	layer_remove_from_parent(text_layer_get_layer(clockLayer));
 }
 
@@ -337,6 +354,9 @@ void UpdateLevelLayerText(int level)
 
 void RemoveLevelLayer(void)
 {
+	if(!levelLayerInitialized)
+		return;
+		
 	layer_remove_from_parent(text_layer_get_layer(levelLayer));
 }
 
@@ -376,6 +396,9 @@ void UpdateHealthText(int current, int max)
 
 void RemoveHealthLayer(void)
 {
+	if(!healthLayersInitialized)
+		return;
+		
 	layer_remove_from_parent(text_layer_get_layer(currentHealthLayer));
 	layer_remove_from_parent(text_layer_get_layer(maxHealthLayer));
 }

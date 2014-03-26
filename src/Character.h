@@ -29,11 +29,12 @@ void IncrementEscapes(void);
 
 void InitializeCharacter(void);
 
-bool DealPlayerDamage(int damage);
+void DealPlayerDamage(int damage);
 CharacterData *GetCharacter(void);
 
 void HealPlayerByPercent(int percent);
 bool PlayerIsInjured(void);
+bool PlayerIsDead(void);
 
 bool GrantExperience(int exp);
 void GrantGold(int gold);

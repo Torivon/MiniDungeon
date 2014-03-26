@@ -1,5 +1,7 @@
 #pragma once
 
+#if ENABLE_ITEMS
+
 typedef enum
 {
 	ITEM_TYPE_POTION = 0,
@@ -25,3 +27,5 @@ bool AddItem(ItemType type);
 
 void ShowAllItemCounts(void);
 void ClearInventory(void);
+
+#endif

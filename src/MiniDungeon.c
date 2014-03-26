@@ -15,10 +15,19 @@
 
 	 
 // Called once per minute
-void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) 
+void handle_time_tick(struct tm* tick_time, TimeUnits units_changed) 
 {
-	UpdateClock();
-	UpdateAdventure();
+	if(gUpdateBattle && (units_changed & SECOND_UNIT))
+	{
+		UpdateBattle();
+	}
+	
+	if(units_changed & MINUTE_UNIT)
+	{
+		UpdateClock();
+		if(gUpdateAdventure)
+			UpdateAdventure();
+	}
 }
 
 void handle_init() {
@@ -28,14 +37,14 @@ void handle_init() {
 	SeedRandom();
 	DEBUG_LOG("Srand");
 	
-	handle_minute_tick(NULL, MINUTE_UNIT);
+	handle_time_tick(NULL, SECOND_UNIT);
 	DEBUG_LOG("First handle second");
 	
 	// Just here so that the health and level fields are always filled in.
 	InitializeCharacter();
 	
 	ShowTitleMenu();
-	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
+	tick_timer_service_subscribe(SECOND_UNIT, &handle_time_tick);
 }
 
 void handle_deinit() 

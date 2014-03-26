@@ -625,11 +625,13 @@ void InitializeDragonQuest(void)
 	dragonQuestStoryState.persistedStoryState.currentPathDestination = 0;
 	dragonQuestStoryState.persistedStoryState.mostRecentMonster = 0;
 	
+#if ENABLE_ITEMS
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
+#endif
 }
 
 Story dragonQuestStory = 

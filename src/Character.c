@@ -115,17 +115,14 @@ void GrantGold(int gold)
 		characterData.gold = 9999;
 }
 
-bool DealPlayerDamage(int damage)
+void DealPlayerDamage(int damage)
 {
-	int returnValue = false;
 	characterData.stats.currentHealth = characterData.stats.currentHealth - damage;
 	if(characterData.stats.currentHealth <= 0)
 	{
 		characterData.stats.currentHealth = 0;
-		returnValue = true;
 	}
 	UpdateCharacterHealth();
-	return returnValue;
 }
 
 CharacterData *GetCharacter(void)
@@ -145,6 +142,11 @@ void HealPlayerByPercent(int percent)
 bool PlayerIsInjured(void)
 {
 	return characterData.stats.currentHealth < characterData.stats.maxHealth;
+}
+
+bool PlayerIsDead(void)
+{
+	return characterData.stats.currentHealth <= 0;
 }
 
 void EndMenuDisappear(Window *window)

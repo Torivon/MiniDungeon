@@ -13,6 +13,8 @@
 #include "UILayers.h"
 #include "Utils.h"
 
+bool gUpdateAdventure = false;
+
 int updateDelay = 0;
 bool adventureWindowVisible = false;
 
@@ -31,9 +33,13 @@ void InitializeGameData(void)
 void ResetGame(void)
 {
 	INFO_LOG("Resetting game.");
+#if ENABLE_SHOPS
 	ResetStatPointsPurchased();
+#endif
 	InitializeCharacter();
+#if ENABLE_ITEMS
 	ClearInventory();
+#endif
 	InitializeCurrentStory();
 	
 	SavePersistedData();
@@ -150,7 +156,11 @@ MenuDefinition adventureMenuDef =
 	.menuEntries = 
 	{
 		{.text = "Main", .description = "Open the main menu", .menuFunction = ShowMainMenu},
+#if ENABLE_SHOPS
 		{.useFunctions = true, .textFunction = ShopMenuEntryTextFunction, .descriptionFunction = ShopMenuEntryDescriptionFunction, .menuFunction = ShowShopWindow},
+#else
+		{0},
+#endif			
 		{.useFunctions = true, .textFunction = Path0Text, .descriptionFunction = Path0Text, .menuFunction = FollowPath0},
 		{.useFunctions = true, .textFunction = Path1Text, .descriptionFunction = Path1Text, .menuFunction = FollowPath1},
 		{.useFunctions = true, .textFunction = Path2Text, .descriptionFunction = Path2Text, .menuFunction = FollowPath2},
@@ -179,12 +189,14 @@ void AdventureWindowAppear(Window *window)
 	MenuAppear(window);
 	adventureWindow = window;
 	adventureWindowVisible = true;
+	gUpdateAdventure = true;
 	RefreshAdventure();
 }
 
 void AdventureWindowDisappear(Window *window)
 {
 	adventureWindowVisible = false;
+	gUpdateAdventure = false;
 	MenuDisappear(window);
 	adventureWindow = NULL;
 }

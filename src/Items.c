@@ -1,5 +1,7 @@
 #include "pebble.h"
 
+#if ENABLE_ITEMS
+
 #include "Character.h"
 #include "Items.h"
 #include "Logging.h"
@@ -225,3 +227,5 @@ bool AttemptToConsumeLightningScroll(void)
 {
 	return AttemptToUseItem(ITEM_TYPE_LIGHTNING_SCROLL);
 }
+
+#endif

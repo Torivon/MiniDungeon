@@ -216,12 +216,14 @@ void InitializeDungeonCrawl(void)
 	dungeonCrawlStoryState.persistedStoryState.currentLocationDuration = 0;
 	dungeonCrawlStoryState.persistedStoryState.currentPathDestination = 0;
 	dungeonCrawlStoryState.persistedStoryState.mostRecentMonster = 0;
-	
+
+#if ENABLE_ITEMS
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
 	AddItem(ITEM_TYPE_POTION);
+#endif
 }
 
 Story dungeonCrawlStory = 

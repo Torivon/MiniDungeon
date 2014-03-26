@@ -125,7 +125,11 @@ MenuDefinition mainMenuDef =
 	.menuEntries = 
 	{
 		{.text = "Quit", .description = "Return to adventure", .menuFunction = PopMenu},
+#if ENABLE_ITEMS
 		{.text = "Items", .description = "Items Owned", .menuFunction = ShowMainItemMenu},
+#else
+		{0},
+#endif
 		{.text = "Progress", .description = "Character advancement", .menuFunction = ShowProgressMenu},
 		{.text = "Stats", .description = "Character Stats", .menuFunction = ShowStatMenu},
 		{.text = "Options", .description = "Open the options menu", .menuFunction = ShowOptionsMenu},

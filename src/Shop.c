@@ -1,5 +1,7 @@
 #include "pebble.h"
 
+#if ENABLE_SHOPS
+
 #include "Character.h"
 #include "Items.h"
 #include "Logging.h"
@@ -185,3 +187,5 @@ void ShowShopWindow(void)
 	INFO_LOG("Entering shop.");
 	PushNewMenu(&shopMenuDef);
 }
+
+#endif

@@ -106,7 +106,10 @@ void RefreshMenuAppearance(void)
 		{
 			HideMenuLayer(i);
 		}
-	}	
+	}
+	
+	if(!setSelected)
+		SetMenuDescription(NULL);
 }
 
 void MenuAppear(Window *window)

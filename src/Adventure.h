@@ -9,3 +9,5 @@ void UpdateAdventure(void);
 
 void RefreshAdventure(void);
 void ResetGame(void);
+
+extern bool gUpdateAdventure;
