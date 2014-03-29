@@ -5,6 +5,7 @@
 #include "MainMenu.h"
 #include "Menu.h"
 #include "MiniDungeon.h"
+#include "Slideshow.h"
 #include "UILayers.h"
 	
 #include "DungeonCrawl.h"
@@ -28,6 +29,11 @@ static MenuDefinition titleMenuDef =
 #endif
 #if INCLUDE_DRAGON_QUEST
 		{.text = "Quest", .description = "Quest to kill a dragon", .menuFunction = LaunchDragonQuest},
+#else
+		{.text = NULL, .description = NULL, .menuFunction = NULL},
+#endif
+#if INCLUDE_SLIDESHOW
+		{.text = "Slideshow", .description = "Slideshow of all art", .menuFunction = LaunchSlideshow},
 #else
 		{.text = NULL, .description = NULL, .menuFunction = NULL},
 #endif

@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include "Persistence.h"
 #include "Shop.h"
+#include "Slideshow.h"
 #include "Story.h"
 #include "TitleMenu.h"
 #include "UILayers.h"
@@ -27,6 +28,11 @@ void handle_time_tick(struct tm* tick_time, TimeUnits units_changed)
 		UpdateClock();
 		if(gUpdateAdventure)
 			UpdateAdventure();
+		
+#if INCLUDE_SLIDESHOW
+		if(gUpdateSlideshow)
+			UpdateSlideshow();
+#endif
 	}
 }
 
