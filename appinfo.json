@@ -4,10 +4,16 @@
         ""
     ],
     "companyName": "Torivon",
-    "longName": "MiniDungeon-Beta",
+    "longName": "MiniDungeon",
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/icon.png",
+                "menuIcon": true,
+                "name": "IMAGE_MENU_ICON",
+                "type": "png"
+            },
             {
                 "file": "images/newfloor.png",
                 "name": "IMAGE_NEWFLOOR",
@@ -36,12 +42,6 @@
             {
                 "file": "images/background.png",
                 "name": "IMAGE_BACKGROUND",
-                "type": "png"
-            },
-            {
-                "file": "images/icon.png",
-                "menuIcon": true,
-                "name": "IMAGE_MENU_ICON",
                 "type": "png"
             },
             {
@@ -92,7 +92,7 @@
         ]
     },
     "sdkVersion": "3",
-    "shortName": "MiniDungeon-B",
+    "shortName": "MiniDungeon",
     "targetPlatforms": [
         "aplite",
         "basalt"
