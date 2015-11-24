@@ -9,14 +9,54 @@
     "resources": {
         "media": [
             {
+                "file": "images/zombie.png",
+                "name": "IMAGE_ZOMBIE",
+                "type": "png"
+            },
+            {
+                "file": "images/wizard.png",
+                "name": "IMAGE_WIZARD",
+                "type": "png"
+            },
+            {
+                "file": "images/turtle.png",
+                "name": "IMAGE_TURTLE",
+                "type": "png"
+            },
+            {
+                "file": "images/shop.png",
+                "name": "IMAGE_SHOP",
+                "type": "png"
+            },
+            {
+                "file": "images/rest.png",
+                "name": "IMAGE_REST",
+                "type": "png"
+            },
+            {
+                "file": "images/rat.png",
+                "name": "IMAGE_RAT",
+                "type": "png"
+            },
+            {
+                "file": "images/newfloor.png",
+                "name": "IMAGE_NEWFLOOR",
+                "type": "png"
+            },
+            {
+                "file": "images/lich.png",
+                "name": "IMAGE_LICH",
+                "type": "png"
+            },
+            {
                 "file": "images/icon.png",
                 "menuIcon": true,
                 "name": "IMAGE_MENU_ICON",
                 "type": "png"
             },
             {
-                "file": "images/newfloor.png",
-                "name": "IMAGE_NEWFLOOR",
+                "file": "images/goblin.png",
+                "name": "IMAGE_GOBLIN",
                 "type": "png"
             },
             {
@@ -40,53 +80,13 @@
                 "type": "png"
             },
             {
-                "file": "images/background.png",
-                "name": "IMAGE_BACKGROUND",
-                "type": "png"
-            },
-            {
-                "file": "images/rest.png",
-                "name": "IMAGE_REST",
-                "type": "png"
-            },
-            {
-                "file": "images/shop.png",
-                "name": "IMAGE_SHOP",
-                "type": "png"
-            },
-            {
-                "file": "images/goblin.png",
-                "name": "IMAGE_GOBLIN",
-                "type": "png"
-            },
-            {
-                "file": "images/rat.png",
-                "name": "IMAGE_RAT",
-                "type": "png"
-            },
-            {
-                "file": "images/zombie.png",
-                "name": "IMAGE_ZOMBIE",
-                "type": "png"
-            },
-            {
-                "file": "images/turtle.png",
-                "name": "IMAGE_TURTLE",
-                "type": "png"
-            },
-            {
-                "file": "images/wizard.png",
-                "name": "IMAGE_WIZARD",
-                "type": "png"
-            },
-            {
-                "file": "images/lich.png",
-                "name": "IMAGE_LICH",
-                "type": "png"
-            },
-            {
                 "file": "images/dragon.png",
                 "name": "IMAGE_DRAGON",
+                "type": "png"
+            },
+            {
+                "file": "images/background.png",
+                "name": "IMAGE_BACKGROUND",
                 "type": "png"
             }
         ]
@@ -95,10 +95,11 @@
     "shortName": "MiniDungeon",
     "targetPlatforms": [
         "aplite",
-        "basalt"
+        "basalt",
+        "chalk"
     ],
     "uuid": "99206a03-76a9-452f-b320-f2a7fc9850ec",
-    "versionLabel": "2.2",
+    "versionLabel": "3.0",
     "watchapp": {
         "watchface": false
     }

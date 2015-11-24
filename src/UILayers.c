@@ -7,6 +7,13 @@
 #include "Adventure.h"
 
 #define WINDOW_ROW_HEIGHT 16
+#if defined(PBL_RECT)
+#define MENU_TOP  7
+#define MENU_LEFT  6
+#elif defined(PBL_ROUND)
+#define MENU_TOP  17
+#define MENU_LEFT  26
+#endif
 
 TextLayer * InitializeTextLayer(GRect frame, GFont font)
 {
@@ -23,8 +30,8 @@ TextLayer *menuLayers[MAX_MENU_ENTRIES];
 TextLayer *menuDescLayer;
 bool menuLayersInitialized = false;
 
-GRect baseMenuFrame = {.origin = {.x = 92, .y = 7}, .size = {.w = 45, .h = WINDOW_ROW_HEIGHT}};
-GRect menuDescFrame = {.origin = {.x = 10, .y = 107}, .size = {.w = 144-20, .h = 20}};
+GRect baseMenuFrame = {.origin = {.x = MENU_LEFT + 86, .y = MENU_TOP}, .size = {.w = 45, .h = WINDOW_ROW_HEIGHT}};
+GRect menuDescFrame = {.origin = {.x = MENU_LEFT + 4, .y = MENU_TOP + 100}, .size = {.w = 144-20, .h = 20}};
 
 void RemoveMenuLayers(void)
 {
@@ -123,11 +130,14 @@ void UnloadBackgroundImage(void)
 
 void RemoveBackgroundImage()
 {
+	#if defined(PBL_RECT)
 	layer_remove_from_parent(bitmap_layer_get_layer(backgroundImage));
+	#endif
 }
 
 void LoadBackgroundImage(Window *window, int id)
 {
+	#if defined(PBL_RECT)
 	Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_frame(window_layer);
 	if(!backgroundLoaded)
@@ -140,6 +150,7 @@ void LoadBackgroundImage(Window *window, int id)
 	}
 	
 	layer_add_child(window_layer, bitmap_layer_get_layer(backgroundImage));		
+	#endif
 }
 
 //******** Main part of the screen *********//
@@ -151,15 +162,15 @@ void LoadBackgroundImage(Window *window, int id)
 
 GBitmap *mainImageBitmap;
 BitmapLayer *mainImage;
-GRect mainFrame = {.origin = {.x = 5, .y = 25}, .size = {.w = 80, .h = 80}};
+GRect mainFrame = {.origin = {.x = MENU_LEFT - 1, .y = MENU_TOP + 18}, .size = {.w = 80, .h = 80}};
+GRect mainTextBaseFrame = {.origin = {.x = MENU_LEFT, .y = MENU_TOP}, .size = {.w = 80, .h = WINDOW_ROW_HEIGHT}};
+GRect mainNumberBaseFrame = {.origin = {.x = MENU_LEFT + 48, .y = MENU_TOP}, .size = {.w = 30, .h = WINDOW_ROW_HEIGHT}};
 static bool mainImageLoaded = false;
 static int mainImageResourceLoaded = -1;
 
 TextLayer *mainTextLayers[MAX_MAIN_TEXT_LAYERS];
-GRect mainTextBaseFrame = {.origin = {.x = 6, .y = 7}, .size = {.w = 80, .h = WINDOW_ROW_HEIGHT}};
 	
 TextLayer *mainNumberLayers[MAX_MAIN_TEXT_LAYERS];
-GRect mainNumberBaseFrame = {.origin = {.x = 54, .y = 7}, .size = {.w = 30, .h = WINDOW_ROW_HEIGHT}};
 
 bool mainLayersInitialized = false;
 
@@ -274,7 +285,11 @@ void LoadMainBmpImage(Window *window, int id)
 //******* CLOCK *********//
 
 TextLayer *clockLayer; // The clock
+#if defined(PBL_RECT)
 GRect clockFrame = {.origin = {.x = 85, .y = 127}, .size = {.w = 144-85, .h = 168-127}};
+#elif defined(PBL_ROUND)
+GRect clockFrame = {.origin = {.x = 65, .y = 137}, .size = {.w = 144-85, .h = 168-127}};
+#endif
 bool clockLayerInitialized = false;
 
 void UpdateClock(void)
@@ -323,7 +338,11 @@ void InitializeClockLayer(Window *window)
 // *********** Level **********//
 
 TextLayer *levelLayer;
+#if defined(PBL_RECT)
 GRect levelFrame = {.origin = {.x = 10, .y = 127}, .size = {.w = 144-85, .h = 168-127}};
+#elif defined(PBL_ROUND)
+GRect levelFrame = {.origin = {.x = 35, .y = 127}, .size = {.w = 144-85, .h = 168-127}};
+#endif
 bool levelLayerInitialized = false;
 
 void UpdateLevelLayerText(int level)
@@ -356,10 +375,15 @@ void InitializeLevelLayer(Window *window)
 // ********** Health *********//
 
 TextLayer *currentHealthLayer;
+#if defined(PBL_RECT)
 GRect currentHealthFrame = {.origin = {.x = 42, .y = 126}, .size = {.w = 50, .h = 168-130}};
+GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 168-140}};
+#elif defined(PBL_ROUND)
+GRect currentHealthFrame = {.origin = {.x = 122, .y = 126}, .size = {.w = 50, .h = 168-130}};
+GRect maxHealthFrame = {.origin = {.x = 122, .y = 143}, .size = {.w = 50, .h = 168-140}};
+#endif
 
 TextLayer *maxHealthLayer;
-GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 168-140}};
 bool healthLayersInitialized = false;
 void UpdateHealthText(int current, int max)
 {
