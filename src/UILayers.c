@@ -12,7 +12,7 @@
 #define MENU_LEFT  6
 #elif defined(PBL_ROUND)
 #define MENU_TOP  17
-#define MENU_LEFT  26
+#define MENU_LEFT  35
 #endif
 
 TextLayer * InitializeTextLayer(GRect frame, GFont font)
@@ -379,8 +379,8 @@ TextLayer *currentHealthLayer;
 GRect currentHealthFrame = {.origin = {.x = 42, .y = 126}, .size = {.w = 50, .h = 168-130}};
 GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 168-140}};
 #elif defined(PBL_ROUND)
-GRect currentHealthFrame = {.origin = {.x = 122, .y = 126}, .size = {.w = 50, .h = 168-130}};
-GRect maxHealthFrame = {.origin = {.x = 122, .y = 143}, .size = {.w = 50, .h = 168-140}};
+GRect currentHealthFrame = {.origin = {.x = 112, .y = 127}, .size = {.w = 50, .h = 168-130}};
+GRect maxHealthFrame = {.origin = {.x = 112, .y = 144}, .size = {.w = 50, .h = 168-140}};
 #endif
 
 TextLayer *maxHealthLayer;

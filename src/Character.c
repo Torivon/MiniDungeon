@@ -81,7 +81,7 @@ void InitializeCharacter(void)
 {
 	INFO_LOG("Initializing character.");
 	characterData.xp = 0;
-	characterData.level = 1;
+	characterData.level = 20;
 	characterData.gold = 0;
 	characterData.escapes = 0;
 	characterData.xpForNextLevel = ComputeXPForNextLevel(1);
