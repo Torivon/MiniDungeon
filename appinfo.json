@@ -1,100 +1,105 @@
 {
-    "versionLabel": "2.0.1",
-    "uuid": "79206a03-76a9-452f-b320-f2a7fc9850ec",
     "appKeys": {},
-    "longName": "MiniDungeon",
-    "versionCode": 3,
     "capabilities": [
         ""
     ],
-    "shortName": "MiniDungeon",
     "companyName": "Torivon",
-    "watchapp": {
-        "watchface": false
-    },
+    "longName": "MiniDungeon",
+    "projectType": "native",
     "resources": {
         "media": [
             {
-                "type": "png",
-                "name": "IMAGE_DRAGON",
-                "file": "images/dragon.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_LICH",
-                "file": "images/lich.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_WIZARD",
-                "file": "images/wizard.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_TURTLE",
-                "file": "images/turtle.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_ZOMBIE",
-                "file": "images/zombie.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_RAT",
-                "file": "images/rat.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_GOBLIN",
-                "file": "images/goblin.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_SHOP",
-                "file": "images/shop.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_REST",
-                "file": "images/rest.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_NEWFLOOR",
-                "file": "images/newfloor.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_DUNGEONDEADEND",
-                "file": "images/dungeondeadend.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_DUNGEONSTRAIGHT",
-                "file": "images/dungeonstraight.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_DUNGEONRIGHT",
-                "file": "images/dungeonright.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_DUNGEONLEFT",
-                "file": "images/dungeonleft.png"
-            },
-            {
-                "type": "png",
-                "name": "IMAGE_BACKGROUND",
-                "file": "images/background.png"
-            },
-            {
+                "file": "images/icon.png",
                 "menuIcon": true,
-                "type": "png",
                 "name": "IMAGE_MENU_ICON",
-                "file": "images/icon.png"
+                "type": "png"
+            },
+            {
+                "file": "images/newfloor.png",
+                "name": "IMAGE_NEWFLOOR",
+                "type": "png"
+            },
+            {
+                "file": "images/dungeonstraight.png",
+                "name": "IMAGE_DUNGEONSTRAIGHT",
+                "type": "png"
+            },
+            {
+                "file": "images/dungeonright.png",
+                "name": "IMAGE_DUNGEONRIGHT",
+                "type": "png"
+            },
+            {
+                "file": "images/dungeonleft.png",
+                "name": "IMAGE_DUNGEONLEFT",
+                "type": "png"
+            },
+            {
+                "file": "images/dungeondeadend.png",
+                "name": "IMAGE_DUNGEONDEADEND",
+                "type": "png"
+            },
+            {
+                "file": "images/background.png",
+                "name": "IMAGE_BACKGROUND",
+                "type": "png"
+            },
+            {
+                "file": "images/rest.png",
+                "name": "IMAGE_REST",
+                "type": "png"
+            },
+            {
+                "file": "images/shop.png",
+                "name": "IMAGE_SHOP",
+                "type": "png"
+            },
+            {
+                "file": "images/goblin.png",
+                "name": "IMAGE_GOBLIN",
+                "type": "png"
+            },
+            {
+                "file": "images/rat.png",
+                "name": "IMAGE_RAT",
+                "type": "png"
+            },
+            {
+                "file": "images/zombie.png",
+                "name": "IMAGE_ZOMBIE",
+                "type": "png"
+            },
+            {
+                "file": "images/turtle.png",
+                "name": "IMAGE_TURTLE",
+                "type": "png"
+            },
+            {
+                "file": "images/wizard.png",
+                "name": "IMAGE_WIZARD",
+                "type": "png"
+            },
+            {
+                "file": "images/lich.png",
+                "name": "IMAGE_LICH",
+                "type": "png"
+            },
+            {
+                "file": "images/dragon.png",
+                "name": "IMAGE_DRAGON",
+                "type": "png"
             }
         ]
+    },
+    "sdkVersion": "3",
+    "shortName": "MiniDungeon",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "99206a03-76a9-452f-b320-f2a7fc9850ec",
+    "versionLabel": "2.2",
+    "watchapp": {
+        "watchface": false
     }
 }
