@@ -11,8 +11,8 @@
 #define MENU_TOP  7
 #define MENU_LEFT  6
 #elif defined(PBL_ROUND)
-#define MENU_TOP  17
-#define MENU_LEFT  35
+#define MENU_TOP  28
+#define MENU_LEFT  36
 #endif
 
 TextLayer * InitializeTextLayer(GRect frame, GFont font)
@@ -130,14 +130,11 @@ void UnloadBackgroundImage(void)
 
 void RemoveBackgroundImage()
 {
-	#if defined(PBL_RECT)
 	layer_remove_from_parent(bitmap_layer_get_layer(backgroundImage));
-	#endif
 }
 
 void LoadBackgroundImage(Window *window, int id)
 {
-	#if defined(PBL_RECT)
 	Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_frame(window_layer);
 	if(!backgroundLoaded)
@@ -150,7 +147,6 @@ void LoadBackgroundImage(Window *window, int id)
 	}
 	
 	layer_add_child(window_layer, bitmap_layer_get_layer(backgroundImage));		
-	#endif
 }
 
 //******** Main part of the screen *********//
@@ -288,7 +284,7 @@ TextLayer *clockLayer; // The clock
 #if defined(PBL_RECT)
 GRect clockFrame = {.origin = {.x = 85, .y = 127}, .size = {.w = 144-85, .h = 168-127}};
 #elif defined(PBL_ROUND)
-GRect clockFrame = {.origin = {.x = 65, .y = 137}, .size = {.w = 144-85, .h = 168-127}};
+GRect clockFrame = {.origin = {.x = 65, .y = 145}, .size = {.w = 144-85, .h = 168-127}};
 #endif
 bool clockLayerInitialized = false;
 
@@ -341,7 +337,7 @@ TextLayer *levelLayer;
 #if defined(PBL_RECT)
 GRect levelFrame = {.origin = {.x = 10, .y = 127}, .size = {.w = 144-85, .h = 168-127}};
 #elif defined(PBL_ROUND)
-GRect levelFrame = {.origin = {.x = 35, .y = 127}, .size = {.w = 144-85, .h = 168-127}};
+GRect levelFrame = {.origin = {.x = 6, .y = 47}, .size = {.w = 144-85, .h = 168-127}};
 #endif
 bool levelLayerInitialized = false;
 
@@ -379,8 +375,8 @@ TextLayer *currentHealthLayer;
 GRect currentHealthFrame = {.origin = {.x = 42, .y = 126}, .size = {.w = 50, .h = 168-130}};
 GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 168-140}};
 #elif defined(PBL_ROUND)
-GRect currentHealthFrame = {.origin = {.x = 112, .y = 127}, .size = {.w = 50, .h = 168-130}};
-GRect maxHealthFrame = {.origin = {.x = 112, .y = 144}, .size = {.w = 50, .h = 168-140}};
+GRect currentHealthFrame = {.origin = {.x = 3, .y = 90}, .size = {.w = 50, .h = 168-130}};
+GRect maxHealthFrame = {.origin = {.x = 3, .y = 107}, .size = {.w = 50, .h = 168-140}};
 #endif
 
 TextLayer *maxHealthLayer;
