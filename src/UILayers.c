@@ -7,12 +7,16 @@
 #include "Adventure.h"
 
 #define WINDOW_ROW_HEIGHT 16
+#define MENU_ITEM_OFFSET 86
+
 #if defined(PBL_RECT)
 #define MENU_TOP  7
 #define MENU_LEFT  6
+#define MENU_ITEM_WIDTH 45
 #elif defined(PBL_ROUND)
 #define MENU_TOP  28
 #define MENU_LEFT  36
+#define MENU_ITEM_WIDTH 180 - (MENU_LEFT + MENU_ITEM_OFFSET)
 #endif
 
 TextLayer * InitializeTextLayer(GRect frame, GFont font)
@@ -30,8 +34,8 @@ TextLayer *menuLayers[MAX_MENU_ENTRIES];
 TextLayer *menuDescLayer;
 bool menuLayersInitialized = false;
 
-GRect baseMenuFrame = {.origin = {.x = MENU_LEFT + 86, .y = MENU_TOP}, .size = {.w = 45, .h = WINDOW_ROW_HEIGHT}};
-GRect menuDescFrame = {.origin = {.x = MENU_LEFT + 4, .y = MENU_TOP + 100}, .size = {.w = 144-20, .h = 20}};
+GRect baseMenuFrame = {.origin = {.x = MENU_LEFT + MENU_ITEM_OFFSET, .y = MENU_TOP}, .size = {.w = MENU_ITEM_WIDTH, .h = WINDOW_ROW_HEIGHT}};
+GRect menuDescFrame = {.origin = {.x = MENU_LEFT + 4, .y = MENU_TOP + 101}, .size = {.w = 144-20, .h = 20}};
 
 void RemoveMenuLayers(void)
 {
@@ -76,8 +80,13 @@ void SetMenuHighlight(int menuItem, bool selected)
 {
 	if(selected)
 	{
+#if defined(PBL_COLOR)
+		text_layer_set_text_color(menuLayers[menuItem], GColorBlue);
+		text_layer_set_background_color(menuLayers[menuItem], GColorWhite);
+#else
 		text_layer_set_text_color(menuLayers[menuItem], GColorBlack);
 		text_layer_set_background_color(menuLayers[menuItem], GColorWhite);
+#endif
 	}
 	else
 	{
@@ -273,6 +282,9 @@ void LoadMainBmpImage(Window *window, int id)
 	mainImage = bitmap_layer_create(mainFrame);
 	bitmap_layer_set_bitmap(mainImage, mainImageBitmap);
 	bitmap_layer_set_alignment(mainImage, GAlignCenter);
+#if defined(PBL_COLOR)
+	bitmap_layer_set_compositing_mode(mainImage, GCompOpSet);
+#endif
 	layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 	mainImageLoaded = true;
 	mainImageResourceLoaded = resourceId;
@@ -375,8 +387,8 @@ TextLayer *currentHealthLayer;
 GRect currentHealthFrame = {.origin = {.x = 42, .y = 126}, .size = {.w = 50, .h = 168-130}};
 GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 168-140}};
 #elif defined(PBL_ROUND)
-GRect currentHealthFrame = {.origin = {.x = 3, .y = 90}, .size = {.w = 50, .h = 168-130}};
-GRect maxHealthFrame = {.origin = {.x = 3, .y = 107}, .size = {.w = 50, .h = 168-140}};
+GRect currentHealthFrame = {.origin = {.x = 3, .y = 89}, .size = {.w = 50, .h = 168-130}};
+GRect maxHealthFrame = {.origin = {.x = 3, .y = 106}, .size = {.w = 50, .h = 168-140}};
 #endif
 
 TextLayer *maxHealthLayer;
