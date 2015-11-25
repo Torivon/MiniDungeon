@@ -80,7 +80,8 @@ MenuDefinition shopItemMenuDef =
 		{.text = "20", .description = "Buy Spark", .menuFunction = BuySpark},
 	},
 	.appear = ShopItemMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ShopItemMenuAppear(Window *window)
@@ -148,7 +149,8 @@ MenuDefinition shopStatMenuDef =
 		{.text = "Buy", .description = "Buy stat point", .menuFunction = BuyStatPoint},
 	},
 	.appear = ShopStatMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ShopStatMenuAppear(Window *window)
@@ -173,7 +175,8 @@ MenuDefinition shopMenuDef =
 		{.text = "Stats", .description = "Buy stat points", .menuFunction = ShowShopStatMenu},
 	},
 	.appear = ShopMenuWindowAppear,
-	.mainImageId = RESOURCE_ID_IMAGE_SHOP
+	.mainImageId = RESOURCE_ID_IMAGE_SHOP,
+	.floorImageId = -1
 };
 
 void ShopMenuWindowAppear(Window *window)

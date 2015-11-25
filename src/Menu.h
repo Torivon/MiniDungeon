@@ -31,13 +31,8 @@ typedef struct
 	int currentSelection : 4;
 	int animated : 1;
 	int disableBackButton : 1;
-<<<<<<< HEAD
 	int mainImageId; //resourceid
-=======
-	int mainImageId : 6;
-	int floorImageId : 6;
-	int useFloorImage : 1;
->>>>>>> origin/master
+	int floorImageId; //resourceid For now, the floor image will not be drawn if there is no main image.
 } MenuDefinition;
 
 void SetCurrentMenu(MenuDefinition *menuDef);

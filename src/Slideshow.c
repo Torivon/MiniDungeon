@@ -106,6 +106,7 @@ MenuDefinition slideshowMenuDef =
 	.appear = SlideshowMenuWindowAppear,
 	.disappear = SlideshowMenuWindowDisappear,
 	.mainImageId = RESOURCE_ID_IMAGE_TITLE,
+	.floorImageId = -1
 };
 
 void LaunchSlideshow(void)
@@ -121,7 +122,7 @@ void UpdateSlideshow(void)
 
 	slideshowMenuDef.mainImageId = resourceArray[iterator];
 	if(slideshowWindow)
-		LoadMainBmpImage(slideshowWindow, slideshowMenuDef.mainImageId);	
+		LoadMainBmpImage(slideshowWindow, slideshowMenuDef.mainImageId, slideshowMenuDef.floorImageId);	
 }
 
 #endif

@@ -9,6 +9,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/battlefloor.png",
+                "name": "IMAGE_BATTLE_FLOOR",
+                "type": "png"
+            },
+            {
                 "file": "images/zombie.png",
                 "name": "IMAGE_ZOMBIE",
                 "type": "png"

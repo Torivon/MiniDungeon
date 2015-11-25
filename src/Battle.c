@@ -235,7 +235,8 @@ MenuDefinition itemBattleMenuDef =
 		{.text = "Throw", .description = "Deal lightning damage", .menuFunction = ActivateLightningScroll}
 	},
 	.appear = ItemBattleMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ItemBattleMenuAppear(Window *window)
@@ -319,7 +320,8 @@ MenuDefinition battleMainMenuDef =
 	.appear = BattleWindowAppear,
 	.disappear = BattleWindowDisappear,
 	.disableBackButton = true,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ShowMainBattleMenu(void)
@@ -384,7 +386,6 @@ void BattleInit(void)
 	
 	battleMainMenuDef.mainImageId = currentMonster->imageId;
 	battleMainMenuDef.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR;
-	battleMainMenuDef.useFloorImage = true;
 	battleCleanExit = false;
 }
 

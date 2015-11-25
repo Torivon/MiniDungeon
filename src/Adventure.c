@@ -171,7 +171,8 @@ MenuDefinition adventureMenuDef =
 	.init = AdventureWindowInit,
 	.deinit = AdventureWindowDeinit,
 	.animated = true,
-	.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT
+	.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT,
+	.floorImageId = -1
 };
 
 Window *adventureWindow = NULL;
@@ -180,7 +181,7 @@ void LoadLocationImage(void)
 {
 	adventureMenuDef.mainImageId = GetCurrentBackgroundImage();
 	if(adventureWindow)
-		LoadMainBmpImage(adventureWindow, adventureMenuDef.mainImageId, -1);
+		LoadMainBmpImage(adventureWindow, adventureMenuDef.mainImageId, adventureMenuDef.floorImageId);
 }
 
 void AdventureWindowAppear(Window *window)

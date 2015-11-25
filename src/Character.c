@@ -164,7 +164,8 @@ MenuDefinition endMenuDef =
 	},
 	.disappear = EndMenuDisappear,
 	.appear = EndMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void EndMenuAppear(Window *window)
@@ -291,7 +292,8 @@ MenuDefinition statMenuDef =
 		{.text = "Increase", .description = "Increase magic defense", .menuFunction = IncrementMagicDefense},
 	},
 	.appear = StatMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void StatMenuAppear(Window *window)

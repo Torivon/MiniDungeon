@@ -39,7 +39,8 @@ static MenuDefinition titleMenuDef =
 #endif
 	},
 	.appear = TitleMenuWindowAppear,
-	.mainImageId = RESOURCE_ID_IMAGE_TITLE
+	.mainImageId = RESOURCE_ID_IMAGE_TITLE,
+	.floorImageId = -1
 };
 
 void ShowTitleMenu(void)

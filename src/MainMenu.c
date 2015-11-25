@@ -59,7 +59,8 @@ MenuDefinition testMenuDef =
 		{.text = "Battle", .description = "", .menuFunction = ForceBattle},
 		{.text = "Shop", .description = "", .menuFunction = ForceShop},
 	},
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ShowTestMenu(void)
@@ -104,7 +105,8 @@ MenuDefinition optionsMenuDef =
 		{.text = "Toggle", .description = "Toggle Vibration", .menuFunction = ToggleVibration},
 	},
 	.appear = OptionsMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void OptionsMenuAppear(Window *window)
@@ -137,8 +139,7 @@ MenuDefinition mainMenuDef =
 	},
 	.appear = MainMenuWindowAppear,
 	.mainImageId = RESOURCE_ID_IMAGE_REST,
-	.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR,
-	.useFloorImage = true
+	.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR
 };
 
 void MainMenuWindowAppear(Window *window)

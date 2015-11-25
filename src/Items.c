@@ -87,7 +87,8 @@ MenuDefinition itemGainMenuDef =
 	},
 	.init = ItemGainMenuInit,
 	.appear = ItemGainMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ShowAllItemCounts(void)
@@ -188,7 +189,8 @@ MenuDefinition itemMainMenuDef =
 		{.text = "Drink", .description = "Heal 100% of max health", .menuFunction = ActivateFullPotion}
 	},
 	.appear = ItemMainMenuAppear,
-	.mainImageId = -1
+	.mainImageId = -1,
+	.floorImageId = -1
 };
 
 void ItemMainMenuAppear(Window *window)
