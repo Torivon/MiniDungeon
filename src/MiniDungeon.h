@@ -12,7 +12,7 @@
 #define ENABLE_SHOPS 0
 
 // Publish 0 turns on the test menu
-#define PUBLISH 0
+#define PUBLISH 1
 	
 // Stories to include
 #define INCLUDE_DUNGEON_CRAWL 1
