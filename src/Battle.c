@@ -383,6 +383,8 @@ void BattleInit(void)
 	}
 	
 	battleMainMenuDef.mainImageId = currentMonster->imageId;
+	battleMainMenuDef.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR;
+	battleMainMenuDef.useFloorImage = true;
 	battleCleanExit = false;
 }
 

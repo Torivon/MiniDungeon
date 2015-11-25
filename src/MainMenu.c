@@ -136,7 +136,9 @@ MenuDefinition mainMenuDef =
 		{.text = "Reset", .description = "Reset the game", .menuFunction = ResetGame},
 	},
 	.appear = MainMenuWindowAppear,
-	.mainImageId = RESOURCE_ID_IMAGE_REST
+	.mainImageId = RESOURCE_ID_IMAGE_REST,
+	.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR,
+	.useFloorImage = true
 };
 
 void MainMenuWindowAppear(Window *window)

@@ -31,7 +31,13 @@ typedef struct
 	int currentSelection : 4;
 	int animated : 1;
 	int disableBackButton : 1;
+<<<<<<< HEAD
 	int mainImageId; //resourceid
+=======
+	int mainImageId : 6;
+	int floorImageId : 6;
+	int useFloorImage : 1;
+>>>>>>> origin/master
 } MenuDefinition;
 
 void SetCurrentMenu(MenuDefinition *menuDef);
