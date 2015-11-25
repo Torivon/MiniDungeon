@@ -22,6 +22,8 @@ typedef struct
 	int animated : 1;
 	int disableBackButton : 1;
 	int mainImageId : 6;
+	int floorImageId : 6;
+	int useFloorImage : 1;
 } MenuDefinition;
 
 void SetCurrentMenu(MenuDefinition *menuDef);

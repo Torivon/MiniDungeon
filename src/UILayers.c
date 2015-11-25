@@ -167,10 +167,14 @@ void LoadBackgroundImage(Window *window, int id)
 
 GBitmap *mainImageBitmap;
 BitmapLayer *mainImage;
+GBitmap *floorImageBitmap;
+BitmapLayer *floorImage;
+
 GRect mainFrame = {.origin = {.x = MENU_LEFT - 1, .y = MENU_TOP + 18}, .size = {.w = 80, .h = 80}};
 GRect mainTextBaseFrame = {.origin = {.x = MENU_LEFT, .y = MENU_TOP}, .size = {.w = 80, .h = WINDOW_ROW_HEIGHT}};
 GRect mainNumberBaseFrame = {.origin = {.x = MENU_LEFT + 48, .y = MENU_TOP}, .size = {.w = 30, .h = WINDOW_ROW_HEIGHT}};
 static bool mainImageLoaded = false;
+static bool floorImageLoaded = false;
 static int mainImageResourceLoaded = -1;
 
 TextLayer *mainTextLayers[MAX_MAIN_TEXT_LAYERS];
@@ -229,6 +233,9 @@ void ShowMainWindowRow(int index, const char *text, const char *number)
 void RemoveMainBmpImage(void)
 {
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
+#if defined(PBL_COLOR)
+	layer_remove_from_parent(bitmap_layer_get_layer(floorImage));
+#endif
 }
 
 void UnloadMainBmpImage(void)
@@ -244,11 +251,21 @@ void UnloadMainBmpImage(void)
 	mainImageBitmap = NULL;
 	mainImageLoaded = false;
 	mainImageResourceLoaded = -1;
+	
+#if defined(PBL_COLOR)
+	if(!floorImageLoaded)
+		return;
+	
+	layer_remove_from_parent(bitmap_layer_get_layer(floorImage));
+	bitmap_layer_destroy(floorImage);
+	gbitmap_destroy(floorImageBitmap);
+	floorImage = NULL;
+	floorImageBitmap = NULL;
+	floorImageLoaded = false;	
+#endif
 }
 
-
-
-void LoadMainBmpImage(Window *window, int id)
+void LoadMainBmpImage(Window *window, int id, int floorId)
 {
 	int resourceId = id;
 	
@@ -269,6 +286,8 @@ void LoadMainBmpImage(Window *window, int id)
 		if(mainImageResourceLoaded == resourceId)
 		{
 			DEBUG_LOG("Resource %d already loaded.", resourceId);
+			if(floorImageLoaded)
+				layer_add_child(window_layer, bitmap_layer_get_layer(floorImage));
 			layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 			return; // already loaded the correct one.
 		}
@@ -277,6 +296,18 @@ void LoadMainBmpImage(Window *window, int id)
 	}
 	
 	DEBUG_LOG("Loading resourceId %d.", resourceId);
+
+#if defined(PBL_COLOR)
+	if(floorId >= 0)
+	{
+		floorImageBitmap = gbitmap_create_with_resource(floorId);
+		floorImage = bitmap_layer_create(mainFrame);
+		bitmap_layer_set_bitmap(floorImage, floorImageBitmap);
+		bitmap_layer_set_alignment(floorImage, GAlignCenter);
+		layer_add_child(window_layer, bitmap_layer_get_layer(floorImage));
+		floorImageLoaded = true;
+	}
+#endif
 
 	mainImageBitmap = gbitmap_create_with_resource(resourceId);
 	mainImage = bitmap_layer_create(mainFrame);

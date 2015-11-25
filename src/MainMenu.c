@@ -150,7 +150,9 @@ MenuDefinition mainMenuDef =
 		{"Options", "Open the options menu", ShowOptionsMenu},
 	},
 	.appear = MainMenuWindowAppear,
-	.mainImageId = RESOURCE_ID_IMAGE_REST
+	.mainImageId = RESOURCE_ID_IMAGE_REST,
+	.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR,
+	.useFloorImage = true
 };
 
 void MainMenuWindowAppear(Window *window)

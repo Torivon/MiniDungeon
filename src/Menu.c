@@ -88,7 +88,7 @@ void MenuAppear(Window *window)
 	
 	if(menuWindow && menuWindow->menu && menuWindow->menu->mainImageId != -1)
 	{
-		LoadMainBmpImage(window, menuWindow->menu->mainImageId);
+		LoadMainBmpImage(window, menuWindow->menu->mainImageId, menuWindow->menu->useFloorImage ? menuWindow->menu->floorImageId : -1);
 	}
 }
 

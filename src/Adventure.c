@@ -64,7 +64,7 @@ void LoadRandomDungeonImage(void)
 #endif
 
 	if(adventureWindow)
-		LoadMainBmpImage(adventureWindow, adventureMenuDef.mainImageId);
+		LoadMainBmpImage(adventureWindow, adventureMenuDef.mainImageId, -1);
 }
 
 void AdventureWindowAppear(Window *window)

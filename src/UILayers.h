@@ -8,7 +8,7 @@ void ShowMenuLayer(int index, const char *text);
 void HideMenuLayer(int index);
 void HideAllMenuLayers(void);
 
-void LoadMainBmpImage(Window *window, int resourceId);
+void LoadMainBmpImage(Window *window, int resourceId, int backgroundId);
 void UnloadMainBmpImage(void);
 void UnloadBackgroundImage(void);
 void UnloadTextLayers(void);
