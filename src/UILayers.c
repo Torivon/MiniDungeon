@@ -418,8 +418,8 @@ TextLayer *currentHealthLayer;
 GRect currentHealthFrame = {.origin = {.x = 42, .y = 126}, .size = {.w = 50, .h = 168-130}};
 GRect maxHealthFrame = {.origin = {.x = 42, .y = 143}, .size = {.w = 50, .h = 168-140}};
 #elif defined(PBL_ROUND)
-GRect currentHealthFrame = {.origin = {.x = 3, .y = 89}, .size = {.w = 50, .h = 168-130}};
-GRect maxHealthFrame = {.origin = {.x = 3, .y = 106}, .size = {.w = 50, .h = 168-140}};
+GRect currentHealthFrame = {.origin = {.x = 2, .y = 84}, .size = {.w = 50, .h = 168-130}};
+GRect maxHealthFrame = {.origin = {.x = 2, .y = 101}, .size = {.w = 50, .h = 168-140}};
 #endif
 
 TextLayer *maxHealthLayer;

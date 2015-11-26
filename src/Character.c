@@ -311,6 +311,9 @@ MenuDefinition progressMenuDef =
 	.menuEntries = 
 	{
 		{"Quit", "Return to main menu", PopMenu},
+#if ALLOW_TEST_MENU
+		{"Lvl Up", "Increase level", LevelUp},
+#endif
 	},
 	.appear = ProgressMenuAppear,
 	.mainImageId = -1
