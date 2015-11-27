@@ -31,6 +31,12 @@ void IntToString(char *buffer, size_t bufferSize, int value)
 	}
 }
 
+void IntToPercent(char *buffer, size_t bufferSize, int value)
+{
+	buffer[bufferSize - 1] = '%';
+	IntToString(buffer, bufferSize - 1, value);
+}
+
 // Returns an integer in the range [1,max]
 int Random(int max)
 {

@@ -9,6 +9,7 @@
 #include "Menu.h"
 #include "Shop.h"
 #include "UILayers.h"
+#include "Utils.h"
 
 // **************** TEST MENU ******************//
 
@@ -157,8 +158,16 @@ MenuDefinition mainMenuDef =
 
 void MainMenuWindowAppear(Window *window)
 {
+	static char s_battery_buffer[4] = "0000";
+	BatteryChargeState charge_state = battery_state_service_peek();
 	MenuAppear(window);
-	ShowMainWindowRow(0, "Paused", "");
+
+	if (charge_state.is_charging) {
+	  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "Chg");
+	} else {
+	  IntToPercent(s_battery_buffer, sizeof(s_battery_buffer), charge_state.charge_percent);
+	}
+	ShowMainWindowRow(0, "Paused",  s_battery_buffer);
 }
 
 void ShowMainMenu(void)

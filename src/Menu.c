@@ -53,7 +53,7 @@ void MenuAppear(Window *window)
 	if(menuWindow)
 	{
 		SetCurrentMenu(menuWindow->menu);
-	}	
+	}
 	WindowAppear(window);
 	if(!currentMenuDef)
 	{
@@ -85,7 +85,7 @@ void MenuAppear(Window *window)
 			HideMenuLayer(i);
 		}
 	}
-	
+
 	if(menuWindow && menuWindow->menu && menuWindow->menu->mainImageId != -1)
 	{
 		LoadMainBmpImage(window, menuWindow->menu->mainImageId, menuWindow->menu->useFloorImage ? menuWindow->menu->floorImageId : -1);
