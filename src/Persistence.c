@@ -9,7 +9,7 @@
 #include "Persistence.h"
 #include "Shop.h"
 	
-#define CURRENT_DATA_VERSION 2
+#define CURRENT_DATA_VERSION 3
 enum
 {
 	PERSISTED_IS_DATA_SAVED = 0,

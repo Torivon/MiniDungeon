@@ -19,6 +19,7 @@ typedef struct
 	int gold;
 	int escapes;
 	Stats stats;
+	int statPointsToSpend;
 } CharacterData;
 
 int ComputePlayerHealth(int level);

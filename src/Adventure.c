@@ -34,7 +34,7 @@ MenuDefinition adventureMenuDef =
 		{NULL, NULL, NULL},
 		{NULL, NULL, NULL},
 		{NULL, NULL, NULL},
-		{"", "", ShowTestMenu}
+		{"TEST", "Test features", ShowTestMenu}
 #endif
 	},
 	.appear = AdventureWindowAppear,
