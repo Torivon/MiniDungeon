@@ -7,6 +7,7 @@
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
+#include "OptionsMenu.h"
 #include "Shop.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -22,7 +23,7 @@ void DoNothing(void)
 void ForceEvent(void)
 {
 	PopMenu();
-	ComputeRandomEvent(true);
+	ExecuteEvent(ComputeRandomEvent(true));
 }
 
 void ForceNewFloor(void)
@@ -70,73 +71,6 @@ void ShowTestMenu(void)
 #endif
 
 //************* Main Menu *****************//
-
-static bool vibration = true;
-static int fastMode = false;
-
-void DrawOptionsMenu(void)
-{
-	ShowMainWindowRow(0, "Options", "");
-	ShowMainWindowRow(1, "Vibration", vibration ? "On" : "Off");
-	ShowMainWindowRow(2, "Fast Mode", fastMode ? "On" : "Off");
-}
-
-void ToggleVibration(void)
-{
-	vibration = !vibration;
-	DrawOptionsMenu();
-}
-
-bool GetVibration(void)
-{
-	return vibration;
-}
-
-void SetVibration(bool enable)
-{
-	vibration = enable;
-}
-
-bool GetFastMode(void)
-{
-	return fastMode;
-}
-
-void SetFastMode(bool enable)
-{
-	fastMode = enable;
-}
-
-void ToggleFastMode(void)
-{
-	fastMode = !fastMode;
-	DrawOptionsMenu();
-}
-
-void OptionsMenuAppear(Window *window);
-
-MenuDefinition optionsMenuDef = 
-{
-	.menuEntries = 
-	{
-		{"Quit", "Return to main menu", PopMenu},
-		{"Toggle", "Toggle Vibration", ToggleVibration},
-		{"Toggle", "Speed up events", ToggleFastMode}
-	},
-	.appear = OptionsMenuAppear,
-	.mainImageId = -1
-};
-
-void OptionsMenuAppear(Window *window)
-{
-	MenuAppear(window);
-	DrawOptionsMenu();
-}
-
-void ShowOptionsMenu(void)
-{
-	PushNewMenu(&optionsMenuDef);
-}
 
 void MainMenuWindowAppear(Window *window);
 

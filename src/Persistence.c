@@ -4,8 +4,8 @@
 #include "Character.h"
 #include "Items.h"
 #include "Logging.h"
-#include "MainMenu.h"
 #include "Monsters.h"
+#include "OptionsMenu.h"
 #include "Persistence.h"
 #include "Shop.h"
 	
@@ -21,6 +21,7 @@ enum
 	PERSISTED_STAT_POINTS_PURCHASED,
 	PERSISTED_VIBRATION,
 	PERSISTED_FAST_MODE,
+	PERSISTED_WORKER_APP,
 	
 	PERSISTED_IN_COMBAT,
 	PERSISTED_MONSTER_TYPE,
@@ -96,6 +97,7 @@ bool SavePersistedData(void)
 
 	persist_write_bool(PERSISTED_VIBRATION, GetVibration());
 	persist_write_bool(PERSISTED_FAST_MODE, GetFastMode());
+	persist_write_bool(PERSISTED_WORKER_APP, GetWorkerApp());
 
 	persist_write_bool(PERSISTED_IN_COMBAT, ClosingWhileInBattle());
 	persist_write_int(PERSISTED_MONSTER_TYPE, GetMostRecentMonster());
@@ -127,6 +129,7 @@ bool LoadPersistedData(void)
 	SetStatPointsPurchased(persist_read_int(PERSISTED_STAT_POINTS_PURCHASED));
 	SetVibration(persist_read_bool(PERSISTED_VIBRATION));
 	SetFastMode(persist_read_bool(PERSISTED_FAST_MODE));
+	SetWorkerApp(persist_read_bool(PERSISTED_WORKER_APP));
 	
 	if(persist_read_bool(PERSISTED_IN_COMBAT))
 	{

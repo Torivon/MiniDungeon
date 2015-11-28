@@ -7,9 +7,11 @@
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
+#include "OptionsMenu.h"
 #include "Shop.h"
 #include "UILayers.h"
 #include "Utils.h"
+#include "WorkerControl.h"
 
 const char *UpdateFloorText(void)
 {
@@ -20,6 +22,11 @@ const char *UpdateFloorText(void)
 
 int updateDelay = 0;
 bool adventureWindowVisible = false;
+
+bool AdventureWindowIsVisible(void)
+{
+	return adventureWindowVisible;
+}
 
 void AdventureWindowAppear(Window *window);
 void AdventureWindowDisappear(Window *window);
@@ -78,11 +85,19 @@ void AdventureWindowAppear(Window *window)
 	UpdateCharacterLevel();
 	updateDelay = 1;
 	adventureWindowVisible = true;
+	if(WorkerIsRunning())
+	{
+		UnpauseWorkerApp();
+	}
 }
 
 void AdventureWindowDisappear(Window *window)
 {
 	adventureWindowVisible = false;
+	if(WorkerIsRunning())
+	{
+		PauseWorkerApp();
+	}
 	MenuDisappear(window);
 	adventureWindow = NULL;
 }
@@ -121,16 +136,40 @@ RandomTableEntry entries[] =
 #endif
 
 static int baseChanceOfEvent = 35;
-#if EVENT_CHANCE_SCALING
 static int ticksSinceLastEvent = 0;
-#endif
 
-bool ComputeRandomEvent(bool fastMode)
+int GetTickCount(void)
+{
+	return ticksSinceLastEvent;
+}
+
+void SetTickCount(int ticks)
+{
+	ticksSinceLastEvent = ticks;
+}
+
+void ExecuteEvent(int i)
+{
+	if(i == -1)
+		return;
+	
+	if(GetVibration())
+		vibes_short_pulse();
+	if(entries[i].windowFunction)
+		entries[i].windowFunction();
+#if EVENT_CHANCE_SCALING
+	ticksSinceLastEvent = 0;
+#endif
+	
+}
+
+int ComputeRandomEvent(bool fastMode)
 {
 	int result = Random(100);
 	int i = 0;
 	int acc = 0;
 	int chanceOfEvent = baseChanceOfEvent;
+	int event = -1;
 #if EVENT_CHANCE_SCALING
 	if(ticksSinceLastEvent > 20)
 	{
@@ -139,7 +178,7 @@ bool ComputeRandomEvent(bool fastMode)
 #endif
 	
 	if(!fastMode && result > chanceOfEvent)
-		return false;
+		return -1;
 		
 	result = Random(100);
 	
@@ -148,18 +187,12 @@ bool ComputeRandomEvent(bool fastMode)
 		acc += entries[i].weight;
 		if(acc >= result)
 		{
-			if(GetVibration())
-				vibes_short_pulse();
-			if(entries[i].windowFunction)
-				entries[i].windowFunction();
-#if EVENT_CHANCE_SCALING
-			ticksSinceLastEvent = 0;
-#endif
+			event = i;
 			break;
 		}
 		++i;      
     } while (i < 4);
-	return true;
+	return event;
 }
 
 void UpdateAdventure(void)
@@ -183,7 +216,8 @@ void UpdateAdventure(void)
 		return;
 	}
 
-	ComputeRandomEvent(GetFastMode());
+	if(!WorkerIsHandlingUpdates())
+		ExecuteEvent(ComputeRandomEvent(GetFastMode()));
 	LoadRandomDungeonImage();
 }
 
