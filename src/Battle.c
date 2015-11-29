@@ -11,7 +11,7 @@
 #include "UILayers.h"
 #include "Utils.h"
 
-static bool battleCleanExit = false;
+static bool battleCleanExit = true;
 
 typedef void (*BattleAfterExitCallback)(void);
 

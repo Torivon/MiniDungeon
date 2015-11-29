@@ -1,6 +1,7 @@
 #include <pebble_worker.h>
 
 #include "MiniDungeon.h"
+#include "Utils.h"
 #include "WorkerControl.h"
 
 void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
@@ -16,119 +17,37 @@ void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t dat
 static bool handlingTicks = false;
 static bool appAlive = false;
 static int lastEvent = -1;
+static bool forcedDelay = false; // Make sure we don't trigger an event while the app is still closing
 
-#if ALLOW_SHOP
-// These should add up to 100
-int chances[] = 
-{
-	44,
-	44,
-	9,
-	3
-};
-#else
-// These should add up to 100
-int chances[] = 
-{
-	40,
-	50,
-	10
-};
-#endif
+int importedChances[10];
+int chanceCount = 0;
+bool chancesComplete = false;
 
-// Returns an integer in the range [1,max]
-int Random(int max)
-{
-	int result = (uint16_t)(rand() % max) + 1;
-	return result;
-}
-
-static int baseChanceOfEvent = 35;
+static int baseChanceOfEvent = 0;
 static int ticksSinceLastEvent = 0;
-
-int ComputeRandomEvent(void)
-{
-	int result = Random(100);
-	int i = 0;
-	int acc = 0;
-	int chanceOfEvent = baseChanceOfEvent;
-	int event = -1;
-#if EVENT_CHANCE_SCALING
-	if(ticksSinceLastEvent > 20)
-	{
-		chanceOfEvent += (ticksSinceLastEvent - 20) * 2;
-	}
-#endif
-	
-	if(result > chanceOfEvent)
-		return -1;
-		
-	result = Random(100);
-	
-	do
-	{
-		acc += chances[i];
-		if(acc >= result)
-		{
-			event = i;
-			break;
-		}
-		++i;      
-    } while (i < 4);
-	return event;
-}
 
 static void TriggerEvent(int event)
 {
-	SendMessageToApp(TRIGGER_EVENT, event, 0, 0);
-	ticksSinceLastEvent = 0;	
-}
-
-static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
-{
-	switch(type)
+	if(event > -1)
 	{
-		case APP_SEND_TICK_COUNT:
-		{
-#if EVENT_CHANCE_SCALING
-			ticksSinceLastEvent = data->data0;
-#endif
-			appAlive = true;
-			break;
-		}
-		case PAUSE_WORKER_APP:
-		{
-			handlingTicks = false;
-			break;
-		}
-		case UNPAUSE_WORKER_APP:
-		{
-			handlingTicks = true;
-			break;
-		}
-		case APP_DYING:
-		{
-			appAlive = false;
-			handlingTicks = true;
-			break;
-		}
-		case APP_AWAKE:
-		{
-			appAlive = true;
-			TriggerEvent(lastEvent);
-			break;
-		}
+		SendMessageToApp(TRIGGER_EVENT, event, 0, 0);
+		ticksSinceLastEvent = 0;
 	}
 }
 
 void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) 
-{
+{	
 	if(handlingTicks)
 	{
+		if(forcedDelay)
+		{
+			forcedDelay = false;
+			return;
+		}
 #if EVENT_CHANCE_SCALING
 		++ticksSinceLastEvent;
 #endif
-		lastEvent = ComputeRandomEvent();
+		lastEvent = ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, importedChances, chanceCount, FAST_MODE_IN_BACKGROUND);
 		if(lastEvent > -1)
 		{
 			if(appAlive)
@@ -140,6 +59,54 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 				worker_launch_app();
 				handlingTicks = false;
 			}
+		}
+	}
+}
+
+static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
+{
+	switch(type)
+	{
+		case APP_DYING:
+		{
+			appAlive = false;
+			handlingTicks = !data->data1; // Don't handle ticks while in combat
+#if EVENT_CHANCE_SCALING
+			ticksSinceLastEvent = data->data0;
+#endif
+			forcedDelay = true;
+			worker_launch_app();
+			break;
+		}
+		case APP_AWAKE:
+		{
+			SendMessageToApp(WORKER_PREVIOUS_STATE, handlingTicks, appAlive, lastEvent);
+			appAlive = true;
+			handlingTicks = false;
+			TriggerEvent(lastEvent);
+			lastEvent = -1;
+			break;
+		}
+		case APP_SEND_BASE_EVENT_CHANCE:
+		{
+			baseChanceOfEvent = data->data0;
+			//SendMessageToApp(WORKER_ACKNOWLEDGE_BASE_CHANCE, baseChanceOfEvent, 0, 0);
+			break;
+		}
+		case APP_SEND_EVENT_CHANCE:
+		{
+			if(chancesComplete)
+				break;
+			importedChances[chanceCount] = data->data0;
+			//SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_CHANCE, chanceCount, data->data0, 0);
+			++chanceCount;
+			break;
+		}
+		case APP_SEND_EVENT_END:
+		{
+			chancesComplete = true;
+			SendMessageToApp(WORKER_READY, 0, 0, 0);
+			break;
 		}
 	}
 }

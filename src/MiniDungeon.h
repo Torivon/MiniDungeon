@@ -22,8 +22,6 @@
 #define BOUNDS_CHECKING 1
 #define EVENT_CHANCE_SCALING 1
 
-#define USE_WORKER_APP 0
-
 #define ALLOW_SHOP 1
 #if ALLOW_SHOP
 	#define ALLOW_ITEM_SHOP 1
@@ -36,8 +34,10 @@
 // Set up the test menu based on previous choices
 #if PUBLISH
 	#define ALLOW_TEST_MENU 0
+	#define FAST_MODE_IN_BACKGROUND false
 #else
 	#define ALLOW_TEST_MENU 1
+	#define FAST_MODE_IN_BACKGROUND true
 #endif
 
 // This needs to be large enough to handle the maximum size of the window stack

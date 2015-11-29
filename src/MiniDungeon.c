@@ -16,6 +16,8 @@
 // Called once per minute
 void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) 
 {
+	DEBUG_LOG("Main App tick");
+	
 #if ALLOW_WORKER_APP
 	WorkerAppLaunchCheck();
 #endif
@@ -75,7 +77,7 @@ void handle_deinit()
 	UnloadTextLayers();
 	tick_timer_service_unsubscribe();
 #if ALLOW_WORKER_APP
-	AppDying();
+	AppDying(ClosingWhileInBattle());
 	app_worker_message_unsubscribe();
 #endif
 }

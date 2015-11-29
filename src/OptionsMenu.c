@@ -17,7 +17,9 @@ void DrawOptionsMenu(void)
 	ShowMainWindowRow(2, "Fast Mode", fastMode ? "On" : "Off");
 #if ALLOW_WORKER_APP
 	ShowMainWindowRow(3, "Background", useWorkerApp ? "On" : "Off");
+#if ALLOW_TEST_MENU
 	ShowMainWindowRow(4, WorkerIsRunning() ? "Running" : "Not Running", "");
+#endif
 #endif
 }
 
@@ -69,12 +71,17 @@ void SetWorkerApp(bool enable)
 				ActivateWorkerAppLaunchCheck();
 			}
 		}
+		else
+		{
+			SetWorkerReady(true);
+		}
 #endif
 	}
 	else
 	{
 #if ALLOW_WORKER_APP
 		KillWorkerApp();
+		SetWorkerReady(false);
 #endif
 	}
 }

@@ -7,23 +7,25 @@ bool WorkerIsRunning(void);
 void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data);
 void ActivateWorkerAppLaunchCheck(void);
 void WorkerAppLaunchCheck(void);
-void AppDying(void);
+void AppDying(bool closingWhileInBattle);
 void AppAwake(void);
-
-void UnpauseWorkerApp(void);
-void PauseWorkerApp(void);
+void SetWorkerReady(bool ready);
 
 // Worker message types
 enum
 {
 	WORKER_HANDLE_UPDATES = 0,
-	WORKER_SEND_TICK_COUNT,
 	WORKER_LAUNCHED,
 	WORKER_DYING,
+	WORKER_READY,
 	TRIGGER_EVENT,
-	PAUSE_WORKER_APP,
-	UNPAUSE_WORKER_APP,
-	APP_SEND_TICK_COUNT,
+	WORKER_ACKNOWLEDGE_BASE_CHANCE,
+	WORKER_ACKNOWLEDGE_EVENT_CHANCE,
+	WORKER_PREVIOUS_STATE,
+
 	APP_DYING,
 	APP_AWAKE,
+	APP_SEND_BASE_EVENT_CHANCE,
+	APP_SEND_EVENT_CHANCE,
+	APP_SEND_EVENT_END
 };

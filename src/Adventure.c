@@ -85,19 +85,11 @@ void AdventureWindowAppear(Window *window)
 	UpdateCharacterLevel();
 	updateDelay = 1;
 	adventureWindowVisible = true;
-	if(WorkerIsRunning())
-	{
-		UnpauseWorkerApp();
-	}
 }
 
 void AdventureWindowDisappear(Window *window)
 {
 	adventureWindowVisible = false;
-	if(WorkerIsRunning())
-	{
-		PauseWorkerApp();
-	}
 	MenuDisappear(window);
 	adventureWindow = NULL;
 }
@@ -113,30 +105,57 @@ typedef void (*ShowWindowFunction)(void);
 typedef struct
 {
 	ShowWindowFunction windowFunction;
-	int weight;
 } RandomTableEntry;
 
 #if ALLOW_SHOP
 // These should add up to 100
 RandomTableEntry entries[] = 
 {
-	{ShowItemGainWindow, 44},
-	{ShowBattleWindow, 44},
-	{ShowNewFloorWindow, 9},
-	{ShowShopWindow, 3}
+	{ShowItemGainWindow},
+	{ShowBattleWindow},
+	{ShowNewFloorWindow},
+	{ShowShopWindow}
+};
+int chances[] = 
+{
+	44,
+	44,
+	9,
+	3
 };
 #else
 // These should add up to 100
 RandomTableEntry entries[] = 
 {
-	{ShowItemGainWindow, 40},
-	{ShowBattleWindow, 50},
-	{ShowNewFloorWindow, 10}
+	{ShowItemGainWindow},
+	{ShowBattleWindow},
+	{ShowNewFloorWindow}
+};
+int chances[] = 
+{
+	40,
+	50,
+	10
 };
 #endif
 
+int *GetEventChances(void)
+{
+	return chances;
+}
+
+int GetEventCount(void)
+{
+	return sizeof(chances)/sizeof(*chances);
+}
+
 static int baseChanceOfEvent = 35;
 static int ticksSinceLastEvent = 0;
+
+int GetBaseChanceOfEvent(void)
+{
+	return baseChanceOfEvent;
+}
 
 int GetTickCount(void)
 {
@@ -163,36 +182,10 @@ void ExecuteEvent(int i)
 	
 }
 
-int ComputeRandomEvent(bool fastMode)
+void ForceEvent(void)
 {
-	int result = Random(100);
-	int i = 0;
-	int acc = 0;
-	int chanceOfEvent = baseChanceOfEvent;
-	int event = -1;
-#if EVENT_CHANCE_SCALING
-	if(ticksSinceLastEvent > 20)
-	{
-		chanceOfEvent += (ticksSinceLastEvent - 20) * 2;
-	}
-#endif
-	
-	if(!fastMode && result > chanceOfEvent)
-		return -1;
-		
-	result = Random(100);
-	
-	do
-	{
-		acc += entries[i].weight;
-		if(acc >= result)
-		{
-			event = i;
-			break;
-		}
-		++i;      
-    } while (i < 4);
-	return event;
+	PopMenu();
+	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, sizeof(chances), true));
 }
 
 void UpdateAdventure(void)
@@ -216,8 +209,7 @@ void UpdateAdventure(void)
 		return;
 	}
 
-	if(!WorkerIsHandlingUpdates())
-		ExecuteEvent(ComputeRandomEvent(GetFastMode()));
+	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, sizeof(chances), GetFastMode()));
 	LoadRandomDungeonImage();
 }
 

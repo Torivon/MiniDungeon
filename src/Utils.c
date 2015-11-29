@@ -2,6 +2,7 @@
 
 #include "Logging.h"
 #include "MiniDungeon.h"
+#include "Utils.h"
 
 // Right justified
 void IntToString(char *buffer, size_t bufferSize, int value)
@@ -38,9 +39,9 @@ void IntToPercent(char *buffer, size_t bufferSize, int value)
 }
 
 // Returns an integer in the range [1,max]
-int Random(int max)
+uint16_t Random(uint16_t max)
 {
-	int result = (uint16_t)(rand() % max) + 1;
+	int result = Random_inline(max);
 	DEBUG_VERBOSE_LOG("Random(%d)=%d", max, result);
 	return result;
 }

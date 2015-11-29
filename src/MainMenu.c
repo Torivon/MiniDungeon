@@ -20,12 +20,6 @@ void DoNothing(void)
 
 #if ALLOW_TEST_MENU
 
-void ForceEvent(void)
-{
-	PopMenu();
-	ExecuteEvent(ComputeRandomEvent(true));
-}
-
 void ForceNewFloor(void)
 {
 	PopMenu();
@@ -92,14 +86,16 @@ MenuDefinition mainMenuDef =
 
 void MainMenuWindowAppear(Window *window)
 {
-	static char s_battery_buffer[4] = "0000";
+	static char s_battery_buffer[5] = "0000";
 	BatteryChargeState charge_state = battery_state_service_peek();
 	MenuAppear(window);
 
 	if (charge_state.is_charging) {
-	  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "Chg");
+		snprintf(s_battery_buffer, sizeof(s_battery_buffer), "Chg");
+	} else if(charge_state.charge_percent == 100) {
+		snprintf(s_battery_buffer, sizeof(s_battery_buffer), "Full");
 	} else {
-	  IntToPercent(s_battery_buffer, sizeof(s_battery_buffer), charge_state.charge_percent);
+		IntToPercent(s_battery_buffer, sizeof(s_battery_buffer), charge_state.charge_percent);
 	}
 	ShowMainWindowRow(0, "Paused",  s_battery_buffer);
 }
