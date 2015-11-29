@@ -75,7 +75,6 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 			ticksSinceLastEvent = data->data0;
 #endif
 			forcedDelay = true;
-			worker_launch_app();
 			break;
 		}
 		case APP_AWAKE:
