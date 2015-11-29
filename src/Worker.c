@@ -18,6 +18,7 @@ static bool handlingTicks = false;
 static bool appAlive = false;
 static int lastEvent = -1;
 static bool forcedDelay = false; // Make sure we don't trigger an event while the app is still closing
+static bool workerCanLaunch = false;
 
 int importedChances[10];
 int chanceCount = 0;
@@ -56,7 +57,8 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 			}
 			else
 			{
-				worker_launch_app();
+				if(workerCanLaunch)
+					worker_launch_app();
 				handlingTicks = false;
 			}
 		}
@@ -105,6 +107,11 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 		{
 			chancesComplete = true;
 			SendMessageToApp(WORKER_READY, 0, 0, 0);
+			break;
+		}
+		case APP_SEND_WORKER_CAN_LAUNCH:
+		{
+			workerCanLaunch = data->data0;
 			break;
 		}
 	}

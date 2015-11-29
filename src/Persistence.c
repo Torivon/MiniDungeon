@@ -9,7 +9,7 @@
 #include "Persistence.h"
 #include "Shop.h"
 	
-#define CURRENT_DATA_VERSION 3
+#define CURRENT_DATA_VERSION 4
 enum
 {
 	PERSISTED_IS_DATA_SAVED = 0,
@@ -22,6 +22,7 @@ enum
 	PERSISTED_VIBRATION,
 	PERSISTED_FAST_MODE,
 	PERSISTED_WORKER_APP,
+	PERSISTED_WORKER_CAN_LAUNCH,
 	
 	PERSISTED_IN_COMBAT,
 	PERSISTED_MONSTER_TYPE,
@@ -101,6 +102,7 @@ bool SavePersistedData(void)
 	persist_write_bool(PERSISTED_VIBRATION, GetVibration());
 	persist_write_bool(PERSISTED_FAST_MODE, GetFastMode());
 	persist_write_bool(PERSISTED_WORKER_APP, GetWorkerApp());
+	persist_write_bool(PERSISTED_WORKER_CAN_LAUNCH, GetWorkerCanLaunch());
 
 	persist_write_bool(PERSISTED_IN_COMBAT, ClosingWhileInBattle());
 	persist_write_int(PERSISTED_MONSTER_TYPE, GetMostRecentMonster());
@@ -135,6 +137,7 @@ bool LoadPersistedData(void)
 	SetVibration(persist_read_bool(PERSISTED_VIBRATION));
 	SetFastMode(persist_read_bool(PERSISTED_FAST_MODE));
 	SetWorkerApp(persist_read_bool(PERSISTED_WORKER_APP));
+	SetWorkerCanLaunch(persist_read_bool(PERSISTED_WORKER_CAN_LAUNCH));
 	
 	if(persist_read_bool(PERSISTED_IN_COMBAT))
 	{

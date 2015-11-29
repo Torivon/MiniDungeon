@@ -96,6 +96,12 @@ void SendEventChances(int baseChance, int *chances, int chanceCount)
 	SendMessageToWorker(APP_SEND_EVENT_END, 0, 0, 0);
 }
 
+void SendWorkerCanLaunch(void)
+{
+	SendMessageToWorker(APP_SEND_WORKER_CAN_LAUNCH, GetWorkerCanLaunch(), 0, 0);
+}
+
+
 void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 {
 	switch(type)
@@ -105,6 +111,7 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 			workerHandlingUpdates = false;
 			DEBUG_LOG("Worker Launched. Sending events.");
 			SendEventChances(GetBaseChanceOfEvent(), GetEventChances(), GetEventCount());
+			SendWorkerCanLaunch();
 			if(OptionsMenuIsVisible())
 				DrawOptionsMenu();
 				

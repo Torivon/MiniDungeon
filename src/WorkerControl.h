@@ -10,6 +10,7 @@ void WorkerAppLaunchCheck(void);
 void AppDying(bool closingWhileInBattle);
 void AppAwake(void);
 void SetWorkerReady(bool ready);
+void SendWorkerCanLaunch(void);
 
 // Worker message types
 enum
@@ -27,5 +28,6 @@ enum
 	APP_AWAKE,
 	APP_SEND_BASE_EVENT_CHANCE,
 	APP_SEND_EVENT_CHANCE,
-	APP_SEND_EVENT_END
+	APP_SEND_EVENT_END,
+	APP_SEND_WORKER_CAN_LAUNCH
 };

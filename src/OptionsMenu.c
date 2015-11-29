@@ -6,8 +6,9 @@
 #include "WorkerControl.h"
 
 static bool vibration = true;
-static int fastMode = false;
-static int useWorkerApp = false;
+static bool fastMode = false;
+static bool useWorkerApp = false;
+static bool workerCanLaunch = false;
 static bool optionsMenuVisible = false;
 
 void DrawOptionsMenu(void)
@@ -17,8 +18,9 @@ void DrawOptionsMenu(void)
 	ShowMainWindowRow(2, "Fast Mode", fastMode ? "On" : "Off");
 #if ALLOW_WORKER_APP
 	ShowMainWindowRow(3, "Background", useWorkerApp ? "On" : "Off");
+	ShowMainWindowRow(4, "Launch", workerCanLaunch ? "On" : "Off");
 #if ALLOW_TEST_MENU
-	ShowMainWindowRow(4, WorkerIsRunning() ? "Running" : "Not Running", "");
+	ShowMainWindowRow(5, WorkerIsRunning() ? "Running" : "Not Running", "");
 #endif
 #endif
 }
@@ -63,6 +65,7 @@ void SetWorkerApp(bool enable)
 		int result = 0;
 #if ALLOW_WORKER_APP
 		SetFastMode(false);
+		SetWorkerCanLaunch(true);
 		if(!WorkerIsRunning())
 		{
 			result = LaunchWorkerApp();
@@ -97,6 +100,23 @@ bool GetWorkerApp(void)
 	return useWorkerApp;
 }
 
+void SetWorkerCanLaunch(bool enable)
+{
+	workerCanLaunch = enable;
+	SendWorkerCanLaunch();
+}
+
+void ToggleWorkerCanLaunch(void)
+{
+	SetWorkerCanLaunch(!workerCanLaunch);
+	DrawOptionsMenu();
+}
+
+bool GetWorkerCanLaunch(void)
+{
+	return workerCanLaunch;
+}
+
 void OptionsMenuAppear(Window *window);
 void OptionsMenuDisappear(Window *window);
 
@@ -108,7 +128,8 @@ MenuDefinition optionsMenuDef =
 		{"Toggle", "Toggle Vibration", ToggleVibration},
 		{"Toggle", "Speed up events", ToggleFastMode},
 #if ALLOW_WORKER_APP
-		{"Toggle", "Events in background", ToggleWorkerApp}
+		{"Toggle", "Events in background", ToggleWorkerApp},
+		{"Toggle", "Launch from background", ToggleWorkerCanLaunch}
 #endif
 	},
 	.appear = OptionsMenuAppear,
