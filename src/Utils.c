@@ -9,7 +9,7 @@ void IntToString(char *buffer, size_t bufferSize, int value)
 {
 	int i = bufferSize - 1;
 	int digit;
-	int temp = value;
+	int temp = value >= 0 ? value : 0;
 
 	DEBUG_VERBOSE_LOG("IntToString(%d)", value);
 	

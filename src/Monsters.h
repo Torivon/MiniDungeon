@@ -15,7 +15,7 @@ typedef struct
 	int healthLevel : 3;
 	int defenseLevel : 3;
 	int magicDefenseLevel : 3;
-	int goldScale : 4;
+	int goldScale : 5;
 } MonsterDef;
 
 int GetMostRecentMonster(void);

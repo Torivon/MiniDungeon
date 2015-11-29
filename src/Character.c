@@ -261,9 +261,8 @@ void IncrementMagicDefense(void)
 	IncrementStat(&characterData.stats.magicDefense);
 }
 
-void LevelUp(void)
+void LevelUpData(void)
 {
-	INFO_LOG("Level up.");
 	characterData.statPointsToSpend += STAT_POINTS_PER_LEVEL;
 	++characterData.level;
 	characterData.xpForNextLevel += ComputeXPForNextLevel(characterData.level);
@@ -272,7 +271,13 @@ void LevelUp(void)
 		characterData.stats.maxHealth = 9999;
 	characterData.stats.currentHealth = characterData.stats.maxHealth;
 	UpdateCharacterLevel();
-	UpdateCharacterHealth();
+	UpdateCharacterHealth();	
+}
+
+void LevelUp(void)
+{
+	INFO_LOG("Level up.");
+	LevelUpData();
 	ShowStatMenu();
 }
 

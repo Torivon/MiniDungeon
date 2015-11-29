@@ -43,5 +43,6 @@ void GrantGold(int gold);
 void ShowStatMenu(void);
 void ShowProgressMenu(void);
 
+void LevelUpData(void);
 void LevelUp(void);
 void ShowEndWindow(void);

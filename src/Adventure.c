@@ -40,7 +40,7 @@ MenuDefinition adventureMenuDef =
 		{NULL, NULL, NULL},
 		{NULL, NULL, NULL},
 		{NULL, NULL, NULL},
-		{NULL, NULL, NULL},
+		{"", "", ShowTestMenu2},
 		{"", "", ShowTestMenu}
 #endif
 	},

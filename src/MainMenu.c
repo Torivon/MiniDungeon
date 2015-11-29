@@ -62,6 +62,33 @@ void ShowTestMenu(void)
 {
 	PushNewMenu(&testMenuDef);
 }
+
+void ForceDragonSetup(void)
+{
+	int i = 0;
+	SetCurrentFloor(20);
+	GrantGold(5000);
+	for(i = 0; i < 20; ++i)
+	{
+		LevelUpData();
+	}
+	LevelUp();
+}
+
+MenuDefinition testMenu2Def = 
+{
+	.menuEntries = 
+	{
+		{"Quit", "", PopMenu},
+		{"Dragon", "", ForceDragonSetup},
+	},
+	.mainImageId = -1
+};
+
+void ShowTestMenu2(void)
+{
+	PushNewMenu(&testMenu2Def);
+}
 #endif
 
 //************* Main Menu *****************//
