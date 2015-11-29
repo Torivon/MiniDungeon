@@ -16,6 +16,7 @@
 #define ERROR_LOGGING 1 // ERROR_LOG should be used for actual incorrect operation.
 #define WARNING_LOGGING 1 // WARNING_LOG should be used strange edge cases that are not expected
 #define INFO_LOGGING 1 // INFO_LOG should be used to log game flow.
+#define PROFILE_LOGGING 0 // PROFILE_LOGGING shows up as DEBUG_VERBOSE_LOG, but should be used for timing
 
 // Features to turn off to make space
 #define ALLOW_RANDOM_DUNGEON_GRAPHICS 1

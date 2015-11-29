@@ -243,6 +243,7 @@ void UnloadMainBmpImage(void)
 	if(!mainImageLoaded)
 		return;
 	
+	ProfileLogStart("UnloadMainBmpImage")
 	DEBUG_LOG("Removing resourceId %d.", mainImageResourceLoaded);
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
 	bitmap_layer_destroy(mainImage);
@@ -251,6 +252,7 @@ void UnloadMainBmpImage(void)
 	mainImageBitmap = NULL;
 	mainImageLoaded = false;
 	mainImageResourceLoaded = -1;
+	ProfileLogStop("UnloadMainBmpImage");
 	
 #if defined(PBL_COLOR)
 	if(!floorImageLoaded)
@@ -309,6 +311,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	}
 #endif
 
+	ProfileLogStart("LoadMainBmpImage");
 	mainImageBitmap = gbitmap_create_with_resource(resourceId);
 	mainImage = bitmap_layer_create(mainFrame);
 	bitmap_layer_set_bitmap(mainImage, mainImageBitmap);
@@ -319,6 +322,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 	mainImageLoaded = true;
 	mainImageResourceLoaded = resourceId;
+	ProfileLogStop("LoadMainBmpImage");
 }
 
 //******* CLOCK *********//

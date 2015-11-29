@@ -27,8 +27,6 @@ static bool workerAppMaybeLaunching = false;
 
 void AppDying(bool closingWhileInBattle)
 {
-	uint16_t test = (uint16_t)closingWhileInBattle;
-	DEBUG_LOG("Original %d, cast %d, !cast %d", closingWhileInBattle, test, !test);
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_DYING, GetTickCount(), closingWhileInBattle, 0);
 }

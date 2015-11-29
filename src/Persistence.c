@@ -47,6 +47,7 @@ bool IsPersistedDataCurrent(void)
 	
 void ClearPersistedData(void)
 {
+	ProfileLogStart("ClearPersistedData");
 	if(persist_exists(PERSISTED_IS_DATA_SAVED))
 	{
 		DEBUG_LOG("Clearing persisted data.");
@@ -57,6 +58,7 @@ void ClearPersistedData(void)
 			persist_delete(i);
 		}
 	}
+	ProfileLogStop("ClearPersistedData");
 }
 	
 bool SavePersistedData(void)
@@ -81,6 +83,7 @@ bool SavePersistedData(void)
 		return false;
 	}
 
+	ProfileLogStart("SavePersistedData");
 	INFO_LOG("Saving persisted data.");
 	persist_write_bool(PERSISTED_IS_DATA_SAVED, true);
 	persist_write_int(PERSISTED_CURRENT_DATA_VERSION, CURRENT_DATA_VERSION);
@@ -102,6 +105,7 @@ bool SavePersistedData(void)
 	persist_write_bool(PERSISTED_IN_COMBAT, ClosingWhileInBattle());
 	persist_write_int(PERSISTED_MONSTER_TYPE, GetMostRecentMonster());
 	persist_write_int(PERSISTED_MONSTER_HEALTH, GetCurrentMonsterHealth());
+	ProfileLogStop("SavePersistedData");
 	
 	return true;
 }
@@ -120,6 +124,7 @@ bool LoadPersistedData(void)
 		return false;
 	}
 
+	ProfileLogStart("LoadPersistedData");
 	INFO_LOG("Loading persisted data.");
 	characterData = GetCharacter();
 	persist_read_data(PERSISTED_CHARACTER_DATA, characterData, sizeof(CharacterData));
@@ -137,6 +142,7 @@ bool LoadPersistedData(void)
 		int currentMonsterHealth = persist_read_int(PERSISTED_MONSTER_HEALTH);
 		ResumeBattle(currentMonster, currentMonsterHealth);
 	}
+	ProfileLogStop("LoadPersistedData");
 	if(characterData->level == 0)
 	{
 		// Something bad happened to the data, possible due to a watch crash

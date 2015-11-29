@@ -49,6 +49,7 @@ void MenuAppear(Window *window)
 {
 	int i;
 	bool setSelected = false;
+		
 	MenuWindow *menuWindow = window_get_user_data(window);
 	if(menuWindow)
 	{
