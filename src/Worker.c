@@ -33,6 +33,7 @@ static void TriggerEvent(int event)
 	{
 		SendMessageToApp(TRIGGER_EVENT, event, 0, 0);
 		ticksSinceLastEvent = 0;
+		lastEvent = -1;
 	}
 }
 
@@ -81,11 +82,9 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 		}
 		case APP_AWAKE:
 		{
-			SendMessageToApp(WORKER_PREVIOUS_STATE, handlingTicks, appAlive, lastEvent);
 			appAlive = true;
 			handlingTicks = false;
 			TriggerEvent(lastEvent);
-			lastEvent = -1;
 			break;
 		}
 		case APP_SEND_BASE_EVENT_CHANCE:
