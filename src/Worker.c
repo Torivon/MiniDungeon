@@ -90,7 +90,6 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 		case APP_SEND_BASE_EVENT_CHANCE:
 		{
 			baseChanceOfEvent = data->data0;
-			//SendMessageToApp(WORKER_ACKNOWLEDGE_BASE_CHANCE, baseChanceOfEvent, 0, 0);
 			break;
 		}
 		case APP_SEND_EVENT_CHANCE:
@@ -98,7 +97,6 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 			if(chancesComplete)
 				break;
 			importedChances[chanceCount] = data->data0;
-			//SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_CHANCE, chanceCount, data->data0, 0);
 			++chanceCount;
 			break;
 		}

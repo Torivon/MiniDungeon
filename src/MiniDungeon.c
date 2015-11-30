@@ -17,10 +17,6 @@
 void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) 
 {
 	DEBUG_LOG("Main App tick");
-	
-#if ALLOW_WORKER_APP
-	WorkerAppLaunchCheck();
-#endif
 	UpdateClock();
 	UpdateAdventure();
 }
@@ -68,9 +64,6 @@ void handle_init() {
 void handle_deinit() 
 {
 	INFO_LOG("Cleaning up on exit.");
-#if ALLOW_WORKER_APP
-	WorkerAppLaunchCheck();
-#endif
 	SavePersistedData();
 	UnloadBackgroundImage();
 	UnloadMainBmpImage();

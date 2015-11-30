@@ -8,6 +8,7 @@
 #include "OptionsMenu.h"
 #include "Persistence.h"
 #include "Shop.h"
+#include "WorkerControl.h"
 	
 #define CURRENT_DATA_VERSION 4
 enum
@@ -116,6 +117,7 @@ bool LoadPersistedData(void)
 {
 	CharacterData *characterData;
 	int floor = 0;
+	bool useWorkerApp = false;
 	if(!persist_exists(PERSISTED_IS_DATA_SAVED) || !persist_read_bool(PERSISTED_IS_DATA_SAVED))
 		return false;
 		
@@ -136,7 +138,15 @@ bool LoadPersistedData(void)
 	SetStatPointsPurchased(persist_read_int(PERSISTED_STAT_POINTS_PURCHASED));
 	SetVibration(persist_read_bool(PERSISTED_VIBRATION));
 	SetFastMode(persist_read_bool(PERSISTED_FAST_MODE));
-	SetWorkerApp(persist_read_bool(PERSISTED_WORKER_APP));
+	useWorkerApp = persist_read_bool(PERSISTED_WORKER_APP);
+	if(useWorkerApp)
+	{
+		AttemptToLaunchWorkerApp();
+	}
+	else
+	{
+		AttemptToKillWorkerApp();
+	}
 	SetWorkerCanLaunch(persist_read_bool(PERSISTED_WORKER_CAN_LAUNCH));
 	
 	if(persist_read_bool(PERSISTED_IN_COMBAT))

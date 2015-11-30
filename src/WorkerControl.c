@@ -22,9 +22,6 @@ void SendMessageToWorker(uint8_t type, uint16_t data0, uint16_t data1, uint16_t 
 	app_worker_send_message(type, &msg_data);
 }
 
-static bool workerHandlingUpdates = false;
-static bool workerAppMaybeLaunching = false;
-
 void AppDying(bool closingWhileInBattle)
 {
 	if(WorkerIsRunning())
@@ -37,27 +34,8 @@ void AppAwake(void)
 		SendMessageToWorker(APP_AWAKE, 0, 0, 0);
 }
 
-void ActivateWorkerAppLaunchCheck(void)
-{
-	workerAppMaybeLaunching = true;
-}
-
-void WorkerAppLaunchCheck(void)
-{
-	if(workerAppMaybeLaunching)
-	{
-		SetWorkerApp(WorkerIsRunning());
-		workerAppMaybeLaunching = false;
-	}		
-}
-
 AppWorkerResult LaunchWorkerApp()
 {
-	bool running = WorkerIsRunning();
-
-	if(running)
-		return false;
-	
 	return app_worker_launch();
 }
 
@@ -71,9 +49,33 @@ AppWorkerResult KillWorkerApp()
 	return app_worker_kill();
 }
 
-bool WorkerIsHandlingUpdates(void)
+void AttemptToLaunchWorkerApp()
 {
-	return workerHandlingUpdates;
+#if ALLOW_WORKER_APP
+	if(WorkerIsRunning())
+	{
+		SetWorkerApp(true);
+	}
+	else
+	{
+		LaunchWorkerApp();
+		SetWorkerApp(false);
+	}
+#endif
+}
+
+void AttemptToKillWorkerApp()
+{
+#if ALLOW_WORKER_APP
+	if(WorkerIsRunning())
+	{
+		KillWorkerApp();
+	}
+	else
+	{
+		SetWorkerApp(false);
+	}
+#endif	
 }
 
 bool WorkerIsRunning(void)
@@ -108,13 +110,11 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 	{
 		case WORKER_LAUNCHED:
 		{
-			workerHandlingUpdates = false;
 			DEBUG_LOG("Worker Launched. Sending events.");
 			SendEventChances(GetBaseChanceOfEvent(), GetEventChances(), GetEventCount());
 			SendWorkerCanLaunch();
-			if(OptionsMenuIsVisible())
-				DrawOptionsMenu();
-				
+			SetWorkerApp(true);
+			SetFastMode(false);
 			break;
 		}
 		case TRIGGER_EVENT:
@@ -126,32 +126,16 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 		case WORKER_DYING:
 		{
 			DEBUG_LOG("Worker dying");
-			workerHandlingUpdates = false;
 			SetTickCount(data->data0);
 			SetWorkerApp(false);
 			if(OptionsMenuIsVisible())
 				DrawOptionsMenu();
 			break;
 		}
-		case WORKER_ACKNOWLEDGE_BASE_CHANCE:
-		{
-			DEBUG_LOG("Worker got base chance of %d", data->data0);
-			break;
-		}
-		case WORKER_ACKNOWLEDGE_EVENT_CHANCE:
-		{
-			DEBUG_LOG("Worker got event chance[%d]=%d", data->data0, data->data1);
-			break;
-		}
 		case WORKER_READY:
 		{
 			DEBUG_LOG("Worker has event chances");
 			workerReady = true;
-			break;
-		}
-		case WORKER_PREVIOUS_STATE:
-		{
-			DEBUG_LOG("handlingTicks %d, appAlive %d, lastEvent %d", data->data0, data->data1, data->data2);
 			break;
 		}
 	}

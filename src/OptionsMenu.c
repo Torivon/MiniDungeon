@@ -8,20 +8,17 @@
 static bool vibration = true;
 static bool fastMode = false;
 static bool useWorkerApp = false;
-static bool workerCanLaunch = false;
+static bool workerCanLaunch = true;
 static bool optionsMenuVisible = false;
 
 void DrawOptionsMenu(void)
 {
 	ShowMainWindowRow(0, "Options", "");
 	ShowMainWindowRow(1, "Vibration", vibration ? "On" : "Off");
-	ShowMainWindowRow(2, "Fast Mode", fastMode ? "On" : "Off");
+	ShowMainWindowRow(2, "Fast Mode", useWorkerApp ? "-" : fastMode ? "On" : "Off");
 #if ALLOW_WORKER_APP
 	ShowMainWindowRow(3, "Background", useWorkerApp ? "On" : "Off");
-	ShowMainWindowRow(4, "Launch", workerCanLaunch ? "On" : "Off");
-#if ALLOW_TEST_MENU
-	ShowMainWindowRow(5, WorkerIsRunning() ? "Running" : "Not Running", "");
-#endif
+	ShowMainWindowRow(4, "Launch", !useWorkerApp ? "-" : workerCanLaunch ? "On" : "Off");
 #endif
 }
 
@@ -53,6 +50,9 @@ void SetFastMode(bool enable)
 
 void ToggleFastMode(void)
 {
+	if(useWorkerApp)
+		return;
+	
 	fastMode = !fastMode;
 	DrawOptionsMenu();
 }
@@ -60,39 +60,21 @@ void ToggleFastMode(void)
 void SetWorkerApp(bool enable)
 {
 	useWorkerApp = enable;
-	if(useWorkerApp)
-	{
-		int result = 0;
-#if ALLOW_WORKER_APP
-		SetFastMode(false);
-		SetWorkerCanLaunch(true);
-		if(!WorkerIsRunning())
-		{
-			result = LaunchWorkerApp();
-			if(result == APP_WORKER_RESULT_ASKING_CONFIRMATION)
-			{
-				ActivateWorkerAppLaunchCheck();
-			}
-		}
-		else
-		{
-			SetWorkerReady(true);
-		}
-#endif
-	}
-	else
-	{
-#if ALLOW_WORKER_APP
-		KillWorkerApp();
-		SetWorkerReady(false);
-#endif
-	}
+	SetFastMode(false);
+	if(OptionsMenuIsVisible())
+		DrawOptionsMenu();
 }
 
 void ToggleWorkerApp(void)
 {
-	SetWorkerApp(!useWorkerApp);
-	DrawOptionsMenu();
+	if(useWorkerApp)
+	{
+		AttemptToKillWorkerApp();
+	}
+	else
+	{
+		AttemptToLaunchWorkerApp();
+	}
 }
 
 bool GetWorkerApp(void)
@@ -108,6 +90,9 @@ void SetWorkerCanLaunch(bool enable)
 
 void ToggleWorkerCanLaunch(void)
 {
+	if(!useWorkerApp)
+		return;
+	
 	SetWorkerCanLaunch(!workerCanLaunch);
 	DrawOptionsMenu();
 }
@@ -128,7 +113,7 @@ MenuDefinition optionsMenuDef =
 		{"Toggle", "Toggle Vibration", ToggleVibration},
 		{"Toggle", "Speed up events", ToggleFastMode},
 #if ALLOW_WORKER_APP
-		{"Toggle", "Events in background", ToggleWorkerApp},
+		{"Toggle", "Run in background", ToggleWorkerApp},
 		{"Toggle", "Launch from background", ToggleWorkerCanLaunch}
 #endif
 	},
