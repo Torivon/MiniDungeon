@@ -60,7 +60,8 @@ void ToggleFastMode(void)
 void SetWorkerApp(bool enable)
 {
 	useWorkerApp = enable;
-	SetFastMode(false);
+	if(useWorkerApp)
+		SetFastMode(false);
 	if(OptionsMenuIsVisible())
 		DrawOptionsMenu();
 }
