@@ -9,6 +9,7 @@ bool AdventureWindowIsVisible(void);
 
 void ShowAdventureWindow(void);
 void ShowNewFloorWindow(void);
+void SetUpdateDelay();
 
 void ForceEvent(void);
 void ExecuteEvent(int i);

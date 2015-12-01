@@ -21,6 +21,12 @@ const char *UpdateFloorText(void)
 }
 
 int updateDelay = 0;
+
+void SetUpdateDelay()
+{
+	updateDelay = 1;
+}
+
 bool adventureWindowVisible = false;
 
 bool AdventureWindowIsVisible(void)
@@ -83,7 +89,7 @@ void AdventureWindowAppear(Window *window)
 	adventureWindow = window;
 	UpdateCharacterHealth();
 	UpdateCharacterLevel();
-	updateDelay = 1;
+	SetUpdateDelay();
 	adventureWindowVisible = true;
 }
 
@@ -203,7 +209,7 @@ void UpdateAdventure(void)
 #if EVENT_CHANCE_SCALING
 	++ticksSinceLastEvent;
 #endif
-	if(updateDelay && !GetFastMode())
+	if(updateDelay > 0 && !GetFastMode())
 	{
 		--updateDelay;
 		return;

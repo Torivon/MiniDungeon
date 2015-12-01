@@ -91,6 +91,61 @@ void ShowTestMenu2(void)
 }
 #endif
 
+//************* Application Stats *****************//
+
+#if ALLOW_TEST_MENU
+
+static size_t minMemoryFree = (size_t)-1;
+
+void InfoWindowAppear(Window *window);
+
+void UpdateMinFreeMemory()
+{
+	size_t bytesFree = heap_bytes_free();
+	if(bytesFree < minMemoryFree)
+		minMemoryFree = bytesFree;
+}
+
+MenuDefinition infoMenuDef = 
+{
+	.menuEntries = 
+	{
+		{"Quit", "", PopMenu},
+	},
+	.appear = InfoWindowAppear,
+	.mainImageId = -1
+};
+
+const char *UpdateFreeText(void)
+{
+	static char freeText[] = "0000000"; // Needs to be static because it's used by the system later.
+	size_t bytesFree = heap_bytes_free();
+	IntToString(freeText, 7, bytesFree);
+	return freeText;
+}
+
+const char *UpdateMinFreeText(void)
+{
+	static char minFreeText[] = "0000000"; // Needs to be static because it's used by the system later.
+	IntToString(minFreeText, 7, minMemoryFree);
+	return minFreeText;
+}
+
+void InfoWindowAppear(Window *window)
+{
+	MenuAppear(window);
+	
+	ShowMainWindowRow(0, "Info", "");
+	ShowMainWindowRow(1, UpdateFreeText(), "Free");
+	ShowMainWindowRow(2, UpdateMinFreeText(), "Min");
+}
+
+void ShowInfoMenu(void)
+{
+	PushNewMenu(&infoMenuDef);
+}
+#endif
+
 //************* Main Menu *****************//
 
 void MainMenuWindowAppear(Window *window);
@@ -104,6 +159,9 @@ MenuDefinition mainMenuDef =
 		{"Progress", "Character advancement", ShowProgressMenu},
 		{"Stats", "Character Stats", ShowStatMenu},
 		{"Options", "Open the options menu", ShowOptionsMenu},
+#if ALLOW_TEST_MENU
+		{"Info", "Stats about the app", ShowInfoMenu},
+#endif
 	},
 	.appear = MainMenuWindowAppear,
 	.mainImageId = RESOURCE_ID_IMAGE_REST,

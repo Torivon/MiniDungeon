@@ -1,6 +1,7 @@
 #include "pebble.h"
 
 #include "Logging.h"
+#include "MainMenu.h"
 #include "Menu.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -488,7 +489,7 @@ void WindowAppear(Window *window)
 void WindowDisappear(Window *window)
 {
 	(void)window;
-	
+	UpdateMinFreeMemory();
 	RemoveMainBmpImage();
 	RemoveBackgroundImage();
 	RemoveMainLayers();
