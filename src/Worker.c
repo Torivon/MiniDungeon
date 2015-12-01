@@ -15,7 +15,6 @@ void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t dat
 }
 
 static bool handlingTicks = false;
-static bool appAlive = false;
 static int lastEvent = -1;
 static bool forcedDelay = false; // Make sure we don't trigger an event while the app is still closing
 static bool workerCanLaunch = false;
@@ -52,16 +51,9 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 		lastEvent = ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, importedChances, chanceCount, FAST_MODE_IN_BACKGROUND);
 		if(lastEvent > -1)
 		{
-			if(appAlive)
-			{
-				TriggerEvent(lastEvent);
-			}
-			else
-			{
-				if(workerCanLaunch)
-					worker_launch_app();
-				handlingTicks = false;
-			}
+			if(workerCanLaunch)
+				worker_launch_app();
+			handlingTicks = false;
 		}
 	}
 }
@@ -72,7 +64,6 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 	{
 		case APP_DYING:
 		{
-			appAlive = false;
 			handlingTicks = !data->data1; // Don't handle ticks while in combat
 #if EVENT_CHANCE_SCALING
 			ticksSinceLastEvent = data->data0;
@@ -82,7 +73,6 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 		}
 		case APP_AWAKE:
 		{
-			appAlive = true;
 			handlingTicks = false;
 			TriggerEvent(lastEvent);
 			break;
