@@ -15,6 +15,11 @@
 	 
 static bool hasFocus = true;
 
+bool HasFocus(void)
+{
+	return hasFocus;
+}
+
 // Called once per minute
 void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) 
 {

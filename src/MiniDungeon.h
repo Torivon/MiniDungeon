@@ -49,3 +49,4 @@
 #define ALLOW_WORKER_APP 1
 
 void ResetGame(void);
+bool HasFocus(void);

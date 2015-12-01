@@ -148,7 +148,10 @@ void ShowInfoMenu(void)
 
 //************* Main Menu *****************//
 
+static bool mainMenuVisible = false;
+
 void MainMenuWindowAppear(Window *window);
+void MainMenuWindowDisappear(Window *window);
 
 MenuDefinition mainMenuDef = 
 {
@@ -164,25 +167,54 @@ MenuDefinition mainMenuDef =
 #endif
 	},
 	.appear = MainMenuWindowAppear,
+	.disappear = MainMenuWindowDisappear,
 	.mainImageId = RESOURCE_ID_IMAGE_REST,
 	.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR,
 	.useFloorImage = true
 };
 
-void MainMenuWindowAppear(Window *window)
+void UpdateBatteryText(BatteryChargeState chargeState, char *buffer, int count)
+{
+	DEBUG_VERBOSE_LOG("Updating battery text");
+	if (chargeState.is_charging) {
+		snprintf(buffer, count, "Chg");
+	} else if(chargeState.charge_percent == 100) {
+		snprintf(buffer, count, "Full");
+	} else {
+		IntToPercent(buffer, count, chargeState.charge_percent);
+	}	
+	
+	DEBUG_VERBOSE_LOG("Drawing new battery info");
+}
+
+void ShowPauseRow(BatteryChargeState chargeState)
 {
 	static char s_battery_buffer[5] = "0000";
-	BatteryChargeState charge_state = battery_state_service_peek();
-	MenuAppear(window);
 
-	if (charge_state.is_charging) {
-		snprintf(s_battery_buffer, sizeof(s_battery_buffer), "Chg");
-	} else if(charge_state.charge_percent == 100) {
-		snprintf(s_battery_buffer, sizeof(s_battery_buffer), "Full");
-	} else {
-		IntToPercent(s_battery_buffer, sizeof(s_battery_buffer), charge_state.charge_percent);
-	}
+	UpdateBatteryText(chargeState, s_battery_buffer, sizeof(s_battery_buffer));
 	ShowMainWindowRow(0, "Paused",  s_battery_buffer);
+}
+
+void BatteryHandler(BatteryChargeState charge)
+{
+	DEBUG_VERBOSE_LOG("BatteryHandler called");
+	if(mainMenuVisible)
+		ShowPauseRow(charge);
+}
+
+void MainMenuWindowAppear(Window *window)
+{
+	mainMenuVisible = true;
+	MenuAppear(window);
+	ShowPauseRow(battery_state_service_peek());
+	battery_state_service_subscribe(BatteryHandler);
+}
+
+void MainMenuWindowDisappear(Window *window)
+{
+	mainMenuVisible = false;
+	battery_state_service_unsubscribe();
+	MenuDisappear(window);
 }
 
 void ShowMainMenu(void)
