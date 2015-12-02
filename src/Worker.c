@@ -56,6 +56,14 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 			handlingTicks = false;
 		}
 	}
+	else
+	{
+		if(lastEvent > -1)
+		{
+			if(workerCanLaunch)
+				worker_launch_app();
+		}
+	}
 }
 
 static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
@@ -69,6 +77,7 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 			ticksSinceLastEvent = data->data0;
 #endif
 			forcedDelay = true;
+			SendMessageToApp(WORKER_READY, 0, 0, 0);
 			break;
 		}
 		case APP_AWAKE:
@@ -80,6 +89,7 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 		case APP_SEND_BASE_EVENT_CHANCE:
 		{
 			baseChanceOfEvent = data->data0;
+			SendMessageToApp(WORKER_ACKNOWLEDGE_BASE_EVENT_CHANCE, baseChanceOfEvent, 0, 0);
 			break;
 		}
 		case APP_SEND_EVENT_CHANCE:
@@ -87,13 +97,14 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 			if(chancesComplete)
 				break;
 			importedChances[chanceCount] = data->data0;
+			SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_CHANCE, chanceCount, data->data0, 0);
 			++chanceCount;
 			break;
 		}
 		case APP_SEND_EVENT_END:
 		{
+			SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_END, 0, 0, 0);
 			chancesComplete = true;
-			SendMessageToApp(WORKER_READY, 0, 0, 0);
 			break;
 		}
 		case APP_SEND_WORKER_CAN_LAUNCH:
@@ -107,8 +118,8 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 static void init() 
 {
 	// Initialize your worker here
-	SendMessageToApp(WORKER_LAUNCHED, 0, 0, 0);
 	app_worker_message_subscribe(AppMessageHandler);
+	SendMessageToApp(WORKER_LAUNCHED, 0, 0, 0);
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
 

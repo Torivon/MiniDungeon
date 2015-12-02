@@ -95,6 +95,7 @@ void AdventureWindowAppear(Window *window)
 
 void AdventureWindowDisappear(Window *window)
 {
+	DEBUG_LOG("Adventure disappear");
 	adventureWindowVisible = false;
 	MenuDisappear(window);
 	adventureWindow = NULL;

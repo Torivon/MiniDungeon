@@ -11,6 +11,8 @@ void AppDying(bool closingWhileInBattle);
 void AppAwake(void);
 void SendWorkerCanLaunch(void);
 
+bool WorkerIsReady(void);
+
 // Worker message types
 enum
 {
@@ -18,6 +20,9 @@ enum
 	WORKER_DYING,
 	WORKER_READY,
 	TRIGGER_EVENT,
+	WORKER_ACKNOWLEDGE_BASE_EVENT_CHANCE,
+	WORKER_ACKNOWLEDGE_EVENT_CHANCE,
+	WORKER_ACKNOWLEDGE_EVENT_END,
 
 	APP_DYING,
 	APP_AWAKE,

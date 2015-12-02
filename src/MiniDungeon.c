@@ -7,6 +7,7 @@
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
+#include "OptionsMenu.h"
 #include "Persistence.h"
 #include "Shop.h"
 #include "UILayers.h"
@@ -68,22 +69,27 @@ void handle_init() {
 	INFO_LOG("Starting MiniDungeon");
 	time_t now = time(NULL);
 	
+	app_focus_service_subscribe(focus_handler);
+
 	srand(now);
 	DEBUG_LOG("Srand");
 	
 	handle_minute_tick(NULL, MINUTE_UNIT);
 	DEBUG_LOG("First handle second");
 	
+#if ALLOW_WORKER_APP
+	app_worker_message_subscribe(WorkerMessageHandler);
+#endif
+	
 	InitializeGameData();
 
 #if ALLOW_WORKER_APP
-	app_worker_message_subscribe(WorkerMessageHandler);
 	AppAwake();
 #endif
+	
 	DEBUG_LOG("InitializeGameData");
 	ShowAdventureWindow();
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
-	app_focus_service_subscribe(focus_handler);
 }
 
 void handle_deinit() 
@@ -95,7 +101,7 @@ void handle_deinit()
 	UnloadTextLayers();
 	tick_timer_service_unsubscribe();
 	app_focus_service_unsubscribe();
-#if ALLOW_WORKER_APP
+#if ALLOW_WORKER_APP		
 	AppDying(ClosingWhileInBattle());
 	app_worker_message_unsubscribe();
 #endif

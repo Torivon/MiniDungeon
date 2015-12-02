@@ -7,11 +7,6 @@
 
 static bool workerReady = false;
 
-void SetWorkerReady(bool ready)
-{
-	workerReady = true;
-}
-
 void SendMessageToWorker(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
 	AppWorkerMessage msg_data = {
@@ -24,18 +19,21 @@ void SendMessageToWorker(uint8_t type, uint16_t data0, uint16_t data1, uint16_t 
 
 void AppDying(bool closingWhileInBattle)
 {
+	DEBUG_LOG("AppDying(%s)", closingWhileInBattle ? "true" : "false");
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_DYING, GetTickCount(), closingWhileInBattle, 0);
 }
 
 void AppAwake(void)
 {
+	workerReady = false;
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_AWAKE, 0, 0, 0);
 }
 
 AppWorkerResult LaunchWorkerApp()
 {
+	DEBUG_LOG("Launching worker app");
 	return app_worker_launch();
 }
 
@@ -54,6 +52,7 @@ void AttemptToLaunchWorkerApp()
 #if ALLOW_WORKER_APP
 	if(WorkerIsRunning())
 	{
+		DEBUG_LOG("WorkerApp already running");
 		SetWorkerApp(true);
 	}
 	else
@@ -87,6 +86,15 @@ bool WorkerIsRunning(void)
 #endif
 }
 
+bool WorkerIsReady(void)
+{
+#if ALLOW_WORKER_APP
+	return workerReady;
+#else
+	return true;
+#endif
+}
+
 void SendEventChances(int baseChance, int *chances, int chanceCount)
 {
 	int i;
@@ -108,6 +116,21 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 {
 	switch(type)
 	{
+		case WORKER_ACKNOWLEDGE_BASE_EVENT_CHANCE:
+		{
+			DEBUG_VERBOSE_LOG("WorkerApp received base chance %d", data->data0);
+			break;
+		}
+		case WORKER_ACKNOWLEDGE_EVENT_CHANCE:
+		{
+			DEBUG_VERBOSE_LOG("WorkerApp received event chance[%d]=%d", data->data0, data->data1);
+			break;			
+		}
+		case WORKER_ACKNOWLEDGE_EVENT_END:
+		{
+			DEBUG_VERBOSE_LOG("WorkerApp received all event chances");
+			break;			
+		}
 		case WORKER_LAUNCHED:
 		{
 			DEBUG_LOG("Worker Launched. Sending events.");
@@ -134,7 +157,7 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 		}
 		case WORKER_READY:
 		{
-			DEBUG_LOG("Worker has event chances");
+			DEBUG_LOG("Worker ready to run events");
 			workerReady = true;
 			break;
 		}
