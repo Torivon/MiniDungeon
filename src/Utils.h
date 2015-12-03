@@ -40,3 +40,5 @@ inline int ComputeRandomEvent_inline(int baseChanceOfEvent, int ticksSinceLastEv
     } while (i < eventCount);
 	return event;
 }
+
+#define BOOL_TO_STR(b) (b) ? "true" : "false"

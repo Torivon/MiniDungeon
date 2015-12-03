@@ -18,6 +18,9 @@ static bool handlingTicks = false;
 static int lastEvent = -1;
 static bool forcedDelay = false; // Make sure we don't trigger an event while the app is still closing
 static bool workerCanLaunch = false;
+static bool closingWhileInBattle = false;
+static bool appAlive = true; 
+static bool error = false;
 
 int importedChances[10];
 int chanceCount = 0;
@@ -38,6 +41,18 @@ static void TriggerEvent(int event)
 
 void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) 
 {	
+	if(appAlive)
+		return;
+	
+	if(closingWhileInBattle)
+		return;
+		
+	if(!handlingTicks && lastEvent == -1)
+	{
+		error = true;
+		worker_launch_app();
+	}
+
 	if(handlingTicks)
 	{
 		if(forcedDelay)
@@ -72,17 +87,25 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 	{
 		case APP_DYING:
 		{
-			handlingTicks = !data->data1; // Don't handle ticks while in combat
+			closingWhileInBattle = data->data1;
+			handlingTicks = !closingWhileInBattle; // Don't handle ticks while in combat
 #if EVENT_CHANCE_SCALING
 			ticksSinceLastEvent = data->data0;
 #endif
 			forcedDelay = true;
-			SendMessageToApp(WORKER_READY, 0, 0, 0);
+			lastEvent = -1;
+			appAlive = false;
+			error = false;
 			break;
 		}
 		case APP_AWAKE:
 		{
+			SendMessageToApp(WORKER_SEND_STATE1, handlingTicks, lastEvent, ticksSinceLastEvent);
+			SendMessageToApp(WORKER_SEND_STATE2, closingWhileInBattle, forcedDelay, appAlive);
+			if(error)
+				SendMessageToApp(WORKER_SEND_ERROR, 0, 0, 0);
 			handlingTicks = false;
+			appAlive = true;
 			TriggerEvent(lastEvent);
 			break;
 		}

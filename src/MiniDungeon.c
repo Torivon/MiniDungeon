@@ -95,6 +95,9 @@ void handle_init() {
 void handle_deinit() 
 {
 	INFO_LOG("Cleaning up on exit.");
+#if ALLOW_WORKER_APP		
+	AppDying(ClosingWhileInBattle());
+#endif
 	SavePersistedData();
 	UnloadBackgroundImage();
 	UnloadMainBmpImage();
@@ -102,7 +105,6 @@ void handle_deinit()
 	tick_timer_service_unsubscribe();
 	app_focus_service_unsubscribe();
 #if ALLOW_WORKER_APP		
-	AppDying(ClosingWhileInBattle());
 	app_worker_message_unsubscribe();
 #endif
 }

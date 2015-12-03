@@ -245,7 +245,7 @@ void UnloadMainBmpImage(void)
 		return;
 	
 	ProfileLogStart("UnloadMainBmpImage")
-	DEBUG_LOG("Removing resourceId %d.", mainImageResourceLoaded);
+	DEBUG_VERBOSE_LOG("Removing resourceId %d.", mainImageResourceLoaded);
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
 	bitmap_layer_destroy(mainImage);
 	gbitmap_destroy(mainImageBitmap);
@@ -280,7 +280,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	
 	if(!window)
 	{
-		DEBUG_LOG("Skipping image load due to window not yet available.");
+		DEBUG_VERBOSE_LOG("Skipping image load due to window not yet available.");
 		return;
 	}
 		
@@ -288,17 +288,17 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	{
 		if(mainImageResourceLoaded == resourceId)
 		{
-			DEBUG_LOG("Resource %d already loaded.", resourceId);
+			DEBUG_VERBOSE_LOG("Resource %d already loaded.", resourceId);
 			if(floorImageLoaded)
 				layer_add_child(window_layer, bitmap_layer_get_layer(floorImage));
 			layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 			return; // already loaded the correct one.
 		}
-		DEBUG_LOG("Unloading resourceId %d.", mainImageResourceLoaded);
+		DEBUG_VERBOSE_LOG("Unloading resourceId %d.", mainImageResourceLoaded);
 		UnloadMainBmpImage();
 	}
 	
-	DEBUG_LOG("Loading resourceId %d.", resourceId);
+	DEBUG_VERBOSE_LOG("Loading resourceId %d.", resourceId);
 
 #if defined(PBL_COLOR)
 	if(floorId >= 0)

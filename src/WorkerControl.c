@@ -4,8 +4,7 @@
 #include "MainMenu.h"
 #include "OptionsMenu.h"
 #include "WorkerControl.h"
-
-static bool workerReady = false;
+#include "Utils.h"
 
 void SendMessageToWorker(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
@@ -26,7 +25,6 @@ void AppDying(bool closingWhileInBattle)
 
 void AppAwake(void)
 {
-	workerReady = false;
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_AWAKE, 0, 0, 0);
 }
@@ -86,15 +84,6 @@ bool WorkerIsRunning(void)
 #endif
 }
 
-bool WorkerIsReady(void)
-{
-#if ALLOW_WORKER_APP
-	return workerReady;
-#else
-	return true;
-#endif
-}
-
 void SendEventChances(int baseChance, int *chances, int chanceCount)
 {
 	int i;
@@ -149,16 +138,25 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 		case WORKER_DYING:
 		{
 			DEBUG_LOG("Worker dying");
-			SetTickCount(data->data0);
 			SetWorkerApp(false);
 			if(OptionsMenuIsVisible())
 				DrawOptionsMenu();
 			break;
 		}
-		case WORKER_READY:
+		case WORKER_SEND_STATE1:
 		{
-			DEBUG_LOG("Worker ready to run events");
-			workerReady = true;
+			DEBUG_LOG("Worker on wake up: HandlingTicks: %s; LastEvent: %d; TicksSinceLastEvent: %d", BOOL_TO_STR(data->data0), (int16_t)data->data1, data->data2);
+			SetTickCount(data->data2);
+			break;
+		}
+		case WORKER_SEND_STATE2:
+		{
+			DEBUG_LOG("Worker on wake up: closingWhileInBattle: %s; forcedDelay: %s; appAlive: %s", BOOL_TO_STR(data->data0), BOOL_TO_STR(data->data1), BOOL_TO_STR(data->data2));
+			break;
+		}
+		case WORKER_SEND_ERROR:
+		{
+			ERROR_LOG("Worker in bad state.");
 			break;
 		}
 	}
