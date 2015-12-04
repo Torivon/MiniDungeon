@@ -16,4 +16,3 @@ Full code is available on GitHub.
 Additional Contributors:
 * BlackLamb
 * Belphemur
- 
