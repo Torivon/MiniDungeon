@@ -141,6 +141,8 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 static void init() 
 {
 	// Initialize your worker here
+	time_t now = time(NULL);
+	srand(now);
 	app_worker_message_subscribe(AppMessageHandler);
 	SendMessageToApp(WORKER_LAUNCHED, 0, 0, 0);
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
