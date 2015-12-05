@@ -93,17 +93,6 @@ bool WorkerIsRunning(void)
 #endif
 }
 
-void SendEventChances(int baseChance, int *chances, int chanceCount)
-{
-	int i;
-	SendMessageToWorker(APP_SEND_BASE_EVENT_CHANCE, baseChance, 0, 0);
-	for(i = 0; i < chanceCount; ++i)
-	{
-		SendMessageToWorker(APP_SEND_EVENT_CHANCE, chances[i], 0, 0);
-	}
-	SendMessageToWorker(APP_SEND_EVENT_END, 0, 0, 0);
-}
-
 void SendWorkerCanLaunch(void)
 {
 	INFO_LOG("SendWorkerCanLaunch");
@@ -116,28 +105,13 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 	DEBUG_VERBOSE_LOG("Worker message handler");
 	switch(type)
 	{
-		case WORKER_ACKNOWLEDGE_BASE_EVENT_CHANCE:
-		{
-			DEBUG_VERBOSE_LOG("WorkerApp received base chance %d", data->data0);
-			break;
-		}
-		case WORKER_ACKNOWLEDGE_EVENT_CHANCE:
-		{
-			DEBUG_VERBOSE_LOG("WorkerApp received event chance[%d]=%d", data->data0, data->data1);
-			break;			
-		}
-		case WORKER_ACKNOWLEDGE_EVENT_END:
-		{
-			DEBUG_VERBOSE_LOG("WorkerApp received all event chances");
-			break;			
-		}
 		case WORKER_LAUNCHED:
 		{
-			DEBUG_LOG("Worker Launched. Sending events.");
-			SendEventChances(GetBaseChanceOfEvent(), GetEventChances(), GetEventCount());
+			DEBUG_LOG("Worker Launched.");
 			SendWorkerCanLaunch();
 			SetWorkerApp(true);
 			SetFastMode(false);
+			AppAwake();
 			break;
 		}
 		case TRIGGER_EVENT:
@@ -169,11 +143,6 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 		case WORKER_SEND_ERROR:
 		{
 			ERROR_LOG("Worker in bad state.");
-			break;
-		}
-		case WORKER_SEND_TOO_MANY_EVENTS:
-		{
-			ERROR_LOG("Too many events");
 			break;
 		}
 		default:

@@ -17,7 +17,3 @@ int ComputeRandomEvent(bool fastMode);
 void UpdateAdventure(void);
 int GetTickCount(void);
 void SetTickCount(int ticks);
-
-int *GetEventChances(void);
-int GetEventCount(void);
-int GetBaseChanceOfEvent(void);
