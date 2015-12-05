@@ -87,7 +87,7 @@ void handle_init() {
 	srand(now);
 		
 	InitializeGameData();
-	
+		
 	DEBUG_LOG("InitializeGameData");
 	ShowAdventureWindow();
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
