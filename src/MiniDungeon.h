@@ -45,8 +45,12 @@
 #define MAX_MENU_WINDOWS 4
 // This determines how many text rows there are in the interface
 #define MAX_MENU_ENTRIES 6
+
+#define MAX_EVENT_COUNT 10
 	
 #define ALLOW_WORKER_APP 1
+#define ALLOW_WORKER_APP_MESSAGES 1
+#define ALLOW_WORKER_APP_LISTENING 1
 
 void ResetGame(void);
 bool HasFocus(void);

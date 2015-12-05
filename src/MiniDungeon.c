@@ -15,6 +15,7 @@
 #include "WorkerControl.h"
 	 
 static bool hasFocus = true;
+static bool sentAwakeMessage = false;
 
 bool HasFocus(void)
 {
@@ -34,6 +35,7 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 
 void focus_handler(bool in_focus) {
 	hasFocus = in_focus;
+	DEBUG_VERBOSE_LOG("Focus handler");
 	if(hasFocus)
 	{
 		UpdateClock();
@@ -69,27 +71,25 @@ void handle_init() {
 	INFO_LOG("Starting MiniDungeon");
 	time_t now = time(NULL);
 	
-	app_focus_service_subscribe(focus_handler);
+#if ALLOW_WORKER_APP
+		if(WorkerIsRunning())
+		{
+#if ALLOW_WORKER_APP_LISTENING
+			app_worker_message_subscribe(WorkerMessageHandler);
+#endif
+			AppAwake();
+		}
+#endif
 
-	srand(now);
 	DEBUG_LOG("Srand");
-	
-	handle_minute_tick(NULL, MINUTE_UNIT);
-	DEBUG_LOG("First handle second");
-	
-#if ALLOW_WORKER_APP
-	app_worker_message_subscribe(WorkerMessageHandler);
-#endif
-	
+	srand(now);
+		
 	InitializeGameData();
-
-#if ALLOW_WORKER_APP
-	AppAwake();
-#endif
 	
 	DEBUG_LOG("InitializeGameData");
 	ShowAdventureWindow();
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
+	app_focus_service_subscribe(focus_handler);
 }
 
 void handle_deinit() 
@@ -104,7 +104,7 @@ void handle_deinit()
 	UnloadTextLayers();
 	tick_timer_service_unsubscribe();
 	app_focus_service_unsubscribe();
-#if ALLOW_WORKER_APP		
+#if ALLOW_WORKER_APP && ALLOW_WORKER_APP_LISTENING
 	app_worker_message_unsubscribe();
 #endif
 }

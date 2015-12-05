@@ -90,6 +90,7 @@ void AdventureWindowAppear(Window *window)
 	UpdateCharacterHealth();
 	UpdateCharacterLevel();
 	SetUpdateDelay();
+	UpdateClock();
 	adventureWindowVisible = true;
 }
 
@@ -176,7 +177,7 @@ void SetTickCount(int ticks)
 
 void ExecuteEvent(int i)
 {
-	if(i == -1)
+	if(i < 0 || i >= GetEventCount())
 		return;
 	
 	if(GetVibration())
@@ -192,7 +193,7 @@ void ExecuteEvent(int i)
 void ForceEvent(void)
 {
 	PopMenu();
-	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, sizeof(chances), true));
+	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, GetEventCount(), true));
 }
 
 void UpdateAdventure(void)
@@ -216,7 +217,7 @@ void UpdateAdventure(void)
 		return;
 	}
 
-	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, sizeof(chances), GetFastMode()));
+	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, GetEventCount(), GetFastMode()));
 	LoadRandomDungeonImage();
 }
 

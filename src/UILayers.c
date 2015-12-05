@@ -79,6 +79,9 @@ void InitializeMenuLayers(Window *window)
 
 void SetMenuHighlight(int menuItem, bool selected)
 {
+	if(menuItem < 0 || menuItem >= MAX_MENU_ENTRIES)
+		return;
+	
 	if(selected)
 	{
 #if defined(PBL_COLOR)
@@ -103,12 +106,18 @@ void SetMenuDescription(const char *desc)
 
 void ShowMenuLayer(int index, const char *text)
 {
+	if(index < 0 || index >= MAX_MENU_ENTRIES)
+		return;
+	
 	text_layer_set_text(menuLayers[index], text);
 	layer_set_hidden(text_layer_get_layer(menuLayers[index]), false);
 }
 
 void HideMenuLayer(int index)
 {
+	if(index < 0 || index >= MAX_MENU_ENTRIES)
+		return;
+	
 	layer_set_hidden(text_layer_get_layer(menuLayers[index]), true);
 }
 
@@ -131,6 +140,7 @@ void UnloadBackgroundImage(void)
 {
 	if(!backgroundLoaded)
 		return;
+	DEBUG_VERBOSE_LOG("Unloading background image");
 	bitmap_layer_destroy(backgroundImage);
 	backgroundImage = NULL;
 	gbitmap_destroy(backgroundBitmap);
@@ -140,6 +150,7 @@ void UnloadBackgroundImage(void)
 
 void RemoveBackgroundImage()
 {
+	DEBUG_VERBOSE_LOG("Removing background image from parent layer");
 	layer_remove_from_parent(bitmap_layer_get_layer(backgroundImage));
 }
 
@@ -221,7 +232,7 @@ void InitializeMainLayers(Window *window)
 
 void ShowMainWindowRow(int index, const char *text, const char *number)
 {
-	if(index >= MAX_MAIN_TEXT_LAYERS)
+	if(index < 0 || index >= MAX_MAIN_TEXT_LAYERS)
 		return;
 		
 	text_layer_set_text(mainTextLayers[index], text);
@@ -233,6 +244,9 @@ void ShowMainWindowRow(int index, const char *text, const char *number)
 
 void RemoveMainBmpImage(void)
 {
+	if(!mainImageLoaded)
+		return;
+
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
 #if defined(PBL_COLOR)
 	layer_remove_from_parent(bitmap_layer_get_layer(floorImage));
@@ -289,8 +303,10 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 		if(mainImageResourceLoaded == resourceId)
 		{
 			DEBUG_VERBOSE_LOG("Resource %d already loaded.", resourceId);
+#if defined(PBL_COLOR)
 			if(floorImageLoaded)
 				layer_add_child(window_layer, bitmap_layer_get_layer(floorImage));
+#endif
 			layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 			return; // already loaded the correct one.
 		}
@@ -313,7 +329,12 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 #endif
 
 	ProfileLogStart("LoadMainBmpImage");
+	DEBUG_VERBOSE_LOG("LoadMainBmpImage");
 	mainImageBitmap = gbitmap_create_with_resource(resourceId);
+	if(!mainImageBitmap)
+	{
+		DEBUG_VERBOSE_LOG("NULL bitmap");
+	}
 	mainImage = bitmap_layer_create(mainFrame);
 	bitmap_layer_set_bitmap(mainImage, mainImageBitmap);
 	bitmap_layer_set_alignment(mainImage, GAlignCenter);
@@ -323,6 +344,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 	mainImageLoaded = true;
 	mainImageResourceLoaded = resourceId;
+	DEBUG_VERBOSE_LOG("Done loading resourceId %d", resourceId);
 	ProfileLogStop("LoadMainBmpImage");
 }
 
@@ -372,7 +394,8 @@ void InitializeClockLayer(Window *window)
 	if(!clockLayerInitialized)
 	{
 		// Init the text layer used to show the time
-		clockLayer = InitializeTextLayer(clockFrame, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+		GFont font = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
+		clockLayer = InitializeTextLayer(clockFrame, font);
 		clockLayerInitialized = true;
 		UpdateClock();
 	}
@@ -478,6 +501,7 @@ void InitializeHealthLayer(Window *window)
 
 void WindowAppear(Window *window)
 {
+	DEBUG_VERBOSE_LOG("WindowAppear:%p", window);
 	LoadBackgroundImage(window, RESOURCE_ID_IMAGE_BACKGROUND);
 	InitializeMainLayers(window);
 	InitializeClockLayer(window);
@@ -504,7 +528,7 @@ Window * InitializeWindow(const char *name, bool animated)
 	DEBUG_LOG("Creating window %s",name);
 	Window *window = window_create();
 #ifdef PBL_PLATFORM_APLITE
-	window_set_fullscreen(window, true); // Do I want full screen?
+	window_set_fullscreen(window, true);
 #endif
 	window_set_background_color(window, GColorBlack);
 	DEBUG_LOG("Window %s created",name);

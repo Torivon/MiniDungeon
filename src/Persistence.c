@@ -87,27 +87,35 @@ bool SavePersistedData(void)
 
 	ProfileLogStart("SavePersistedData");
 	INFO_LOG("Saving persisted data.");
+	DEBUG_VERBOSE_LOG("Saving meta data");
 	persist_write_bool(PERSISTED_IS_DATA_SAVED, true);
 	persist_write_int(PERSISTED_CURRENT_DATA_VERSION, CURRENT_DATA_VERSION);
 	persist_write_int(PERSISTED_MAX_KEY_USED, MAX_PERSISTED_KEY);
 	
+	DEBUG_VERBOSE_LOG("Saving character");
 	characterData = GetCharacter();
 	persist_write_data(PERSISTED_CHARACTER_DATA, characterData, sizeof(CharacterData));
 	
+	DEBUG_VERBOSE_LOG("Saving floor");
 	persist_write_int(PERSISTED_CURRENT_FLOOR, GetCurrentFloor());
 	
+	DEBUG_VERBOSE_LOG("Saving item data");
 	persist_write_data(PERSISTED_ITEM_DATA, GetItemsOwned(), GetSizeOfItemsOwned());
 	
+	DEBUG_VERBOSE_LOG("Saving stat points");
 	persist_write_int(PERSISTED_STAT_POINTS_PURCHASED, GetStatPointsPurchased());
 
+	DEBUG_VERBOSE_LOG("Saving option data");
 	persist_write_bool(PERSISTED_VIBRATION, GetVibration());
 	persist_write_bool(PERSISTED_FAST_MODE, GetFastMode());
 	persist_write_bool(PERSISTED_WORKER_APP, GetWorkerApp());
 	persist_write_bool(PERSISTED_WORKER_CAN_LAUNCH, GetWorkerCanLaunch());
 
+	DEBUG_VERBOSE_LOG("Saving combat data");
 	persist_write_bool(PERSISTED_IN_COMBAT, ClosingWhileInBattle());
 	persist_write_int(PERSISTED_MONSTER_TYPE, GetMostRecentMonster());
 	persist_write_int(PERSISTED_MONSTER_HEALTH, GetCurrentMonsterHealth());
+	INFO_LOG("Done saving persisted data.");
 	ProfileLogStop("SavePersistedData");
 	
 	return true;
@@ -148,7 +156,7 @@ bool LoadPersistedData(void)
 		AttemptToKillWorkerApp();
 	}
 	SetWorkerCanLaunch(persist_read_bool(PERSISTED_WORKER_CAN_LAUNCH));
-	
+
 	if(persist_read_bool(PERSISTED_IN_COMBAT))
 	{
 		int currentMonster = persist_read_int(PERSISTED_MONSTER_TYPE);

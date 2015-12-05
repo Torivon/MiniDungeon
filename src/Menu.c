@@ -49,7 +49,9 @@ void MenuAppear(Window *window)
 {
 	int i;
 	bool setSelected = false;
-		
+	
+	DEBUG_VERBOSE_LOG("MenuAppear");
+	
 	MenuWindow *menuWindow = window_get_user_data(window);
 	if(menuWindow)
 	{
@@ -58,11 +60,13 @@ void MenuAppear(Window *window)
 	WindowAppear(window);
 	if(!currentMenuDef)
 	{
+		DEBUG_VERBOSE_LOG("No menu");
 		HideAllMenuLayers();
 		SetMenuDescription(NULL);
 		return;
 	}
 
+	DEBUG_VERBOSE_LOG("Set highlight and visibility");
 	currentMenuDef->currentSelection = -1;
 	for(i = 0; i < MAX_MENU_ENTRIES; ++i)
 	{
@@ -90,6 +94,7 @@ void MenuAppear(Window *window)
 
 	if(menuWindow && menuWindow->menu && menuWindow->menu->mainImageId != -1)
 	{
+		DEBUG_VERBOSE_LOG("Load bitmap");
 		LoadMainBmpImage(window, menuWindow->menu->mainImageId, menuWindow->menu->useFloorImage ? menuWindow->menu->floorImageId : -1);
 	}
 }
@@ -100,7 +105,8 @@ void MenuDisappear(Window *window)
 }
 
 void SetCurrentMenu(MenuDefinition *menuDef)
-{
+{	
+	DEBUG_VERBOSE_LOG("SetCurrentMenu");
 	currentMenuDef = menuDef;
 }
 

@@ -6,12 +6,14 @@
 
 void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
+#if ALLOW_WORKER_APP_MESSAGES
 	AppWorkerMessage msg_data = {
 		.data0 = data0,
 		.data1 = data1,
 		.data2 = data2
 	};
 	app_worker_send_message(type, &msg_data);
+#endif
 }
 
 static bool handlingTicks = false;
@@ -22,7 +24,7 @@ static bool closingWhileInBattle = false;
 static bool appAlive = true; 
 static bool error = false;
 
-int importedChances[10];
+int importedChances[MAX_EVENT_COUNT];
 int chanceCount = 0;
 bool chancesComplete = false;
 
@@ -119,6 +121,11 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 		{
 			if(chancesComplete)
 				break;
+			if(chanceCount == MAX_EVENT_COUNT)
+			{
+				SendMessageToApp(WORKER_SEND_TOO_MANY_EVENTS, 0, 0, 0);
+				break;
+			}
 			importedChances[chanceCount] = data->data0;
 			SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_CHANCE, chanceCount, data->data0, 0);
 			++chanceCount;
@@ -143,7 +150,9 @@ static void init()
 	// Initialize your worker here
 	time_t now = time(NULL);
 	srand(now);
+#if ALLOW_WORKER_APP_LISTENING
 	app_worker_message_subscribe(AppMessageHandler);
+#endif
 	SendMessageToApp(WORKER_LAUNCHED, 0, 0, 0);
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
@@ -151,7 +160,9 @@ static void init()
 static void deinit() {
 	// Deinitialize your worker here
 	SendMessageToApp(WORKER_DYING, ticksSinceLastEvent, 0, 0);
+#if ALLOW_WORKER_APP_LISTENING
 	app_worker_message_unsubscribe();
+#endif
 	tick_timer_service_unsubscribe();
 }
 

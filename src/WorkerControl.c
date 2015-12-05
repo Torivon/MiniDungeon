@@ -8,40 +8,46 @@
 
 void SendMessageToWorker(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
+#if ALLOW_WORKER_APP_MESSAGES
 	AppWorkerMessage msg_data = {
 		.data0 = data0,
 		.data1 = data1,
 		.data2 = data2
 	};
+
 	app_worker_send_message(type, &msg_data);
+#endif
 }
 
 void AppDying(bool closingWhileInBattle)
 {
-	DEBUG_LOG("AppDying(%s)", closingWhileInBattle ? "true" : "false");
+	INFO_LOG("AppDying %s battle", closingWhileInBattle ? "in" : "not in");
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_DYING, GetTickCount(), closingWhileInBattle, 0);
 }
 
 void AppAwake(void)
 {
+	INFO_LOG("AppAwake");
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_AWAKE, 0, 0, 0);
 }
 
 AppWorkerResult LaunchWorkerApp()
 {
-	DEBUG_LOG("Launching worker app");
+	INFO_LOG("Launching worker app");
 	return app_worker_launch();
 }
 
 AppWorkerResult KillWorkerApp()
 {
+	
 	bool running = WorkerIsRunning();
 	
 	if(!running)
 		return false;
 	
+	INFO_LOG("Killing worker app");
 	return app_worker_kill();
 }
 
@@ -50,11 +56,14 @@ void AttemptToLaunchWorkerApp()
 #if ALLOW_WORKER_APP
 	if(WorkerIsRunning())
 	{
-		DEBUG_LOG("WorkerApp already running");
+		INFO_LOG("WorkerApp already running");
 		SetWorkerApp(true);
 	}
 	else
 	{
+#if ALLOW_WORKER_APP_LISTENING
+		app_worker_message_subscribe(WorkerMessageHandler);
+#endif
 		LaunchWorkerApp();
 		SetWorkerApp(false);
 	}
@@ -97,12 +106,14 @@ void SendEventChances(int baseChance, int *chances, int chanceCount)
 
 void SendWorkerCanLaunch(void)
 {
-	SendMessageToWorker(APP_SEND_WORKER_CAN_LAUNCH, GetWorkerCanLaunch(), 0, 0);
+	INFO_LOG("SendWorkerCanLaunch");
+	if(WorkerIsRunning())
+		SendMessageToWorker(APP_SEND_WORKER_CAN_LAUNCH, GetWorkerCanLaunch(), 0, 0);
 }
-
 
 void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 {
+	DEBUG_VERBOSE_LOG("Worker message handler");
 	switch(type)
 	{
 		case WORKER_ACKNOWLEDGE_BASE_EVENT_CHANCE:
@@ -131,6 +142,7 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 		}
 		case TRIGGER_EVENT:
 		{
+			DEBUG_VERBOSE_LOG("Trigger event");
 			if(AdventureWindowIsVisible())
 				ExecuteEvent(data->data0);
 			break;
@@ -158,6 +170,15 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 		{
 			ERROR_LOG("Worker in bad state.");
 			break;
+		}
+		case WORKER_SEND_TOO_MANY_EVENTS:
+		{
+			ERROR_LOG("Too many events");
+			break;
+		}
+		default:
+		{
+			DEBUG_VERBOSE_LOG("Undefined worker message: %d", type);
 		}
 	}
 }
