@@ -3,6 +3,7 @@
 #include "Adventure.h"
 #include "Battle.h"
 #include "Character.h"
+#include "Events.h"
 #include "Items.h"
 #include "Logging.h"
 #include "MainMenu.h"
@@ -119,51 +120,22 @@ typedef struct
 // These should add up to 100
 RandomTableEntry entries[] = 
 {
-	{ShowItemGainWindow},
-	{ShowBattleWindow},
-	{ShowNewFloorWindow},
-	{ShowShopWindow}
-};
-int chances[] = 
-{
-	44,
-	44,
-	9,
-	3
+	{ShowItemGainWindow}, //EVENT_ITEM
+	{ShowBattleWindow}, //EVENT_BATTLE
+	{ShowNewFloorWindow}, //EVENT_NEW_FLOOR
+	{ShowShopWindow} //EVENT_SHOP
 };
 #else
 // These should add up to 100
 RandomTableEntry entries[] = 
 {
-	{ShowItemGainWindow},
-	{ShowBattleWindow},
-	{ShowNewFloorWindow}
-};
-int chances[] = 
-{
-	40,
-	50,
-	10
+	{ShowItemGainWindow}, //EVENT_ITEM
+	{ShowBattleWindow}, //EVENT_BATTLE
+	{ShowNewFloorWindow} //EVENT_NEW_FLOOR
 };
 #endif
 
-int *GetEventChances(void)
-{
-	return chances;
-}
-
-int GetEventCount(void)
-{
-	return sizeof(chances)/sizeof(*chances);
-}
-
-static int baseChanceOfEvent = 35;
 static int ticksSinceLastEvent = 0;
-
-int GetBaseChanceOfEvent(void)
-{
-	return baseChanceOfEvent;
-}
 
 int GetTickCount(void)
 {
@@ -193,7 +165,7 @@ void ExecuteEvent(int i)
 void ForceEvent(void)
 {
 	PopMenu();
-	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, GetEventCount(), true));
+	ExecuteEvent(ComputeRandomEvent_inline(GetBaseChanceOfEvent(), ticksSinceLastEvent, GetEventChances(), GetEventCount(), true));
 }
 
 void UpdateAdventure(void)
@@ -217,7 +189,7 @@ void UpdateAdventure(void)
 		return;
 	}
 
-	ExecuteEvent(ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, chances, GetEventCount(), GetFastMode()));
+	ExecuteEvent(ComputeRandomEvent_inline(GetBaseChanceOfEvent(), ticksSinceLastEvent, GetEventChances(), GetEventCount(), GetFastMode()));
 	LoadRandomDungeonImage();
 }
 

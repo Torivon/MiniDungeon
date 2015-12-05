@@ -15,7 +15,6 @@
 #include "WorkerControl.h"
 	 
 static bool hasFocus = true;
-static bool sentAwakeMessage = false;
 
 bool HasFocus(void)
 {
@@ -72,13 +71,13 @@ void handle_init() {
 	time_t now = time(NULL);
 	
 #if ALLOW_WORKER_APP
-		if(WorkerIsRunning())
-		{
+	if(WorkerIsRunning())
+	{
 #if ALLOW_WORKER_APP_LISTENING
-			app_worker_message_subscribe(WorkerMessageHandler);
+		app_worker_message_subscribe(WorkerMessageHandler);
 #endif
-			AppAwake();
-		}
+		AppAwake();
+	}
 #endif
 
 	DEBUG_LOG("Srand");

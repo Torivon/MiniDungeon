@@ -1,8 +1,10 @@
 #include <pebble_worker.h>
 
-#include "MiniDungeon.h"
-#include "Utils.h"
-#include "WorkerControl.h"
+#include "../src/Events.h"
+#include "../src/MiniDungeon.h"
+#include "../src/Utils.h"
+#include "../src/WorkerControl.h"
+#include "Worker_Persistence.h"
 
 void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
@@ -19,16 +21,9 @@ void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t dat
 static bool handlingTicks = false;
 static int lastEvent = -1;
 static bool forcedDelay = false; // Make sure we don't trigger an event while the app is still closing
-static bool workerCanLaunch = false;
-static bool closingWhileInBattle = false;
 static bool appAlive = true; 
 static bool error = false;
 
-int importedChances[MAX_EVENT_COUNT];
-int chanceCount = 0;
-bool chancesComplete = false;
-
-static int baseChanceOfEvent = 0;
 static int ticksSinceLastEvent = 0;
 
 static void TriggerEvent(int event)
@@ -46,7 +41,7 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 	if(appAlive)
 		return;
 	
-	if(closingWhileInBattle)
+	if(GetClosedInBattle())
 		return;
 		
 	if(!handlingTicks && lastEvent == -1)
@@ -65,10 +60,10 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 #if EVENT_CHANCE_SCALING
 		++ticksSinceLastEvent;
 #endif
-		lastEvent = ComputeRandomEvent_inline(baseChanceOfEvent, ticksSinceLastEvent, importedChances, chanceCount, FAST_MODE_IN_BACKGROUND);
+		lastEvent = ComputeRandomEvent_inline(GetBaseChanceOfEvent(), ticksSinceLastEvent, GetEventChances(), GetEventCount(), FAST_MODE_IN_BACKGROUND);
 		if(lastEvent > -1)
 		{
-			if(workerCanLaunch)
+			if(GetWorkerCanLaunch())
 				worker_launch_app();
 			handlingTicks = false;
 		}
@@ -77,10 +72,22 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 	{
 		if(lastEvent > -1)
 		{
-			if(workerCanLaunch)
+			if(GetWorkerCanLaunch())
 				worker_launch_app();
 		}
 	}
+}
+
+static void InitializeState(int ticks)
+{
+	handlingTicks = !GetClosedInBattle(); // Don't handle ticks while in combat
+#if EVENT_CHANCE_SCALING
+	ticksSinceLastEvent = ticks;
+#endif
+	forcedDelay = true;
+	lastEvent = -1;
+	appAlive = false;
+	error = false;	
 }
 
 static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
@@ -89,21 +96,14 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 	{
 		case APP_DYING:
 		{
-			closingWhileInBattle = data->data1;
-			handlingTicks = !closingWhileInBattle; // Don't handle ticks while in combat
-#if EVENT_CHANCE_SCALING
-			ticksSinceLastEvent = data->data0;
-#endif
-			forcedDelay = true;
-			lastEvent = -1;
-			appAlive = false;
-			error = false;
+			SetClosedInBattle(data->data1);
+			InitializeState(data->data0);
 			break;
 		}
 		case APP_AWAKE:
 		{
 			SendMessageToApp(WORKER_SEND_STATE1, handlingTicks, lastEvent, ticksSinceLastEvent);
-			SendMessageToApp(WORKER_SEND_STATE2, closingWhileInBattle, forcedDelay, appAlive);
+			SendMessageToApp(WORKER_SEND_STATE2, GetClosedInBattle(), forcedDelay, appAlive);
 			if(error)
 				SendMessageToApp(WORKER_SEND_ERROR, 0, 0, 0);
 			handlingTicks = false;
@@ -111,35 +111,9 @@ static void AppMessageHandler(uint16_t type, AppWorkerMessage *data)
 			TriggerEvent(lastEvent);
 			break;
 		}
-		case APP_SEND_BASE_EVENT_CHANCE:
-		{
-			baseChanceOfEvent = data->data0;
-			SendMessageToApp(WORKER_ACKNOWLEDGE_BASE_EVENT_CHANCE, baseChanceOfEvent, 0, 0);
-			break;
-		}
-		case APP_SEND_EVENT_CHANCE:
-		{
-			if(chancesComplete)
-				break;
-			if(chanceCount == MAX_EVENT_COUNT)
-			{
-				SendMessageToApp(WORKER_SEND_TOO_MANY_EVENTS, 0, 0, 0);
-				break;
-			}
-			importedChances[chanceCount] = data->data0;
-			SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_CHANCE, chanceCount, data->data0, 0);
-			++chanceCount;
-			break;
-		}
-		case APP_SEND_EVENT_END:
-		{
-			SendMessageToApp(WORKER_ACKNOWLEDGE_EVENT_END, 0, 0, 0);
-			chancesComplete = true;
-			break;
-		}
 		case APP_SEND_WORKER_CAN_LAUNCH:
 		{
-			workerCanLaunch = data->data0;
+			SetWorkerCanLaunch(data->data0);
 			break;
 		}
 	}
@@ -150,9 +124,12 @@ static void init()
 	// Initialize your worker here
 	time_t now = time(NULL);
 	srand(now);
+	if(!LoadWorkerData())
+		worker_launch_app();
 #if ALLOW_WORKER_APP_LISTENING
 	app_worker_message_subscribe(AppMessageHandler);
 #endif
+	InitializeState(0);
 	SendMessageToApp(WORKER_LAUNCHED, 0, 0, 0);
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
 }
