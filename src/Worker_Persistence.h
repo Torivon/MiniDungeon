@@ -1,3 +1,4 @@
+#pragma once
 #include <pebble_worker.h>
 
 bool LoadWorkerData(void);
