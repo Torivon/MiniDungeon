@@ -76,9 +76,6 @@ void handle_init() {
 #if ALLOW_WORKER_APP_LISTENING
 		app_worker_message_subscribe(WorkerMessageHandler);
 #endif
-		// If the worker app is running, the user has chosen this.
-		// Make sure the settings reflect it.
-		SetWorkerApp(true);
 		AppAwake();
 	}
 #endif
