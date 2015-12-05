@@ -113,7 +113,10 @@ bool LoadPersistedData(void)
 	}
 	else
 	{
-		AttemptToKillWorkerApp();
+		// If the user has launched the worker app outside of MiniDungeon,
+		// they want it on.
+		if(WorkerIsRunning())
+			SetWorkerApp(true);
 	}
 	SetWorkerCanLaunch(persist_read_bool(PERSISTED_WORKER_CAN_LAUNCH));
 

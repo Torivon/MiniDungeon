@@ -69,7 +69,6 @@ void handle_init() {
 	
 	INFO_LOG("Starting MiniDungeon");
 	time_t now = time(NULL);
-	bool workerOnAtStart = false;
 	
 #if ALLOW_WORKER_APP
 	if(WorkerIsRunning())
@@ -77,7 +76,6 @@ void handle_init() {
 #if ALLOW_WORKER_APP_LISTENING
 		app_worker_message_subscribe(WorkerMessageHandler);
 #endif
-		workerOnAtStart = true;
 		AppAwake();
 	}
 #endif
@@ -86,12 +84,7 @@ void handle_init() {
 	srand(now);
 		
 	InitializeGameData();
-	
-	// If the worker app is running, the user has chosen this.
-	// Make sure the settings reflect it.
-	if(workerOnAtStart)
-		SetWorkerApp(true);
-	
+		
 	DEBUG_LOG("InitializeGameData");
 	ShowAdventureWindow();
 	tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
