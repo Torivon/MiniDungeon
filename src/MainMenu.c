@@ -7,8 +7,10 @@
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
+#include "OptionsMenu.h"
 #include "Shop.h"
 #include "UILayers.h"
+#include "Utils.h"
 
 // **************** TEST MENU ******************//
 
@@ -17,12 +19,6 @@ void DoNothing(void)
 }
 
 #if ALLOW_TEST_MENU
-
-void ForceEvent(void)
-{
-	PopMenu();
-	ComputeRandomEvent(true);
-}
 
 void ForceNewFloor(void)
 {
@@ -67,60 +63,97 @@ void ShowTestMenu(void)
 {
 	PushNewMenu(&testMenuDef);
 }
-#endif
 
-//************* Main Menu *****************//
-
-static bool vibration = true;
-
-void DrawOptionsMenu(void)
+void ForceDragonSetup(void)
 {
-	ShowMainWindowRow(0, "Options", "");
-	ShowMainWindowRow(1, "Vibration", vibration ? "On" : "Off");
+	int i = 0;
+	SetCurrentFloor(20);
+	GrantGold(5000);
+	for(i = 0; i < 20; ++i)
+	{
+		LevelUpData();
+	}
+	LevelUp();
 }
 
-void ToggleVibration(void)
-{
-	vibration = !vibration;
-	DrawOptionsMenu();
-}
-
-bool GetVibration(void)
-{
-	return vibration;
-}
-
-void SetVibration(bool enable)
-{
-	vibration = enable;
-}
-
-void OptionsMenuAppear(Window *window);
-
-MenuDefinition optionsMenuDef = 
+MenuDefinition testMenu2Def = 
 {
 	.menuEntries = 
 	{
-		{.text = "Quit", .description = "Return to main menu", .menuFunction = PopMenu},
-		{.text = "Toggle", .description = "Toggle Vibration", .menuFunction = ToggleVibration},
+		{"Quit", "", PopMenu},
+		{"Dragon", "", ForceDragonSetup},
 	},
-	.appear = OptionsMenuAppear,
+	.mainImageId = -1
+};
+
+void ShowTestMenu2(void)
+{
+	PushNewMenu(&testMenu2Def);
+}
+#endif
+
+//************* Application Stats *****************//
+
+#if ALLOW_TEST_MENU
+
+static size_t minMemoryFree = (size_t)-1;
+
+void InfoWindowAppear(Window *window);
+
+void UpdateMinFreeMemory()
+{
+	size_t bytesFree = heap_bytes_free();
+	if(bytesFree < minMemoryFree)
+		minMemoryFree = bytesFree;
+}
+
+MenuDefinition infoMenuDef = 
+{
+	.menuEntries = 
+	{
+		{"Quit", "", PopMenu},
+	},
+	.appear = InfoWindowAppear,
 	.mainImageId = -1,
 	.floorImageId = -1
 };
 
-void OptionsMenuAppear(Window *window)
+const char *UpdateFreeText(void)
+{
+	static char freeText[] = "0000000"; // Needs to be static because it's used by the system later.
+	size_t bytesFree = heap_bytes_free();
+	IntToString(freeText, 7, bytesFree);
+	return freeText;
+}
+
+const char *UpdateMinFreeText(void)
+{
+	static char minFreeText[] = "0000000"; // Needs to be static because it's used by the system later.
+	IntToString(minFreeText, 7, minMemoryFree);
+	return minFreeText;
+}
+
+void InfoWindowAppear(Window *window)
 {
 	MenuAppear(window);
-	DrawOptionsMenu();
+	
+	ShowMainWindowRow(0, "Info", "");
+	ShowMainWindowRow(1, UpdateFreeText(), "Free");
+	ShowMainWindowRow(2, UpdateMinFreeText(), "Min");
 }
 
-void ShowOptionsMenu(void)
+void ShowInfoMenu(void)
 {
-	PushNewMenu(&optionsMenuDef);
+	PushNewMenu(&infoMenuDef);
 }
+#endif
+
+//************* Main Menu *****************//
+
+static bool mainMenuVisible = false;
 
 void MainMenuWindowAppear(Window *window);
+void MainMenuWindowDisappear(Window *window);
 
 MenuDefinition mainMenuDef = 
 {
@@ -138,14 +171,53 @@ MenuDefinition mainMenuDef =
 		{.text = "Reset", .description = "Reset the game", .menuFunction = ResetGame},
 	},
 	.appear = MainMenuWindowAppear,
+	.disappear = MainMenuWindowDisappear,
 	.mainImageId = RESOURCE_ID_IMAGE_REST,
 	.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR
 };
 
+void UpdateBatteryText(BatteryChargeState chargeState, char *buffer, int count)
+{
+	DEBUG_VERBOSE_LOG("Updating battery text");
+	if (chargeState.is_charging) {
+		snprintf(buffer, count, "Chg");
+	} else if(chargeState.charge_percent == 100) {
+		snprintf(buffer, count, "Full");
+	} else {
+		IntToPercent(buffer, count, chargeState.charge_percent);
+	}	
+	
+	DEBUG_VERBOSE_LOG("Drawing new battery info");
+}
+
+void ShowPauseRow(BatteryChargeState chargeState)
+{
+	static char s_battery_buffer[5] = "0000";
+
+	UpdateBatteryText(chargeState, s_battery_buffer, sizeof(s_battery_buffer));
+	ShowMainWindowRow(0, "Paused",  s_battery_buffer);
+}
+
+void BatteryHandler(BatteryChargeState charge)
+{
+	DEBUG_VERBOSE_LOG("BatteryHandler called");
+	if(mainMenuVisible)
+		ShowPauseRow(charge);
+}
+
 void MainMenuWindowAppear(Window *window)
 {
+	mainMenuVisible = true;
 	MenuAppear(window);
-	ShowMainWindowRow(0, "Paused", "");
+	ShowPauseRow(battery_state_service_peek());
+	battery_state_service_subscribe(BatteryHandler);
+}
+
+void MainMenuWindowDisappear(Window *window)
+{
+	mainMenuVisible = false;
+	battery_state_service_unsubscribe();
+	MenuDisappear(window);
 }
 
 void ShowMainMenu(void)

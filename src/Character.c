@@ -10,11 +10,10 @@
 #include "Utils.h"
 
 CharacterData characterData;
-static int statPointsToSpend = 0;
 
 void AddStatPointToSpend(void)
 {
-	++statPointsToSpend;
+	++characterData.statPointsToSpend;
 }
 
 void UpdateCharacterHealth(void)
@@ -91,7 +90,7 @@ void InitializeCharacter(void)
 	characterData.stats.magic = 1;
 	characterData.stats.defense = 1;
 	characterData.stats.magicDefense = 1;
-	statPointsToSpend = 0;
+	characterData.statPointsToSpend = 0;
 
 	UpdateCharacterLevel();
 	UpdateCharacterHealth();
@@ -189,7 +188,7 @@ const char  *UpdateStatPointText(void)
 {
 	static char statText[] = "00"; // Needs to be static because it's used by the system later.
 
-	IntToString(statText, 2, statPointsToSpend);
+	IntToString(statText, 2, characterData.statPointsToSpend);
 	return statText;
 }
 
@@ -236,10 +235,10 @@ void DrawStatWindow(void)
 
 void IncrementStat(int *stat)
 {
-	if(statPointsToSpend && (*stat) < characterData.level)
+	if(characterData.statPointsToSpend && (*stat) < characterData.level)
 	{
 		++(*stat);
-		--statPointsToSpend;
+		--characterData.statPointsToSpend;
 		DrawStatWindow();
 	}
 }
@@ -264,10 +263,9 @@ void IncrementMagicDefense(void)
 	IncrementStat(&characterData.stats.magicDefense);
 }
 
-void LevelUp(void)
+void LevelUpData(void)
 {
-	INFO_LOG("Level up.");
-	statPointsToSpend += STAT_POINTS_PER_LEVEL;
+	characterData.statPointsToSpend += STAT_POINTS_PER_LEVEL;
 	++characterData.level;
 	characterData.xpForNextLevel += ComputeXPForNextLevel(characterData.level);
 	characterData.stats.maxHealth = ComputePlayerHealth(characterData.level);
@@ -275,7 +273,13 @@ void LevelUp(void)
 		characterData.stats.maxHealth = 9999;
 	characterData.stats.currentHealth = characterData.stats.maxHealth;
 	UpdateCharacterLevel();
-	UpdateCharacterHealth();
+	UpdateCharacterHealth();	
+}
+
+void LevelUp(void)
+{
+	INFO_LOG("Level up.");
+	LevelUpData();
 	ShowStatMenu();
 }
 
@@ -307,6 +311,18 @@ void ShowStatMenu(void)
 	PushNewMenu(&statMenuDef);
 }
 
+void ForceLevelUp(void)
+{
+	GrantExperience(characterData.xpForNextLevel - characterData.xp);
+	LevelUp();
+}
+
+void ForceGold(void)
+{
+	GrantGold(100);
+	ShowMainWindowRow(4, "Gold", UpdateGoldText());
+}
+
 void ProgressMenuAppear(Window *window);
 
 MenuDefinition progressMenuDef = 
@@ -314,6 +330,13 @@ MenuDefinition progressMenuDef =
 	.menuEntries = 
 	{
 		{.text = "Quit", .description = "Return to main menu", .menuFunction = PopMenu},
+#if ALLOW_TEST_MENU
+		{.text = "Lvl Up", .description = "Increase level", .menuFunction = ForceLevelUp},
+		{0},
+		{0},
+		{.text = "Add Gold", .description = "Add more gold", .menuFunction = ForceGold},
+		
+#endif
 	},
 	.appear = ProgressMenuAppear,
 	.mainImageId = -1

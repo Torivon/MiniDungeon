@@ -3,20 +3,34 @@
 #include "Adventure.h"
 #include "Battle.h"
 #include "Character.h"
+#include "Events.h"
 #include "Items.h"
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
 #include "Persistence.h"
+#include "OptionsMenu.h"
 #include "Shop.h"
 #include "Story.h"
 #include "UILayers.h"
 #include "Utils.h"
+#include "WorkerControl.h"
 
 bool gUpdateAdventure = false;
 
 int updateDelay = 0;
+
+void SetUpdateDelay()
+{
+	updateDelay = 1;
+}
+
 bool adventureWindowVisible = false;
+
+bool AdventureWindowIsVisible(void)
+{
+	return adventureWindowVisible;
+}
 
 void AdventureWindowAppear(Window *window);
 void AdventureWindowDisappear(Window *window);
@@ -147,10 +161,6 @@ const char *ShopMenuEntryDescriptionFunction(void)
 		return NULL;
 }
 
-#if ALLOW_TEST_MENU
-		{.text = "", .description = "", .menuFunction = ShowTestMenu}
-#endif
-
 MenuDefinition adventureMenuDef = 
 {
 	.menuEntries = 
@@ -196,6 +206,7 @@ void AdventureWindowAppear(Window *window)
 
 void AdventureWindowDisappear(Window *window)
 {
+	DEBUG_LOG("Adventure disappear");
 	adventureWindowVisible = false;
 	gUpdateAdventure = false;
 	MenuDisappear(window);
@@ -228,7 +239,6 @@ typedef void (*ShowWindowFunction)(void);
 typedef struct
 {
 	ShowWindowFunction windowFunction;
-	int weight;
 } RandomTableEntry;
 
 // These should add up to 100

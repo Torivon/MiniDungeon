@@ -18,6 +18,7 @@ typedef struct
 	int gold;
 	int escapes;
 	Stats stats;
+	int statPointsToSpend;
 } CharacterData;
 
 int ComputePlayerHealth(int level);
@@ -42,5 +43,6 @@ void GrantGold(int gold);
 void ShowStatMenu(void);
 void ShowProgressMenu(void);
 
+void LevelUpData(void);
 void LevelUp(void);
 void ShowEndWindow(void);

@@ -16,7 +16,7 @@
 bool gUpdateBattle = false;
 static BattleState gBattleState = {0};
 
-static bool battleCleanExit = false;
+static bool battleCleanExit = true;
 
 typedef void (*BattleAfterExitCallback)(void);
 
@@ -385,7 +385,9 @@ void BattleInit(void)
 	}
 	
 	battleMainMenuDef.mainImageId = currentMonster->imageId;
+#if defined(PBL_COLOR)
 	battleMainMenuDef.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR;
+#endif
 	battleCleanExit = false;
 }
 

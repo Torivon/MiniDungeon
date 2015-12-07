@@ -3,6 +3,8 @@
 void ToggleVibration(void);
 const char *UpdateVibrationText(void);
 
+bool AdventureWindowIsVisible(void);
+
 void ShowAdventureWindow(void);
 
 void UpdateAdventure(void);

@@ -1,6 +1,11 @@
 #pragma once
-
+#include "MiniDungeon.h"
 void ShowMainMenu(void);
-bool GetVibration(void);
-void SetVibration(bool enable);
 void ShowTestMenu(void);
+void ShowTestMenu2(void);
+
+#if ALLOW_TEST_MENU
+void UpdateMinFreeMemory();
+#else
+#define UpdateMinFreeMemory()
+#endif

@@ -81,6 +81,7 @@ void RefreshMenuAppearance(void)
 {
 	int i;
 	bool setSelected = false;
+
 	if(!currentMenuDef)
 		return;
 	
@@ -114,6 +115,8 @@ void RefreshMenuAppearance(void)
 
 void MenuAppear(Window *window)
 {
+	DEBUG_VERBOSE_LOG("MenuAppear");
+
 	MenuWindow *menuWindow = window_get_user_data(window);
 	if(menuWindow)
 	{
@@ -141,7 +144,8 @@ void MenuDisappear(Window *window)
 }
 
 void SetCurrentMenu(MenuDefinition *menuDef)
-{
+{	
+	DEBUG_VERBOSE_LOG("SetCurrentMenu");
 	currentMenuDef = menuDef;
 }
 
@@ -205,7 +209,7 @@ void SelectSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 	DEBUG_VERBOSE_LOG("End Single Click Select");
 }
 
-void IterateMenuEntries(int direction, int limit)
+void IterateMenuEntries(int direction)
 {
 	int iterator,newSelection;
 
@@ -213,11 +217,19 @@ void IterateMenuEntries(int direction, int limit)
 		return;
 
 	iterator = newSelection = currentMenuDef->currentSelection;
-  
-	while(iterator != limit)
+	
+	if(currentMenuDef->currentSelection == -1)
+		return;
+
+	do
 	{
 		MenuEntry *entry;
 		iterator += direction;
+		if(iterator > MAX_MENU_ENTRIES-1)
+			iterator = 0;
+		else if(iterator < 0)
+			iterator = MAX_MENU_ENTRIES-1;
+
 		entry = &currentMenuDef->menuEntries[iterator];
 		if(MenuEntryIsActive(entry))
 		{
@@ -225,6 +237,7 @@ void IterateMenuEntries(int direction, int limit)
 			break;
 		}
 	}
+	while(iterator != currentMenuDef->currentSelection);
 
 	if(newSelection != currentMenuDef->currentSelection)
 	{
@@ -238,12 +251,12 @@ void IterateMenuEntries(int direction, int limit)
 
 void UpSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
-	IterateMenuEntries(-1, 0);
+	IterateMenuEntries(-1);
 }
 
 void DownSingleClickHandler(ClickRecognizerRef recognizer, Window *window)
 {
-	IterateMenuEntries(1, MAX_MENU_ENTRIES-1);
+	IterateMenuEntries(1);
 }
 
 void BackSingleClickHandler(ClickRecognizerRef recognizer, Window *window)

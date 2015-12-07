@@ -4,80 +4,17 @@
 #include "Character.h"
 #include "Items.h"
 #include "Logging.h"
-#include "MainMenu.h"
 #include "Monsters.h"
+#include "OptionsMenu.h"
 #include "Persistence.h"
 #include "Shop.h"
 #include "Story.h"
-	
-#define CURRENT_DATA_VERSION 7
-
-#define NUMBER_OF_PERSISTED_GAMES 2
-
-enum
-{
-	PERSISTED_IS_DATA_SAVED = 0,
-	PERSISTED_CURRENT_DATA_VERSION,
-	PERSISTED_MAX_KEY_USED,
-	PERSISTED_VIBRATION,
-	PERSISTED_GLOBAL_DATA_COUNT,
-};
-
-enum
-{
-	PERSISTED_GAME_IS_DATA_SAVED = 0,
-	PERSISTED_GAME_CURRENT_DATA_VERSION,
-	PERSISTED_GAME_CHARACTER_DATA,
-	PERSISTED_GAME_STORY_DATA,
-	PERSISTED_GAME_ITEM_DATA,
-	PERSISTED_GAME_STAT_POINTS_PURCHASED,
-	
-	PERSISTED_GAME_IN_COMBAT,
-	PERSISTED_GAME_MONSTER_TYPE,
-	PERSISTED_GAME_MONSTER_HEALTH,
-	
-	// This needs to always be last
-	PERSISTED_GAME_DATA_COUNT
-};
-
-#define PERSISTED_DATA_COUNT PERSISTED_GLOBAL_DATA_COUNT + NUMBER_OF_PERSISTED_GAMES * PERSISTED_GAME_DATA_COUNT
-#define MAX_PERSISTED_KEY PERSISTED_DATA_COUNT - 1
-
-int ComputeGamePersistedDataOffset(int storyNumber)
-{
-	return PERSISTED_GLOBAL_DATA_COUNT + storyNumber * PERSISTED_GAME_DATA_COUNT;
-}
-	
-bool IsPersistedDataCurrent(void)
-{
-	bool dataSaved = persist_read_bool(PERSISTED_IS_DATA_SAVED);
-	int savedVersion;
-	if(!dataSaved)
-		return true;
-	
-	savedVersion = persist_read_int(PERSISTED_CURRENT_DATA_VERSION);
-	
-	return savedVersion == CURRENT_DATA_VERSION;
-}
-	
-bool IsPersistedGameDataCurrent(int storyNumber, int storyDataVersion)
-{
-	int offset = ComputeGamePersistedDataOffset(storyNumber);
-	bool dataSaved = persist_read_bool(PERSISTED_GAME_IS_DATA_SAVED + offset);
-	int savedVersion;
-	if(!dataSaved)
-		return true;
-	
-	savedVersion = persist_read_int(PERSISTED_GAME_CURRENT_DATA_VERSION + offset);
-	
-	return savedVersion == storyDataVersion;
-}
+#include "WorkerControl.h"
 
 void ClearPersistedData(void)
 {
 	if(persist_exists(PERSISTED_IS_DATA_SAVED))
 	{
-		DEBUG_LOG("Clearing persisted data.");
 		int maxKey = persist_read_int(PERSISTED_MAX_KEY_USED);
 		int i;
 		for(i = 0; i <= maxKey; ++i)
@@ -133,17 +70,23 @@ bool SavePersistedData(void)
 	}
 #endif
 
+	ProfileLogStart("SavePersistedData");
 	INFO_LOG("Saving global persisted data.");
+	DEBUG_VERBOSE_LOG("Saving meta data");
 	persist_write_bool(PERSISTED_IS_DATA_SAVED, true);
 	persist_write_int(PERSISTED_CURRENT_DATA_VERSION, CURRENT_DATA_VERSION);
 	persist_write_int(PERSISTED_MAX_KEY_USED, MAX_PERSISTED_KEY);
 	persist_write_bool(PERSISTED_VIBRATION, GetVibration());
+	persist_write_bool(PERSISTED_WORKER_APP, GetWorkerApp());
+	persist_write_bool(PERSISTED_WORKER_CAN_LAUNCH, GetWorkerCanLaunch());
 	
 	currentStoryState = GetCurrentStoryState();
 	currentStory = GetCurrentStory();
 	if(currentStoryState && currentStory && currentStoryState->needsSaving)
 	{
 		int offset = ComputeGamePersistedDataOffset(currentStory->gameNumber);
+		
+		persist_write_int(PERSISTED_CURRENT_GAME, currentStory->gameNumber);
 		
 		if(!IsPersistedGameDataCurrent(currentStory->gameNumber, currentStory->gameDataVersion))
 		{
@@ -171,6 +114,9 @@ bool SavePersistedData(void)
 		persist_write_int(PERSISTED_GAME_MONSTER_HEALTH + offset, GetCurrentMonsterHealth());
 		currentStoryState->needsSaving = false;
 	}
+
+	INFO_LOG("Done saving persisted data.");
+	ProfileLogStop("SavePersistedData");
 	
 	return true;
 }
@@ -180,6 +126,8 @@ bool LoadPersistedData(void)
 	CharacterData *characterData;
 	StoryState *currentStoryState;
 	const Story *currentStory;
+	bool useWorkerApp = false;
+
 	if(!persist_exists(PERSISTED_IS_DATA_SAVED) || !persist_read_bool(PERSISTED_IS_DATA_SAVED))
 	{
 		INFO_LOG("No saved data to load.");
@@ -192,8 +140,22 @@ bool LoadPersistedData(void)
 		ClearPersistedData();
 		return false;
 	}
+
 	INFO_LOG("Loading global persisted data.");
 	SetVibration(persist_read_bool(PERSISTED_VIBRATION));
+	useWorkerApp = persist_read_bool(PERSISTED_WORKER_APP);
+	if(useWorkerApp)
+	{
+		AttemptToLaunchWorkerApp();
+	}
+	else
+	{
+		// If the user has launched the worker app outside of MiniDungeon,
+		// they want it on.
+		if(WorkerIsRunning())
+			SetWorkerApp(true);
+	}
+	SetWorkerCanLaunch(persist_read_bool(PERSISTED_WORKER_CAN_LAUNCH));
 
 	currentStoryState = GetCurrentStoryState();
 	currentStory = GetCurrentStory();
