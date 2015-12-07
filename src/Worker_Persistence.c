@@ -3,6 +3,7 @@
 #include "../src/Persistence.h"
 #include "Worker_Persistence.h"
 
+#if ALLOW_WORKER_APP
 static bool closedInBattle = false;
 static bool workerCanLaunch = false;
 
@@ -41,4 +42,4 @@ bool LoadWorkerData(void)
 	SetClosedInBattle(persist_read_bool(PERSISTED_IN_COMBAT));
 	return true;
 }
-
+#endif

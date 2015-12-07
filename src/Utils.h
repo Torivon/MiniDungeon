@@ -1,7 +1,6 @@
 #pragma once
 
 void IntToString(char *buffer, size_t bufferSize, int value);
-<<<<<<< HEAD
 
 void SeedRandom(void);
 

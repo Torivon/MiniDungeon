@@ -52,9 +52,9 @@ enum
 
 #define MAX_EVENT_COUNT 10
 	
-#define ALLOW_WORKER_APP 1
-#define ALLOW_WORKER_APP_MESSAGES 1
-#define ALLOW_WORKER_APP_LISTENING 1
+#define ALLOW_WORKER_APP 0
+#define ALLOW_WORKER_APP_MESSAGES 0
+#define ALLOW_WORKER_APP_LISTENING 0
 
 void ResetGame(void);
 bool HasFocus(void);

@@ -110,12 +110,12 @@ MenuDefinition optionsMenuDef =
 {
 	.menuEntries = 
 	{
-		{"Quit", "Return to main menu", PopMenu},
-		{"Toggle", "Toggle Vibration", ToggleVibration},
-		{"Toggle", "Speed up events", ToggleFastMode},
+		{.text = "Quit", .description = "Return to main menu", .menuFunction = PopMenu},
+		{.text = "Toggle", .description = "Toggle Vibration", .menuFunction = ToggleVibration},
+		{.text = "Toggle", .description = "Speed up events", .menuFunction = ToggleFastMode},
 #if ALLOW_WORKER_APP
-		{"Toggle", "Run in background", ToggleWorkerApp},
-		{"Toggle", "Launch from background", ToggleWorkerCanLaunch}
+		{.text = "Toggle", .description = "Run in background", .menuFunction = ToggleWorkerApp},
+		{.text = "Toggle", .description = "Launch from background", .menuFunction = ToggleWorkerCanLaunch}
 #endif
 	},
 	.appear = OptionsMenuAppear,

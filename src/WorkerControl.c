@@ -21,27 +21,35 @@ void SendMessageToWorker(uint8_t type, uint16_t data0, uint16_t data1, uint16_t 
 
 void AppDying(bool closingWhileInBattle)
 {
+#if ALLOW_WORKER_APP
 	INFO_LOG("AppDying %s battle", closingWhileInBattle ? "in" : "not in");
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_DYING, GetTickCount(), closingWhileInBattle, 0);
+#endif
 }
 
 void AppAwake(void)
 {
+#if ALLOW_WORKER_APP
 	INFO_LOG("AppAwake");
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_AWAKE, 0, 0, 0);
+#endif
 }
 
 AppWorkerResult LaunchWorkerApp()
 {
+#if ALLOW_WORKER_APP
 	INFO_LOG("Launching worker app");
 	return app_worker_launch();
+#else
+	return APP_WORKER_RESULT_NO_WORKER;
+#endif
 }
 
 AppWorkerResult KillWorkerApp()
 {
-	
+#if ALLOW_WORKER_APP
 	bool running = WorkerIsRunning();
 	
 	if(!running)
@@ -49,6 +57,9 @@ AppWorkerResult KillWorkerApp()
 	
 	INFO_LOG("Killing worker app");
 	return app_worker_kill();
+#else
+	return APP_WORKER_RESULT_NO_WORKER;
+#endif
 }
 
 void AttemptToLaunchWorkerApp()
@@ -95,13 +106,16 @@ bool WorkerIsRunning(void)
 
 void SendWorkerCanLaunch(void)
 {
+#if ALLOW_WORKER_APP
 	INFO_LOG("SendWorkerCanLaunch");
 	if(WorkerIsRunning())
 		SendMessageToWorker(APP_SEND_WORKER_CAN_LAUNCH, GetWorkerCanLaunch(), 0, 0);
+#endif
 }
 
 void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 {
+#if ALLOW_WORKER_APP
 	DEBUG_VERBOSE_LOG("Worker message handler");
 	switch(type)
 	{
@@ -150,4 +164,5 @@ void WorkerMessageHandler(uint16_t type, AppWorkerMessage *data)
 			DEBUG_VERBOSE_LOG("Undefined worker message: %d", type);
 		}
 	}
+#endif
 }

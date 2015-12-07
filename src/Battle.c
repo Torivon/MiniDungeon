@@ -1,5 +1,6 @@
 #include "pebble.h"
 
+#include "Adventure.h"
 #include "Battle.h"
 #include "Character.h"
 #include "Items.h"
@@ -8,7 +9,7 @@
 #include "Menu.h"
 #include "MiniDungeon.h"
 #include "Monsters.h"
-#include "Adventure.h"
+#include "OptionsMenu.h"
 #include "Story.h"
 #include "UILayers.h"
 #include "Utils.h"

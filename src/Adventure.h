@@ -7,6 +7,7 @@ bool AdventureWindowIsVisible(void);
 
 void ShowAdventureWindow(void);
 
+void SetUpdateDelay(void);
 void UpdateAdventure(void);
 
 void RefreshAdventure(void);

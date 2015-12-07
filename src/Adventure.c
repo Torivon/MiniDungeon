@@ -20,7 +20,7 @@ bool gUpdateAdventure = false;
 
 int updateDelay = 0;
 
-void SetUpdateDelay()
+void SetUpdateDelay(void)
 {
 	updateDelay = 1;
 }
@@ -239,6 +239,7 @@ typedef void (*ShowWindowFunction)(void);
 typedef struct
 {
 	ShowWindowFunction windowFunction;
+	int weight;
 } RandomTableEntry;
 
 // These should add up to 100

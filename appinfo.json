@@ -9,11 +9,6 @@
     "resources": {
         "media": [
             {
-                "file": "images/battlefloor.png",
-                "name": "IMAGE_BATTLE_FLOOR",
-                "type": "png"
-            },
-            {
                 "file": "images/zombie.png",
                 "name": "IMAGE_ZOMBIE",
                 "type": "png"
@@ -87,6 +82,11 @@
             {
                 "file": "images/dragon.png",
                 "name": "IMAGE_DRAGON",
+                "type": "png"
+            },
+            {
+                "file": "images/battlefloor.png",
+                "name": "IMAGE_BATTLE_FLOOR",
                 "type": "png"
             },
             {
