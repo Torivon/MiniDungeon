@@ -248,9 +248,7 @@ void RemoveMainBmpImage(void)
 		return;
 
 	layer_remove_from_parent(bitmap_layer_get_layer(mainImage));
-#if defined(PBL_COLOR)
 	layer_remove_from_parent(bitmap_layer_get_layer(floorImage));
-#endif
 }
 
 void UnloadMainBmpImage(void)
@@ -269,7 +267,6 @@ void UnloadMainBmpImage(void)
 	mainImageResourceLoaded = -1;
 	ProfileLogStop("UnloadMainBmpImage");
 	
-#if defined(PBL_COLOR)
 	if(!floorImageLoaded)
 		return;
 	
@@ -279,7 +276,6 @@ void UnloadMainBmpImage(void)
 	floorImage = NULL;
 	floorImageBitmap = NULL;
 	floorImageLoaded = false;	
-#endif
 }
 
 void LoadMainBmpImage(Window *window, int id, int floorId)
@@ -303,10 +299,8 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 		if(mainImageResourceLoaded == resourceId)
 		{
 			DEBUG_VERBOSE_LOG("Resource %d already loaded.", resourceId);
-#if defined(PBL_COLOR)
 			if(floorImageLoaded)
 				layer_add_child(window_layer, bitmap_layer_get_layer(floorImage));
-#endif
 			layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 			return; // already loaded the correct one.
 		}
@@ -316,7 +310,6 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	
 	DEBUG_VERBOSE_LOG("Loading resourceId %d.", resourceId);
 
-#if defined(PBL_COLOR)
 	if(floorId >= 0)
 	{
 		floorImageBitmap = gbitmap_create_with_resource(floorId);
@@ -326,7 +319,6 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 		layer_add_child(window_layer, bitmap_layer_get_layer(floorImage));
 		floorImageLoaded = true;
 	}
-#endif
 
 	ProfileLogStart("LoadMainBmpImage");
 	DEBUG_VERBOSE_LOG("LoadMainBmpImage");
@@ -338,9 +330,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	mainImage = bitmap_layer_create(mainFrame);
 	bitmap_layer_set_bitmap(mainImage, mainImageBitmap);
 	bitmap_layer_set_alignment(mainImage, GAlignCenter);
-#if defined(PBL_COLOR)
 	bitmap_layer_set_compositing_mode(mainImage, GCompOpSet);
-#endif
 	layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 	mainImageLoaded = true;
 	mainImageResourceLoaded = resourceId;
@@ -470,6 +460,8 @@ void UpdateHealthText(int current, int max)
 		text_layer_set_text_color(currentHealthLayer, GColorYellow);
 	else
 		text_layer_set_text_color(currentHealthLayer, GColorWhite);
+#else
+	text_layer_set_text_color(currentHealthLayer, GColorWhite);
 #endif
 
 	IntToString(maxHealthText, 4, max);
@@ -527,9 +519,6 @@ Window * InitializeWindow(const char *name, bool animated)
 {
 	DEBUG_LOG("Creating window %s",name);
 	Window *window = window_create();
-#ifdef PBL_PLATFORM_APLITE
-	window_set_fullscreen(window, true);
-#endif
 	window_set_background_color(window, GColorBlack);
 	DEBUG_LOG("Window %s created",name);
 	return window;		

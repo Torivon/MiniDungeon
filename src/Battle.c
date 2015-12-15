@@ -320,10 +320,8 @@ void BattleInit(void)
 	}
 	
 	battleMainMenuDef.mainImageId = currentMonster->imageId;
-#if defined(PBL_COLOR)
 	battleMainMenuDef.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR;
 	battleMainMenuDef.useFloorImage = true;
-#endif
 	battleCleanExit = false;
 }
 
