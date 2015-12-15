@@ -9,47 +9,6 @@
     "resources": {
         "media": [
             {
-                "file": "images/icon.png",
-                "menuIcon": true,
-                "name": "IMAGE_MENU_ICON",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/newfloor.png",
-                "name": "IMAGE_NEWFLOOR",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/lich.png",
-                "name": "IMAGE_LICH",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/goblin.png",
-                "name": "IMAGE_GOBLIN",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeonstraight.png",
-                "name": "IMAGE_DUNGEONSTRAIGHT",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeonright.png",
-                "name": "IMAGE_DUNGEONRIGHT",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeonleft.png",
-                "name": "IMAGE_DUNGEONLEFT",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeondeadend.png",
-                "name": "IMAGE_DUNGEONDEADEND",
-                "type": "bitmap"
-            },
-            {
                 "file": "images/zombie.png",
                 "name": "IMAGE_ZOMBIE",
                 "type": "bitmap"
@@ -79,6 +38,47 @@
                 "file": "images/rat.png",
                 "name": "IMAGE_RAT",
                 "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/newfloor.png",
+                "name": "IMAGE_NEWFLOOR",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/lich.png",
+                "name": "IMAGE_LICH",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/icon.png",
+                "menuIcon": true,
+                "name": "IMAGE_MENU_ICON",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/goblin.png",
+                "name": "IMAGE_GOBLIN",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/dungeonstraight.png",
+                "name": "IMAGE_DUNGEONSTRAIGHT",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/dungeonright.png",
+                "name": "IMAGE_DUNGEONRIGHT",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/dungeonleft.png",
+                "name": "IMAGE_DUNGEONLEFT",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/dungeondeadend.png",
+                "name": "IMAGE_DUNGEONDEADEND",
                 "type": "bitmap"
             },
             {
