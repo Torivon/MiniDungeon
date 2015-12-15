@@ -327,7 +327,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 		floorImageLoaded = true;
 	}
 #endif
-
+	
 	ProfileLogStart("LoadMainBmpImage");
 	DEBUG_VERBOSE_LOG("LoadMainBmpImage");
 	mainImageBitmap = gbitmap_create_with_resource(resourceId);
@@ -338,9 +338,7 @@ void LoadMainBmpImage(Window *window, int id, int floorId)
 	mainImage = bitmap_layer_create(mainFrame);
 	bitmap_layer_set_bitmap(mainImage, mainImageBitmap);
 	bitmap_layer_set_alignment(mainImage, GAlignCenter);
-#if defined(PBL_COLOR)
 	bitmap_layer_set_compositing_mode(mainImage, GCompOpSet);
-#endif
 	layer_add_child(window_layer, bitmap_layer_get_layer(mainImage));
 	mainImageLoaded = true;
 	mainImageResourceLoaded = resourceId;
@@ -470,6 +468,8 @@ void UpdateHealthText(int current, int max)
 		text_layer_set_text_color(currentHealthLayer, GColorYellow);
 	else
 		text_layer_set_text_color(currentHealthLayer, GColorWhite);
+#else
+	text_layer_set_text_color(currentHealthLayer, GColorWhite);
 #endif
 
 	IntToString(maxHealthText, 4, max);
@@ -527,9 +527,6 @@ Window * InitializeWindow(const char *name, bool animated)
 {
 	DEBUG_LOG("Creating window %s",name);
 	Window *window = window_create();
-#ifdef PBL_PLATFORM_APLITE
-	window_set_fullscreen(window, true);
-#endif
 	window_set_background_color(window, GColorBlack);
 	DEBUG_LOG("Window %s created",name);
 	return window;		
