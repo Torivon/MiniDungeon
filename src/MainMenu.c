@@ -150,6 +150,7 @@ void ShowInfoMenu(void)
 
 static bool mainMenuVisible = false;
 
+void MainMenuWindowInit(Window *window);
 void MainMenuWindowAppear(Window *window);
 void MainMenuWindowDisappear(Window *window);
 
@@ -166,6 +167,7 @@ MenuDefinition mainMenuDef =
 		{"Info", "Stats about the app", ShowInfoMenu},
 #endif
 	},
+	.init = MainMenuWindowInit,
 	.appear = MainMenuWindowAppear,
 	.disappear = MainMenuWindowDisappear,
 	.mainImageId = RESOURCE_ID_IMAGE_REST,
@@ -200,6 +202,16 @@ void BatteryHandler(BatteryChargeState charge)
 	DEBUG_VERBOSE_LOG("BatteryHandler called");
 	if(mainMenuVisible)
 		ShowPauseRow(charge);
+}
+
+void MainMenuWindowInit(Window *window)
+{
+	if(GetUseOldAssets())
+	{
+		mainMenuDef.mainImageId = RESOURCE_ID_IMAGE_REST_OLD;
+		mainMenuDef.floorImageId = -1;
+		mainMenuDef.useFloorImage = false;
+	}
 }
 
 void MainMenuWindowAppear(Window *window)

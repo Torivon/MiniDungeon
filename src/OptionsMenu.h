@@ -1,4 +1,5 @@
 #pragma once
+
 bool GetVibration(void);
 void SetVibration(bool enable);
 bool GetFastMode(void);
@@ -13,3 +14,6 @@ void DrawOptionsMenu(void);
 void ShowOptionsMenu(void);
 
 bool OptionsMenuIsVisible(void);
+
+bool GetUseOldAssets(void);
+void SetUseOldAssets(bool enable);

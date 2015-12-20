@@ -10,15 +10,18 @@ static bool fastMode = false;
 static bool useWorkerApp = false;
 static bool workerCanLaunch = true;
 static bool optionsMenuVisible = false;
+static bool useOldAssets = false;
 
 void DrawOptionsMenu(void)
 {
-	ShowMainWindowRow(0, "Options", "");
-	ShowMainWindowRow(1, "Vibration", vibration ? "On" : "Off");
-	ShowMainWindowRow(2, "Fast Mode", useWorkerApp ? "-" : fastMode ? "On" : "Off");
+	int i = 0;
+	ShowMainWindowRow(i++, "Options", "");
+	ShowMainWindowRow(i++, "Vibration", vibration ? "On" : "Off");
+	ShowMainWindowRow(i++, "Fast Mode", useWorkerApp ? "-" : fastMode ? "On" : "Off");
+	ShowMainWindowRow(i++, "Old Graphics", useOldAssets ? "On" : "Off");
 #if ALLOW_WORKER_APP
-	ShowMainWindowRow(3, "Background", useWorkerApp ? "On" : "Off");
-	ShowMainWindowRow(4, "Launch", !useWorkerApp ? "-" : workerCanLaunch ? "On" : "Off");
+	ShowMainWindowRow(i++, "Background", useWorkerApp ? "On" : "Off");
+	ShowMainWindowRow(i++, "Launch", !useWorkerApp ? "-" : workerCanLaunch ? "On" : "Off");
 #endif
 }
 
@@ -103,6 +106,21 @@ bool GetWorkerCanLaunch(void)
 	return workerCanLaunch;
 }
 
+bool GetUseOldAssets(void)
+{
+	return useOldAssets;
+}
+void SetUseOldAssets(bool enable)
+{
+	useOldAssets = enable;
+}
+
+void ToggleUseOldAssets(void)
+{	
+	SetUseOldAssets(!useOldAssets);
+	DrawOptionsMenu();
+}
+
 void OptionsMenuAppear(Window *window);
 void OptionsMenuDisappear(Window *window);
 
@@ -113,9 +131,10 @@ MenuDefinition optionsMenuDef =
 		{"Quit", "Return to main menu", PopMenu},
 		{"Toggle", "Toggle Vibration", ToggleVibration},
 		{"Toggle", "Speed up events", ToggleFastMode},
+		{"Toggle", "Use old graphics", ToggleUseOldAssets},
 #if ALLOW_WORKER_APP
 		{"Toggle", "Run in background", ToggleWorkerApp},
-		{"Toggle", "Launch from background", ToggleWorkerCanLaunch}
+		{"Toggle", "Launch from background", ToggleWorkerCanLaunch},
 #endif
 	},
 	.appear = OptionsMenuAppear,

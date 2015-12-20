@@ -5,6 +5,7 @@
 #include "Logging.h"
 #include "Menu.h"
 #include "MiniDungeon.h"
+#include "OptionsMenu.h"
 #include "Shop.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -171,6 +172,7 @@ void ShowShopStatMenu(void)
 #endif //ALLOW_STAT_SHOP
 
 void ShopMenuWindowAppear(Window *window);
+void ShopMenuWindowInit(Window *window);
 
 MenuDefinition shopMenuDef = 
 {
@@ -184,9 +186,18 @@ MenuDefinition shopMenuDef =
 		{"Stats", "Buy stat points", ShowShopStatMenu},
 #endif
 	},
+	.init = ShopMenuWindowInit,
 	.appear = ShopMenuWindowAppear,
 	.mainImageId = RESOURCE_ID_IMAGE_SHOP
 };
+
+void ShopMenuWindowInit(Window *window)
+{
+	if(GetUseOldAssets())
+	{
+		shopMenuDef.mainImageId = RESOURCE_ID_IMAGE_SHOP_OLD;
+	}
+}
 
 void ShopMenuWindowAppear(Window *window)
 {
