@@ -15,6 +15,7 @@ MonsterDef Rat =
 {
 	.name = "Rat",
 	.imageId = RESOURCE_ID_IMAGE_RAT,
+	.imageBWId = RESOURCE_ID_IMAGE_RAT_OLD,
 	.extraFireDefenseMultiplier = 100,
 	.extraIceDefenseMultiplier = 100,
 	.extraLightningDefenseMultiplier = 100,
@@ -30,6 +31,7 @@ MonsterDef Goblin =
 {
 	.name = "Goblin",
 	.imageId = RESOURCE_ID_IMAGE_GOBLIN,
+	.imageBWId = RESOURCE_ID_IMAGE_GOBLIN_OLD,
 	.extraFireDefenseMultiplier = 100,
 	.extraIceDefenseMultiplier = 200,
 	.extraLightningDefenseMultiplier = 100,
@@ -45,6 +47,7 @@ MonsterDef Wizard =
 {
 	.name = "Wizard",
 	.imageId = RESOURCE_ID_IMAGE_WIZARD,
+	.imageBWId = RESOURCE_ID_IMAGE_WIZARD_OLD,
 	.extraFireDefenseMultiplier = 100,
 	.extraIceDefenseMultiplier = 100,
 	.extraLightningDefenseMultiplier = 100,
@@ -60,6 +63,7 @@ MonsterDef Zombie =
 {
 	.name = "Zombie",
 	.imageId = RESOURCE_ID_IMAGE_ZOMBIE,
+	.imageBWId = RESOURCE_ID_IMAGE_ZOMBIE_OLD,
 	.extraFireDefenseMultiplier = 300,
 	.extraIceDefenseMultiplier = 100,
 	.extraLightningDefenseMultiplier = 100,
@@ -75,6 +79,7 @@ MonsterDef Turtle =
 {
 	.name = "Turtle",
 	.imageId = RESOURCE_ID_IMAGE_TURTLE,
+	.imageBWId = RESOURCE_ID_IMAGE_TURTLE_OLD,
 	.extraFireDefenseMultiplier = 100,
 	.extraIceDefenseMultiplier = 100,
 	.extraLightningDefenseMultiplier = 600,
@@ -90,6 +95,7 @@ MonsterDef Lich =
 {
 	.name = "Lich",
 	.imageId = RESOURCE_ID_IMAGE_LICH,
+	.imageBWId = RESOURCE_ID_IMAGE_LICH_OLD,
 	.extraFireDefenseMultiplier = 100,
 	.extraIceDefenseMultiplier = 600,
 	.extraLightningDefenseMultiplier = 100,
@@ -105,6 +111,7 @@ MonsterDef Dragon =
 {
 	.name = "Dragon",
 	.imageId = RESOURCE_ID_IMAGE_DRAGON,
+	.imageBWId = RESOURCE_ID_IMAGE_DRAGON_OLD,
 	.extraFireDefenseMultiplier = 100,
 	.extraIceDefenseMultiplier = 100,
 	.extraLightningDefenseMultiplier = 100,

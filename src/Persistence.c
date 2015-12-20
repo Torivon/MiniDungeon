@@ -70,6 +70,7 @@ bool SavePersistedData(void)
 	persist_write_bool(PERSISTED_FAST_MODE, GetFastMode());
 	persist_write_bool(PERSISTED_WORKER_APP, GetWorkerApp());
 	persist_write_bool(PERSISTED_WORKER_CAN_LAUNCH, GetWorkerCanLaunch());
+	persist_write_bool(PERSISTED_USE_OLD_ASSETS, GetUseOldAssets());
 
 	DEBUG_VERBOSE_LOG("Saving combat data");
 	persist_write_bool(PERSISTED_IN_COMBAT, ClosingWhileInBattle());
@@ -106,6 +107,8 @@ bool LoadPersistedData(void)
 	SetStatPointsPurchased(persist_read_int(PERSISTED_STAT_POINTS_PURCHASED));
 	SetVibration(persist_read_bool(PERSISTED_VIBRATION));
 	SetFastMode(persist_read_bool(PERSISTED_FAST_MODE));
+	if(persist_exists(PERSISTED_USE_OLD_ASSETS))
+		SetUseOldAssets(persist_read_bool(PERSISTED_USE_OLD_ASSETS));
 	useWorkerApp = persist_read_bool(PERSISTED_WORKER_APP);
 	if(useWorkerApp)
 	{

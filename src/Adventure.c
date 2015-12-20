@@ -35,6 +35,7 @@ bool AdventureWindowIsVisible(void)
 	return adventureWindowVisible;
 }
 
+void AdventureWindowInit(Window *window);
 void AdventureWindowAppear(Window *window);
 void AdventureWindowDisappear(Window *window);
 
@@ -51,6 +52,7 @@ MenuDefinition adventureMenuDef =
 		{"", "", ShowTestMenu}
 #endif
 	},
+	.init = AdventureWindowInit,
 	.appear = AdventureWindowAppear,
 	.disappear = AdventureWindowDisappear,
 	.animated = true,
@@ -68,17 +70,43 @@ void LoadRandomDungeonImage(void)
 #if ALLOW_RANDOM_DUNGEON_GRAPHICS		
 	result = Random(12);
 	if(result < 6)
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT;
+	{
+		if(GetUseOldAssets())
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT_OLD;
+		else
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONSTRAIGHT;
+	}
 	else if(result < 9)
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONLEFT;
+	{
+		if(GetUseOldAssets())
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONLEFT_OLD;
+		else
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONLEFT;
+	}
 	else if(result < 12)
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT;
+	{
+		if(GetUseOldAssets())
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT_OLD;
+		else
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT;
+	}
 	else
-		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONDEADEND;
+	{
+		if(GetUseOldAssets())
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONDEADEND_OLD;
+		else
+			adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONDEADEND;
+	}
 #endif
 
 	if(adventureWindow)
 		LoadMainBmpImage(adventureWindow, adventureMenuDef.mainImageId, -1);
+}
+
+void AdventureWindowInit(Window *window)
+{
+	if(GetUseOldAssets())
+		adventureMenuDef.mainImageId = RESOURCE_ID_IMAGE_DUNGEONRIGHT_OLD;
 }
 
 void AdventureWindowAppear(Window *window)
@@ -211,6 +239,8 @@ void NewFloorMenuInit(Window *window)
 {
 	MenuInit(window);
 	IncrementFloor();
+	if(GetUseOldAssets())
+		newFloorMenuDef.mainImageId = RESOURCE_ID_IMAGE_NEWFLOOR_OLD;
 }
 
 void NewFloorMenuAppear(Window *window)

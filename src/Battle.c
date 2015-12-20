@@ -7,6 +7,7 @@
 #include "Menu.h"
 #include "MiniDungeon.h"
 #include "Monsters.h"
+#include "OptionsMenu.h"
 #include "Adventure.h"
 #include "UILayers.h"
 #include "Utils.h"
@@ -319,11 +320,20 @@ void BattleInit(void)
 		currentMonsterHealth = ComputeMonsterHealth(currentFloor);
 	}
 	
-	battleMainMenuDef.mainImageId = currentMonster->imageId;
+	if(GetUseOldAssets())
+	{
+		battleMainMenuDef.mainImageId = currentMonster->imageBWId;
+	}
+	else
+	{
 #if defined(PBL_COLOR)
-	battleMainMenuDef.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR;
-	battleMainMenuDef.useFloorImage = true;
+		battleMainMenuDef.mainImageId = currentMonster->imageId;
+		battleMainMenuDef.floorImageId = RESOURCE_ID_IMAGE_BATTLE_FLOOR;
+		battleMainMenuDef.useFloorImage = true;
+#else
+		battleMainMenuDef.mainImageId = currentMonster->imageId;
 #endif
+	}
 	battleCleanExit = false;
 }
 

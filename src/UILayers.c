@@ -3,6 +3,7 @@
 #include "Logging.h"
 #include "MainMenu.h"
 #include "Menu.h"
+#include "OptionsMenu.h"
 #include "UILayers.h"
 #include "Utils.h"
 #include "Adventure.h"
@@ -85,7 +86,10 @@ void SetMenuHighlight(int menuItem, bool selected)
 	if(selected)
 	{
 #if defined(PBL_COLOR)
-		text_layer_set_text_color(menuLayers[menuItem], GColorBlue);
+		if(GetUseOldAssets())
+			text_layer_set_text_color(menuLayers[menuItem], GColorBlack);
+		else
+			text_layer_set_text_color(menuLayers[menuItem], GColorBlue);
 		text_layer_set_background_color(menuLayers[menuItem], GColorWhite);
 #else
 		text_layer_set_text_color(menuLayers[menuItem], GColorBlack);
@@ -502,7 +506,10 @@ void InitializeHealthLayer(Window *window)
 void WindowAppear(Window *window)
 {
 	DEBUG_VERBOSE_LOG("WindowAppear:%p", window);
-	LoadBackgroundImage(window, RESOURCE_ID_IMAGE_BACKGROUND);
+	if(GetUseOldAssets())
+		LoadBackgroundImage(window, RESOURCE_ID_IMAGE_BACKGROUND_OLD);
+	else
+		LoadBackgroundImage(window, RESOURCE_ID_IMAGE_BACKGROUND);
 	InitializeMainLayers(window);
 	InitializeClockLayer(window);
 	InitializeHealthLayer(window);
