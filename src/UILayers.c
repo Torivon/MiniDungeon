@@ -466,7 +466,9 @@ void UpdateHealthText(int current, int max)
 	text_layer_set_text(currentHealthLayer, currentHealthText);
 
 #if defined(PBL_COLOR)
-	if(current <= max / 4)
+	if(GetUseOldAssets())
+		text_layer_set_text_color(currentHealthLayer, GColorWhite);
+	else if(current <= max / 4)
 		text_layer_set_text_color(currentHealthLayer, GColorRed);
 	else if(current <= max / 2)
 		text_layer_set_text_color(currentHealthLayer, GColorYellow);
