@@ -1,10 +1,13 @@
+
+#include "../src/MiniDungeon.h"
+#ifdef BUILD_WORKER_FILES
 #include <pebble_worker.h>
 
 #include "../src/Events.h"
-#include "../src/MiniDungeon.h"
 #include "../src/Utils.h"
 #include "../src/WorkerControl.h"
 #include "Worker_Persistence.h"
+
 
 void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
@@ -148,3 +151,5 @@ int main(void) {
 	worker_event_loop();
 	deinit();
 }
+
+#endif

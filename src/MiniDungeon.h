@@ -1,5 +1,11 @@
 #pragma once
 
+#define BUILD_CLOUDPEBBLE_WORKER_APP 0
+
+#if BUILD_CLOUDPEBBLE_WORKER_APP
+#define BUILD_WORKER_FILES
+#endif
+
 // Game tuning 
 #define STAT_POINTS_PER_LEVEL 2
 #define XP_FOR_NEXT_LEVEL 5 * level
@@ -53,4 +59,4 @@
 #define ALLOW_WORKER_APP_LISTENING 1
 
 void ResetGame(void);
-bool HasFocus(void);
+int HasFocus(void);

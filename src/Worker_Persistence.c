@@ -1,7 +1,11 @@
+
+#include "MiniDungeon.h"
+#ifdef BUILD_WORKER_FILES
 #include <pebble_worker.h>
 
 #include "../src/Persistence.h"
 #include "Worker_Persistence.h"
+
 
 static bool closedInBattle = false;
 static bool workerCanLaunch = false;
@@ -42,3 +46,4 @@ bool LoadWorkerData(void)
 	return true;
 }
 
+#endif

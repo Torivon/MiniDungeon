@@ -7,3 +7,4 @@ waf
 build/
 .waf-*/
 .lock-waf*
+*~
