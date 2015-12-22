@@ -15,9 +15,19 @@
                 "type": "bitmap"
             },
             {
+                "file": "images/zombie.png",
+                "name": "IMAGE_ZOMBIE",
+                "type": "bitmap"
+            },
+            {
                 "file": "images/wizard_old.png",
                 "name": "IMAGE_WIZARD_OLD",
                 "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/wizard.png",
+                "name": "IMAGE_WIZARD",
                 "type": "bitmap"
             },
             {
@@ -27,14 +37,30 @@
                 "type": "bitmap"
             },
             {
+                "file": "images/turtle.png",
+                "name": "IMAGE_TURTLE",
+                "type": "bitmap"
+            },
+            {
                 "file": "images/shop_old",
                 "name": "IMAGE_SHOP_OLD",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
+                "file": "images/shop.png",
+                "name": "IMAGE_SHOP",
+                "type": "bitmap"
+            },
+            {
                 "file": "images/rest_old.png",
                 "name": "IMAGE_REST_OLD",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/rest.png",
+                "name": "IMAGE_REST",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
@@ -45,9 +71,20 @@
                 "type": "bitmap"
             },
             {
+                "file": "images/rat.png",
+                "name": "IMAGE_RAT",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
                 "file": "images/newfloor_old.png",
                 "name": "IMAGE_NEWFLOOR_OLD",
                 "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/newfloor.png",
+                "name": "IMAGE_NEWFLOOR",
                 "type": "bitmap"
             },
             {
@@ -57,45 +94,8 @@
                 "type": "bitmap"
             },
             {
-                "file": "images/goblin_old.png",
-                "name": "IMAGE_GOBLIN_OLD",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeonstraight_old.png",
-                "name": "IMAGE_DUNGEONSTRAIGHT_OLD",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeonleft_old.png",
-                "name": "IMAGE_DUNGEONLEFT_OLD",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeonright_old.png",
-                "name": "IMAGE_DUNGEONRIGHT_OLD",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dungeondeadend_old.png",
-                "name": "IMAGE_DUNGEONDEADEND_OLD",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/dragon_old.png",
-                "name": "IMAGE_DRAGON_OLD",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/background_old.png",
-                "name": "IMAGE_BACKGROUND_OLD",
-                "targetPlatforms": null,
+                "file": "images/lich.png",
+                "name": "IMAGE_LICH",
                 "type": "bitmap"
             },
             {
@@ -105,13 +105,9 @@
                 "type": "bitmap"
             },
             {
-                "file": "images/newfloor.png",
-                "name": "IMAGE_NEWFLOOR",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/lich.png",
-                "name": "IMAGE_LICH",
+                "file": "images/goblin_old.png",
+                "name": "IMAGE_GOBLIN_OLD",
+                "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
@@ -120,8 +116,20 @@
                 "type": "bitmap"
             },
             {
+                "file": "images/dungeonstraight_old.png",
+                "name": "IMAGE_DUNGEONSTRAIGHT_OLD",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
                 "file": "images/dungeonstraight.png",
                 "name": "IMAGE_DUNGEONSTRAIGHT",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/dungeonright_old.png",
+                "name": "IMAGE_DUNGEONRIGHT_OLD",
+                "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
@@ -130,8 +138,20 @@
                 "type": "bitmap"
             },
             {
+                "file": "images/dungeonleft_old.png",
+                "name": "IMAGE_DUNGEONLEFT_OLD",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
                 "file": "images/dungeonleft.png",
                 "name": "IMAGE_DUNGEONLEFT",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/dungeondeadend_old.png",
+                "name": "IMAGE_DUNGEONDEADEND_OLD",
+                "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
@@ -140,34 +160,8 @@
                 "type": "bitmap"
             },
             {
-                "file": "images/zombie.png",
-                "name": "IMAGE_ZOMBIE",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/wizard.png",
-                "name": "IMAGE_WIZARD",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/turtle.png",
-                "name": "IMAGE_TURTLE",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/shop.png",
-                "name": "IMAGE_SHOP",
-                "type": "bitmap"
-            },
-            {
-                "file": "images/rest.png",
-                "name": "IMAGE_REST",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/rat.png",
-                "name": "IMAGE_RAT",
+                "file": "images/dragon_old.png",
+                "name": "IMAGE_DRAGON_OLD",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
@@ -185,6 +179,12 @@
             {
                 "file": "images/background.png",
                 "name": "IMAGE_BACKGROUND",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/background_old.png",
+                "name": "IMAGE_BACKGROUND_OLD",
+                "targetPlatforms": null,
                 "type": "bitmap"
             }
         ]

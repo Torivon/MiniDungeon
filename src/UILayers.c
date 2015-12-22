@@ -190,7 +190,9 @@ GRect mainFrame = {.origin = {.x = MENU_LEFT - 1, .y = MENU_TOP + 18}, .size = {
 GRect mainTextBaseFrame = {.origin = {.x = MENU_LEFT, .y = MENU_TOP}, .size = {.w = 80, .h = WINDOW_ROW_HEIGHT}};
 GRect mainNumberBaseFrame = {.origin = {.x = MENU_LEFT + 48, .y = MENU_TOP}, .size = {.w = 30, .h = WINDOW_ROW_HEIGHT}};
 static bool mainImageLoaded = false;
+#if defined(PBL_COLOR)
 static bool floorImageLoaded = false;
+#endif
 static int mainImageResourceLoaded = -1;
 
 TextLayer *mainTextLayers[MAX_MAIN_TEXT_LAYERS];
