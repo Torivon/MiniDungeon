@@ -6,6 +6,8 @@
 #include "../src/WorkerControl.h"
 #include "Worker_Persistence.h"
 
+#ifdef BUILD_WORKER_FILES
+
 void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
 #if ALLOW_WORKER_APP_MESSAGES
@@ -148,3 +150,5 @@ int main(void) {
 	worker_event_loop();
 	deinit();
 }
+
+#endif
