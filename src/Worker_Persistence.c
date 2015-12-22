@@ -1,10 +1,11 @@
-#include <pebble_worker.h>
 
 #include "MiniDungeon.h"
+#ifdef BUILD_WORKER_FILES
+#include <pebble_worker.h>
+
 #include "../src/Persistence.h"
 #include "Worker_Persistence.h"
 
-#ifdef BUILD_WORKER_FILES
 
 static bool closedInBattle = false;
 static bool workerCanLaunch = false;
