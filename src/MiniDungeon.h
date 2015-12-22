@@ -59,4 +59,4 @@
 #define ALLOW_WORKER_APP_LISTENING 1
 
 void ResetGame(void);
-bool HasFocus(void);
+int HasFocus(void);
