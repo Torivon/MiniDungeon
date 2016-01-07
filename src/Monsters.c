@@ -190,15 +190,11 @@ MonsterDef *GetRandomMonster(int floor)
 {
 	int limit;
 	if(floor >= 20)
-    {
-        mostRecentMonster = 0;
-    }
-    else
-    {
-        limit = floor >= 12 ? 6 : (floor + 1) / 2;
-        
-        mostRecentMonster = Random(limit);
-    }
+		return &Dragon;
+	
+	limit = floor >= 12 ? 6 : (floor + 1) / 2;
+	
+	mostRecentMonster = Random(limit);
 	return randomMonsterMap[mostRecentMonster];
 }
 
