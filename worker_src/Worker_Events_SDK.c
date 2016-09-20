@@ -1,9 +1,6 @@
 #include <pebble_worker.h>
 #include "MiniDungeon.h"
 
-#define BUILD_WORKER_FILES
-#include "../src/Worker_Events.c"
-#undef BUILD_WORKER_FILES
-
-
-
+// ../src/Events.c holds the probablities for events.
+// This way we only have to write it once.
+#include "../src/Events.c"
