@@ -1,5 +1,5 @@
 #pragma once
-#include "MiniDungeon.h"
+#include "../src/MiniDungeon.h"
 
 #include <pebble_worker.h>
 
