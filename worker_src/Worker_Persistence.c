@@ -1,10 +1,5 @@
 #include <pebble_worker.h>
-#include "../src/MiniDungeon.h"
 
-
-#include <pebble_worker.h>
-
-#include "../src/Persistence.h"
 #include "Worker_Persistence.h"
 
 

@@ -1,25 +1,18 @@
 #include <pebble_worker.h>
+#include "Worker.h"
+#include "Worker_Events.h"
 
-
-#include "../src/MiniDungeon.h"
-#include <pebble_worker.h>
-
-#include "../src/Events.h"
-#include "../src/Utils.h"
-#include "../src/WorkerControl.h"
 #include "Worker_Persistence.h"
 
 
 void SendMessageToApp(uint8_t type, uint16_t data0, uint16_t data1, uint16_t data2)
 {
-#if ALLOW_WORKER_APP_MESSAGES
     AppWorkerMessage msg_data = {
         .data0 = data0,
         .data1 = data1,
         .data2 = data2
     };
     app_worker_send_message(type, &msg_data);
-#endif
 }
 
 static bool handlingTicks = false;
@@ -61,9 +54,7 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
             forcedDelay = false;
             return;
         }
-#if EVENT_CHANCE_SCALING
         ++ticksSinceLastEvent;
-#endif
         lastEvent = ComputeRandomEvent_inline(GetBaseChanceOfEvent(), ticksSinceLastEvent, GetEventChances(), GetEventCount(), FAST_MODE_IN_BACKGROUND);
         if(lastEvent > -1)
         {
@@ -85,9 +76,7 @@ void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed)
 static void InitializeState(int ticks)
 {
     handlingTicks = !GetClosedInBattle(); // Don't handle ticks while in combat
-#if EVENT_CHANCE_SCALING
     ticksSinceLastEvent = ticks;
-#endif
     forcedDelay = true;
     lastEvent = -1;
     appAlive = false;
@@ -130,9 +119,7 @@ static void init()
     srand(now);
     if(!LoadWorkerData())
         worker_launch_app();
-#if ALLOW_WORKER_APP_LISTENING
     app_worker_message_subscribe(AppMessageHandler);
-#endif
     InitializeState(0);
     SendMessageToApp(WORKER_LAUNCHED, 0, 0, 0);
     tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
@@ -141,9 +128,7 @@ static void init()
 static void deinit() {
     // Deinitialize your worker here
     SendMessageToApp(WORKER_DYING, ticksSinceLastEvent, 0, 0);
-#if ALLOW_WORKER_APP_LISTENING
     app_worker_message_unsubscribe();
-#endif
     tick_timer_service_unsubscribe();
 }
 
