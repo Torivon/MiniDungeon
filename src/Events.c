@@ -1,6 +1,7 @@
 #include "Events.h"
 
-#if ALLOW_SHOP
+// This needs to be kept in sync with ../worker_src/Worker_Events.c
+
 // These should add up to 100
 int chances[] = 
 {
@@ -9,15 +10,6 @@ int chances[] =
 	9, //EVENT_NEW_FLOOR
 	3 //EVENT_SHOP
 };
-#else
-// These should add up to 100
-int chances[] = 
-{
-	40, //EVENT_ITEM
-	50, //EVENT_BATTLE
-	10 //EVENT_NEW_FLOOR
-};
-#endif
 
 int *GetEventChances(void)
 {

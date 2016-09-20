@@ -1,5 +1,7 @@
 #pragma once
 
+// This needs to be kept in sync with ../worker_src/Worker_Persistence.h"
+
 #define CURRENT_DATA_VERSION 4
 enum
 {

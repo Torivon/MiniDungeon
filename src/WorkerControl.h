@@ -11,6 +11,7 @@ void AppDying(bool closingWhileInBattle);
 void AppAwake(void);
 void SendWorkerCanLaunch(void);
 
+// This needs to be kept in sync with "../worker_src/Worker.h"
 // Worker message types
 enum
 {
