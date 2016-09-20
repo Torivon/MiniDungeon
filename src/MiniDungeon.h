@@ -15,7 +15,7 @@
 #define DISABLE_MENU_BMPS 0
 
 // Publish 0 turns on the test menu
-#define PUBLISH 0
+#define PUBLISH 1
 	
 // Logging
 #define DEBUG_LOGGING 0 // DEBUG_LOGGING 1 turns on DEBUG_LOG. DEBUG_LOGGING 2 turns on DEBUG_VERBOSE_LOG also.
